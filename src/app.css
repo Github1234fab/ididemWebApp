@@ -1,0 +1,205 @@
+/* ============================================
+   IDIDEM — Design System
+   Blue/White/Clean theme inspired by app UI
+   ============================================ */
+
+/* --- CSS Custom Properties --- */
+:root {
+	/* Primary palette */
+	--blue-900: #0d47a1;
+	--blue-700: #1565c0;
+	--blue-600: #1976d2;
+	--blue-500: #1e88e5;
+	--blue-400: #42a5f5;
+	--blue-300: #64b5f6;
+	--blue-200: #90caf9;
+	--blue-100: #bbdefb;
+	--blue-50: #e3f2fd;
+
+	/* Accent */
+	--green-500: #43a047;
+	--green-400: #66bb6a;
+	--teal-500: #00897b;
+	--teal-400: #26a69a;
+
+	/* Neutrals */
+	--white: #ffffff;
+	--gray-50: #f8fafc;
+	--gray-100: #f1f5f9;
+	--gray-200: #e2e8f0;
+	--gray-300: #cbd5e1;
+	--gray-400: #94a3b8;
+	--gray-500: #64748b;
+	--gray-600: #475569;
+	--gray-700: #334155;
+	--gray-800: #1e293b;
+	--gray-900: #0f172a;
+
+	/* Semantic */
+	--success: #22c55e;
+	--warning: #f59e0b;
+	--danger: #ef4444;
+
+	/* Gradients */
+	--gradient-hero: radial-gradient(circle at top right, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%);
+	--gradient-card: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+	--gradient-cta: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+
+	/* Typography */
+	--font-heading: 'Outfit', sans-serif;
+	--font-body: 'Inter', sans-serif;
+
+	/* Spacing */
+	--section-padding: 6rem 2rem;
+	--section-padding-mobile: 3.5rem 1.25rem;
+	--max-width: 1140px;
+
+	/* Radius */
+	--radius-sm: 8px;
+	--radius-md: 14px;
+	--radius-lg: 20px;
+	--radius-xl: 28px;
+	--radius-full: 9999px;
+
+	/* Shadows */
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+	--shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+	--shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
+	--shadow-blue: 0 8px 30px rgba(21, 101, 192, 0.25);
+
+	/* Transitions */
+	--transition-fast: 0.15s ease;
+	--transition-normal: 0.3s ease;
+	--transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset --- */
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	font-family: var(--font-body);
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--gray-800);
+	background-color: var(--white);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow-x: hidden;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+ul, ol {
+	list-style: none;
+}
+
+button {
+	font-family: inherit;
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-heading);
+	line-height: 1.2;
+	color: var(--gray-900);
+}
+
+/* --- Utility classes --- */
+.container {
+	width: 100%;
+	max-width: var(--max-width);
+	margin: 0 auto;
+	padding: 0 2rem;
+}
+
+.section {
+	padding: var(--section-padding);
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-gradient {
+	background: var(--gradient-hero);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+	from {
+		opacity: 0;
+		transform: translateX(-40px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes float {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+}
+
+.animate-fade-in-up {
+	animation: fadeInUp 0.6s ease forwards;
+}
+
+.animate-fade-in {
+	animation: fadeIn 0.5s ease forwards;
+}
+
+/* --- Responsive --- */
+@media screen and (max-width: 768px) {
+	.section {
+		padding: var(--section-padding-mobile);
+	}
+	.container {
+		padding: 0 1.25rem;
+	}
+}
