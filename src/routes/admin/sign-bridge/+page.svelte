@@ -2,17 +2,17 @@
 <script>
 	import { onMount } from 'svelte';
 	
-	let sessionId = '1234'; // ID de session par défaut pour le test
+	let sessionId = $state('1234'); // ID de session par défaut pour le test
 	/** @type {WebSocket | null} */
 	let socket = null;
-	let status = 'Non connecté';
-	let isConnected = false;
-	let isClientConnected = false;
+	let status = $state('Non connecté');
+	let isConnected = $state(false);
+	let isClientConnected = $state(false);
 
 	/** @type {HTMLCanvasElement} */
 	let canvas;
-	/** @type {CanvasRenderingContext2D} */
-	let ctx;
+	/** @type {CanvasRenderingContext2D | null} */
+	let ctx = null;
 
 	onMount(() => {
 		ctx = canvas.getContext('2d');
@@ -43,7 +43,9 @@
 		socket.onopen = () => {
 			isConnected = true;
 			status = `Connecté – Session ${sessionId}`;
-			socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
+			if (socket) {
+				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
+			}
 		};
 
 		socket.onmessage = (event) => {
@@ -105,7 +107,7 @@
 			<div class="input-group">
 				<label for="session">Identifiant de session client :</label>
 				<input type="text" id="session" bind:value={sessionId} disabled={isConnected} />
-				<button class="connect-btn" on:click={connectToBridge} disabled={isConnected}>
+				<button class="connect-btn" onclick={connectToBridge} disabled={isConnected}>
 					Activer le Pont
 				</button>
 			</div>
@@ -123,7 +125,7 @@
 					<!-- Cadre de dessin proportionnel à l'image du Easy Photo de l'ANTS -->
 					<canvas bind:this={canvas} width="600" height="300"></canvas>
 				</div>
-				<button class="clear-btn" on:click={() => socket?.send(JSON.stringify({ type: 'clear', sessionId }))}>
+				<button class="clear-btn" onclick={() => socket?.send(JSON.stringify({ type: 'clear', sessionId }))}>
 					Effacer tout
 				</button>
 			</div>

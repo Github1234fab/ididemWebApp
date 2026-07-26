@@ -12,8 +12,8 @@
 	
 	/** @type {HTMLCanvasElement} */
 	let canvas;
-	/** @type {CanvasRenderingContext2D} */
-	let ctx;
+	/** @type {CanvasRenderingContext2D | null} */
+	let ctx = null;
 	let drawing = false;
 
 	export function clear() {
@@ -29,10 +29,12 @@
 		canvas.height = 250;
 
 		ctx = canvas.getContext('2d');
-		ctx.strokeStyle = '#000000';
-		ctx.lineWidth = 4;
-		ctx.lineCap = 'round';
-		ctx.lineJoin = 'round';
+		if (ctx) {
+			ctx.strokeStyle = '#000000';
+			ctx.lineWidth = 4;
+			ctx.lineCap = 'round';
+			ctx.lineJoin = 'round';
+		}
 	});
 
 	/**
@@ -52,8 +54,9 @@
 			clientX = event.changedTouches[0].clientX;
 			clientY = event.changedTouches[0].clientY;
 		} else {
-			clientX = event.clientX;
-			clientY = event.clientY;
+			const mouseEvent = /** @type {MouseEvent} */ (event);
+			clientX = mouseEvent.clientX;
+			clientY = mouseEvent.clientY;
 		}
 		
 		const x = clientX - rect.left;
@@ -81,10 +84,12 @@
 		
 		// Forcer le contexte et le style de dessin
 		if (!ctx) ctx = canvas.getContext('2d');
-		ctx.strokeStyle = '#0f172a';
-		ctx.lineWidth = 4;
-		ctx.lineCap = 'round';
-		ctx.lineJoin = 'round';
+		if (ctx) {
+			ctx.strokeStyle = '#0f172a';
+			ctx.lineWidth = 4;
+			ctx.lineCap = 'round';
+			ctx.lineJoin = 'round';
+		}
 		
 		lastX = coords.rawX;
 		lastY = coords.rawY;
@@ -101,15 +106,17 @@
 		const coords = getCoords(event);
 		
 		if (!ctx) ctx = canvas.getContext('2d');
-		ctx.beginPath();
-		ctx.strokeStyle = '#000000'; // Noir pur
-		ctx.lineWidth = 4;
-		ctx.lineCap = 'round';
-		ctx.lineJoin = 'round';
-		
-		ctx.moveTo(lastX, lastY);
-		ctx.lineTo(coords.rawX, coords.rawY);
-		ctx.stroke();
+		if (ctx) {
+			ctx.beginPath();
+			ctx.strokeStyle = '#000000'; // Noir pur
+			ctx.lineWidth = 4;
+			ctx.lineCap = 'round';
+			ctx.lineJoin = 'round';
+			
+			ctx.moveTo(lastX, lastY);
+			ctx.lineTo(coords.rawX, coords.rawY);
+			ctx.stroke();
+		}
 		
 		lastX = coords.rawX;
 		lastY = coords.rawY;

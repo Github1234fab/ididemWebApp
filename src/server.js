@@ -5,21 +5,24 @@ const wss = new WebSocketServer({ port: 5001 });
 
 // Gestion des sessions de signature actives
 // Structure : { [sessionId]: { clientSocket: ws, adminSocket: ws } }
+/** @type {Record<string, { clientSocket?: any, adminSocket?: any }>} */
 const sessions = {};
 
 console.log('Serveur Pont de Signature IDidem actif sur le port 5001...');
 
 wss.on('connection', (ws) => {
+	/** @type {string | null} */
 	let currentSessionId = null;
 	let isClient = false;
 
-	ws.on('message', (message) => {
+	ws.on('message', (/** @type {any} */ message) => {
 		try {
 			const data = JSON.parse(message);
 
 			switch (data.type) {
 				case 'register-client':
 					currentSessionId = data.sessionId;
+					if (!currentSessionId) break;
 					isClient = true;
 					
 					if (!sessions[currentSessionId]) {
@@ -42,6 +45,7 @@ wss.on('connection', (ws) => {
 
 				case 'register-admin':
 					currentSessionId = data.sessionId;
+					if (!currentSessionId) break;
 					isClient = false;
 					
 					if (!sessions[currentSessionId]) {

@@ -77,6 +77,9 @@
 	// Simulation clavier pour le test local sur le même écran
 	let simX = 0.5;
 	let simY = 0.5;
+	/**
+	 * @param {KeyboardEvent} event
+	 */
 	function handleKeyDown(event) {
 		const step = 0.05;
 		let active = false;

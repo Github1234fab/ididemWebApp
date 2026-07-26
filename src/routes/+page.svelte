@@ -79,7 +79,7 @@
 				
 				<div class="cta-group">
 					<a href="https://apps.apple.com/fr/app/ididem" class="primary-btn">Télécharger sur l'App Store</a>
-					<a href="#how-it-works" class="secondary-btn">Comment ça marche ?</a>
+					<a href="/photo" class="secondary-btn">Prendre une photo</a>
 				</div>
 
 				<div class="trust-indicators">
@@ -286,7 +286,7 @@
 		gap: 1.5rem;
 		margin-bottom: 2rem;
 	}
-	.primary-btn {
+	.secondary-btn {
 		background: var(--white);
 		color: var(--blue-700);
 		padding: 0.9rem 2rem;
@@ -295,11 +295,11 @@
 		box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 		transition: var(--transition-fast);
 	}
-	.primary-btn:hover {
+	.secondary-btn:hover {	
 		transform: translateY(-2px);
 		box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 	}
-	.secondary-btn {
+	.primary-btn {
 		border: 2px solid rgba(255, 255, 255, 0.4);
 		color: var(--white);
 		padding: 0.9rem 2rem;
@@ -307,7 +307,7 @@
 		font-weight: 600;
 		transition: var(--transition-fast);
 	}
-	.secondary-btn:hover {
+	.primary-btn:hover {
 		background: rgba(255, 255, 255, 0.1);
 	}
 	.trust-indicators {
