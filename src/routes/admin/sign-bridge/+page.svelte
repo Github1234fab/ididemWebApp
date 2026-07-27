@@ -1,6 +1,7 @@
 <!-- src/routes/admin/sign-bridge/+page.svelte -->
 <script>
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	
 	let sessionId = $state('1234'); // ID de session par défaut pour le test
 	/** @type {WebSocket | null} */
@@ -18,6 +19,10 @@
 	let jitsiApi = null;
 
 	onMount(() => {
+		const urlSessionId = page.url.searchParams.get('session_id');
+		if (urlSessionId) {
+			sessionId = urlSessionId;
+		}
 		ctx = canvas.getContext('2d');
 		resetCanvas();
 

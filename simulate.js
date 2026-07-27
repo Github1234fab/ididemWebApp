@@ -1,13 +1,15 @@
 // simulate.js
 import robot from 'robotjs';
 import WebSocket from 'ws';
-import readline from 'readline';
 
 // Config
 const wsUrl = 'ws://localhost:5001';
-const sessionId = '1234'; // Doit correspondre à la session de l'admin et du client
 
-// Coordonnées de calibration de ton cadre Easy Photo sur ton écran Mac
+// Récupération de l'ID de session depuis l'argument de commande (ex: node simulate.js ID-XXXXXX)
+const args = process.argv.slice(2);
+let sessionId = args[0] || '1234';
+
+// Coordonnées de calibration
 let bounds = {
 	topLeft: { x: 0, y: 0 },
 	bottomRight: { x: 0, y: 0 },
@@ -15,35 +17,52 @@ let bounds = {
 	height: 0
 };
 
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout
-});
-
-function question(query) {
-	return new Promise((resolve) => rl.question(query, resolve));
+/**
+ * Lance un compte à rebours visuel dans la console
+ * @param {number} seconds Nombre de secondes
+ * @param {string} message Message à afficher
+ */
+function countdown(seconds, message) {
+	return new Promise((resolve) => {
+		let current = seconds;
+		console.log(`\n👉 ${message}`);
+		
+		const interval = setInterval(() => {
+			if (current > 0) {
+				process.stdout.write(`⏱️ Enregistrement dans ${current}... \r`);
+				current--;
+			} else {
+				clearInterval(interval);
+				console.log('📸 ENREGISTRÉ !                    \n');
+				resolve();
+			}
+		}, 1000);
+	});
 }
 
 async function calibrate() {
 	console.log('\n=== CALIBRATION DU PONT DE SIGNATURE IDIDEM ===');
-	console.log('Nous allons enregistrer la position de votre cadre de signature Easy Photo.');
+	console.log(`Session client ciblée : [${sessionId}]`);
+	console.log('La calibration se fera automatiquement par compte à rebours. Ne cliquez pas sur le terminal.');
 	
 	// Étape 1 : Coin Haut-Gauche
-	await question('\n1. Placez votre souris physique sur le coin HAUT-GAUCHE du cadre de dessin Easy Photo, puis appuyez sur ENTREE...');
+	console.log('\n--- ÉTAPE 1 : COIN HAUT-GAUCHE ---');
+	await countdown(10, 'Placez votre souris sur le coin HAUT-GAUCHE du cadre de dessin Easy Photo et laissez-la immobile...');
 	bounds.topLeft = robot.getMousePos();
-	console.log(`-> Enregistré : X = ${bounds.topLeft.x}, Y = ${bounds.topLeft.y}`);
+	console.log(`-> Position enregistrée : X = ${bounds.topLeft.x}, Y = ${bounds.topLeft.y}`);
 
 	// Étape 2 : Coin Bas-Droit
-	await question('\n2. Placez maintenant votre souris physique sur le coin BAS-DROIT du cadre de dessin Easy Photo, puis appuyez sur ENTREE...');
+	console.log('\n--- ÉTAPE 2 : COIN BAS-DROIT ---');
+	await countdown(10, 'Déplacez maintenant votre souris sur le coin BAS-DROIT du cadre Easy Photo et laissez-la immobile...');
 	bounds.bottomRight = robot.getMousePos();
-	console.log(`-> Enregistré : X = ${bounds.bottomRight.x}, Y = ${bounds.bottomRight.y}`);
+	console.log(`-> Position enregistrée : X = ${bounds.bottomRight.x}, Y = ${bounds.bottomRight.y}`);
 
 	// Calcul des dimensions de la zone cible
 	bounds.width = bounds.bottomRight.x - bounds.topLeft.x;
 	bounds.height = bounds.bottomRight.y - bounds.topLeft.y;
 
-	console.log(`\nCalibration terminée avec succès ! Zone de signature détectée : ${bounds.width}px x ${bounds.height}px.`);
-	rl.close();
+	console.log(`\n✅ Calibration terminée avec succès !`);
+	console.log(`Zone cible : ${bounds.width}px x ${bounds.height}px.`);
 	
 	startBridgeConnection();
 }
@@ -88,7 +107,6 @@ function startBridgeConnection() {
 
 				case 'clear':
 					console.log('Nettoyage du cadre...');
-					// Optionnel : on peut faire cliquer le script sur le bouton effacer d'Easy Photo
 					robot.mouseToggle('up', 'left');
 					break;
 			}

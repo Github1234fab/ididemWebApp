@@ -10,8 +10,11 @@ export async function POST({ request }) {
 			return json({ error: 'formulaId is required' }, { status: 400 });
 		}
 
-		// Initialiser Stripe avec la clé secrète dynamique
-		const stripeSecretKey = env.STRIPE_SECRET_KEY || 'sk_test_51PqLwERpQW2B1A2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6';
+		// Initialiser Stripe avec la clé secrète dynamique issue du fichier .env
+		const stripeSecretKey = env.STRIPE_SECRET_KEY;
+		if (!stripeSecretKey) {
+			throw new Error('STRIPE_SECRET_KEY is not defined in environment variables (.env)');
+		}
 		const stripe = new Stripe(stripeSecretKey);
 
 		// Déterminer le tarif et les détails selon la formule
