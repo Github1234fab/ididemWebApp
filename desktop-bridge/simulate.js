@@ -88,16 +88,18 @@ function startBridgeConnection() {
 
 				case 'drawstart':
 					// Calcul des coordonnées cibles sur ton écran Mac à partir des pourcentages (0->1) reçus du mobile
-					const startX = bounds.topLeft.x + (data.x * bounds.width);
-					const startY = bounds.topLeft.y + (data.y * bounds.height);
+					const startX = Math.round(bounds.topLeft.x + (data.x * bounds.width));
+					const startY = Math.round(bounds.topLeft.y + (data.y * bounds.height));
+					console.log(`[DRAW_START] Reçu: x=${data.x.toFixed(3)}, y=${data.y.toFixed(3)} -> Cible Mac: X=${startX}, Y=${startY}`);
 					
 					robot.moveMouse(startX, startY);
 					robot.mouseToggle('down', 'left'); // On enfonce le clic gauche
 					break;
 
 				case 'draw':
-					const drawX = bounds.topLeft.x + (data.x * bounds.width);
-					const drawY = bounds.topLeft.y + (data.y * bounds.height);
+					const drawX = Math.round(bounds.topLeft.x + (data.x * bounds.width));
+					const drawY = Math.round(bounds.topLeft.y + (data.y * bounds.height));
+					console.log(`[DRAW_MOVE]  Reçu: x=${data.x.toFixed(3)}, y=${data.y.toFixed(3)} -> Cible Mac: X=${drawX}, Y=${drawY}`);
 					
 					robot.dragMouse(drawX, drawY); // On glisse la souris avec le clic enfoncé
 					break;
