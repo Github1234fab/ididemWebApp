@@ -22,8 +22,11 @@ export async function POST({ request }) {
 		const blob = new Blob([buffer], { type: 'image/jpeg' });
 		formData.append('image_file', blob, 'photo.jpg');
 
-		// Get API Key from environment or fallback to default
-		const apiKey = env.PHOTOROOM_API_KEY || 'sk_pr_default_3485625a30ea93e0c8a4f1fae777bd91a70ebe1b';
+		// Get API Key from environment
+		const apiKey = env.PHOTOROOM_API_KEY;
+		if (!apiKey) {
+			throw new Error('PHOTOROOM_API_KEY is not defined in environment variables (.env)');
+		}
 
 		console.log('Sending photo to Photoroom API for background removal...');
 		const response = await fetch('https://sdk.photoroom.com/v1/segment', {
