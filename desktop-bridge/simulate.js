@@ -1,4 +1,4 @@
-// simulate.js
+// desktop-bridge/simulate.js
 import robot from 'robotjs';
 import WebSocket from 'ws';
 
