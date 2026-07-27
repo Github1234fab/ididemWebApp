@@ -12,7 +12,7 @@
 						<path d="M 35 60 A 15 15 0 0 0 65 60" fill="none" stroke="#1e88e5" stroke-width="5" stroke-linecap="round"/>
 					</svg>
 				</div>
-				<span class="logo-text">IDidem</span>
+				<span class="logo-text">IDidem </span>
 			</div>
 			<p class="description">
 				La solution de création de photos d'identité certifiées conformes dans votre poche. Conçue par des photographes professionnels.
