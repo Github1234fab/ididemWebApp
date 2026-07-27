@@ -12,6 +12,9 @@
 	/** @type {SignaturePad} */
 	let pad;
 
+	/** @type {any} */
+	let jitsiApi = null;
+
 	onMount(() => {
 		// Connexion WebSocket en temps réel
 		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -37,8 +40,37 @@
 			status = 'Erreur de connexion';
 		};
 
+		// Charger la visioconférence Jitsi Meet
+		// @ts-ignore
+		const checkJitsi = setInterval(() => {
+			// @ts-ignore
+			if (window.JitsiMeetExternalAPI) {
+				clearInterval(checkJitsi);
+				const domain = 'meet.jit.si';
+				const options = {
+					roomName: `ididem_ephoto_session_${sessionId}`,
+					width: '100%',
+					height: '100%',
+					parentNode: document.getElementById('jitsi-container'),
+					configOverwrite: {
+						startWithAudioMuted: false,
+						startWithVideoMuted: false,
+						prejoinPageEnabled: false,
+						disableDeepLinking: true
+					},
+					interfaceConfigOverwrite: {
+						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
+					}
+				};
+				// @ts-ignore
+				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+			}
+		}, 100);
+
 		return () => {
+			clearInterval(checkJitsi);
 			if (socket) socket.close();
+			if (jitsiApi) jitsiApi.dispose();
 		};
 	});
 
@@ -108,34 +140,48 @@
 
 <svelte:head>
 	<title>Signer votre e-Photo - IDidem</title>
+	<script src="https://meet.jit.si/external_api.js"></script>
 </svelte:head>
 
 <main class="signer-page">
-	<div class="signer-container">
-		<header class="signer-header">
-			<h1>IDidem</h1>
-			<p class="status" class:connected={isConnected}>{status}</p>
-		</header>
-
-		<div class="instructions">
-			<h3>Signez dans le cadre ci-dessous</h3>
-			<p>Utilisez votre doigt ou un stylet. Restez bien à l'intérieur du cadre.</p>
+	<div class="split-signer-container">
+		
+		<!-- Panel visioconférence Jitsi -->
+		<div class="video-panel">
+			<h2>Votre photographe en direct</h2>
+			<div id="jitsi-container" class="jitsi-frame"></div>
 		</div>
 
-		<div class="pad-wrapper">
-			<SignaturePad
-				bind:this={pad}
-				ondrawstart={handleDrawStart}
-				ondraw={handleDraw}
-				ondrawend={handleDrawEnd}
-				onclear={handleClear}
-			/>
+		<!-- Panel Signature Pad -->
+		<div class="signer-container">
+			<header class="signer-header">
+				<h1>IDidem</h1>
+				<p class="status" class:connected={isConnected}>{status}</p>
+			</header>
+
+			<div class="instructions">
+				<h3>Signez dans le cadre ci-dessous</h3>
+				<p>Utilisez votre doigt ou un stylet. Suivez les instructions du photographe en direct.</p>
+			</div>
+
+			<div class="pad-wrapper">
+				<SignaturePad
+					bind:this={pad}
+					ondrawstart={handleDrawStart}
+					ondraw={handleDraw}
+					ondrawend={handleDrawEnd}
+					onclear={handleClear}
+				/>
+			</div>
+
+			<div class="actions">
+				<button class="clear-btn" onclick={handleClear}>Effacer</button>
+				<button class="confirm-btn" disabled={!isConnected} onclick={() => alert('Signature validée !')}>
+					Confirmer ma signature
+				</button>
+			</div>
 		</div>
 
-		<div class="actions">
-			<button class="clear-btn" onclick={handleClear}>Effacer</button>
-			<button class="confirm-btn" disabled={!isConnected}>Confirmer ma signature</button>
-		</div>
 	</div>
 </main>
 
@@ -147,15 +193,57 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 1.5rem;
+		padding: 2.5rem 1.5rem;
 		color: var(--white);
+	}
+	.split-signer-container {
+		display: grid;
+		grid-template-columns: 1.2fr 0.8fr;
+		gap: 2.5rem;
+		width: 100%;
+		max-width: 1100px;
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(15px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: var(--radius-lg);
+		padding: 2.5rem;
+		box-shadow: var(--shadow-2xl);
+	}
+	.video-panel {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		min-height: 480px;
+	}
+	.video-panel h2 {
+		font-size: 1.25rem;
+		font-weight: 800;
+		color: var(--white);
+		margin: 0;
+	}
+	.jitsi-frame {
+		flex: 1;
+		background: #0f172a;
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		box-shadow: var(--shadow-inner);
 	}
 	.signer-container {
 		width: 100%;
-		max-width: 500px;
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
+	}
+	@media (max-width: 900px) {
+		.split-signer-container {
+			grid-template-columns: 1fr;
+			padding: 1.5rem;
+			gap: 1.5rem;
+		}
+		.video-panel {
+			min-height: 280px;
+		}
 	}
 	.signer-header {
 		text-align: center;

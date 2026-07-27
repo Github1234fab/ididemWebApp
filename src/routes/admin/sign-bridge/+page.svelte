@@ -14,12 +14,16 @@
 	/** @type {CanvasRenderingContext2D | null} */
 	let ctx = null;
 
+	/** @type {any} */
+	let jitsiApi = null;
+
 	onMount(() => {
 		ctx = canvas.getContext('2d');
 		resetCanvas();
 
 		return () => {
 			if (socket) socket.close();
+			if (jitsiApi) jitsiApi.dispose();
 		};
 	});
 
@@ -46,6 +50,7 @@
 			if (socket) {
 				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
 			}
+			initJitsiAdmin();
 		};
 
 		socket.onmessage = (event) => {
@@ -94,7 +99,44 @@
 			status = 'Erreur serveur';
 		};
 	}
+
+	function initJitsiAdmin() {
+		if (jitsiApi) {
+			jitsiApi.dispose();
+			jitsiApi = null;
+		}
+
+		const checkJitsi = setInterval(() => {
+			// @ts-ignore
+			if (window.JitsiMeetExternalAPI) {
+				clearInterval(checkJitsi);
+				const domain = 'meet.jit.si';
+				const options = {
+					roomName: `ididem_ephoto_session_${sessionId}`,
+					width: '100%',
+					height: '100%',
+					parentNode: document.getElementById('jitsi-container'),
+					configOverwrite: {
+						startWithAudioMuted: false,
+						startWithVideoMuted: false,
+						prejoinPageEnabled: false,
+						disableDeepLinking: true
+					},
+					interfaceConfigOverwrite: {
+						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
+					}
+				};
+				// @ts-ignore
+				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+			}
+		}, 100);
+	}
 </script>
+
+<svelte:head>
+	<title>Pont de Signature Admin - IDidem</title>
+	<script src="https://meet.jit.si/external_api.js"></script>
+</svelte:head>
 
 <main class="admin-bridge">
 	<div class="container">
@@ -130,18 +172,29 @@
 				</button>
 			</div>
 
-			<div class="instructions-area">
-				<h3>Pont de Simulation robotisé</h3>
-				<div class="instructions-card">
-					<h4>Comment fonctionne la recopie automatique sur Easy Photo ?</h4>
-					<ol>
-						<li>Assurez-vous que le pont est connecté et que le client est en ligne.</li>
-						<li>Ouvrez votre navigateur sur l'écran de signature **Easy Photo**.</li>
-						<li>Lancez le script de simulation local sur votre Mac (`node simulate.js`).</li>
-						<li>Calibrez les coordonnées de votre écran comme demandé par le script.</li>
-						<li>Demandez au client de signer sur son téléphone : son doigt guide le stylet sur votre écran à 100% de manière automatique.</li>
-					</ol>
+			<div class="video-area">
+				<h3>Client en direct (Visioconférence)</h3>
+				<div id="jitsi-container" class="jitsi-admin-frame">
+					{#if !isConnected}
+						<div class="placeholder-jitsi">
+							<p>Veuillez activer le pont pour démarrer la visioconférence</p>
+						</div>
+					{/if}
 				</div>
+			</div>
+		</div>
+
+		<div class="instructions-section">
+			<h3>Pont de Simulation robotisé</h3>
+			<div class="instructions-card">
+				<h4>Comment fonctionne la recopie automatique sur Easy Photo ?</h4>
+				<ol>
+					<li>Assurez-se que le pont est connecté et que le client est en ligne.</li>
+					<li>Ouvrez votre navigateur sur l'écran de signature **Easy Photo**.</li>
+					<li>Lancez le script de simulation local sur votre Mac (`node simulate.js`).</li>
+					<li>Calibrez les coordonnées de votre écran comme demandé par le script.</li>
+					<li>Demandez au client de signer sur son téléphone : son doigt guide le stylet sur votre écran à 100% de manière automatique.</li>
+				</ol>
 			</div>
 		</div>
 	</div>
@@ -219,14 +272,50 @@
 		grid-template-columns: 1.2fr 0.8fr;
 		gap: 2.5rem;
 	}
-	.preview-area, .instructions-area {
+	.preview-area, .video-area {
 		background: var(--white);
 		padding: 2rem;
 		border-radius: var(--radius-lg);
 		border: 1px solid var(--gray-200);
 		box-shadow: var(--shadow-sm);
 	}
-	.preview-area h3, .instructions-area h3 {
+	.preview-area h3, .video-area h3 {
+		margin-bottom: 1.5rem;
+		color: var(--blue-700);
+	}
+	.video-area {
+		display: flex;
+		flex-direction: column;
+		min-height: 420px;
+	}
+	.jitsi-admin-frame {
+		flex: 1;
+		background: #0f172a;
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		border: 1px solid var(--gray-200);
+		position: relative;
+	}
+	.placeholder-jitsi {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--gray-400);
+		font-weight: 600;
+		text-align: center;
+		padding: 2rem;
+	}
+	.instructions-section {
+		background: var(--white);
+		padding: 2rem;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--gray-200);
+		box-shadow: var(--shadow-sm);
+		margin-top: 2.5rem;
+	}
+	.instructions-section h3 {
 		margin-bottom: 1.5rem;
 		color: var(--blue-700);
 	}

@@ -227,12 +227,20 @@
 		isRedirecting = true;
 		processingError = '';
 		try {
+			localStorage.setItem('ididem_captured_image', capturedImage);
+			localStorage.setItem('ididem_selected_formula', selectedFormula);
+			localStorage.setItem('ididem_selected_bg', selectedBgColor);
+			localStorage.setItem('ididem_user_email', userEmail);
+			localStorage.setItem('ididem_booking_date', bookingDate);
+			localStorage.setItem('ididem_booking_time', bookingTime);
+			localStorage.setItem('ididem_client_session_id', clientSessionId);
+
 			const res = await fetch('/api/checkout-session', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ formulaId: selectedFormula })
+				body: JSON.stringify({ formulaId: selectedFormula, email: userEmail })
 			});
 
 			if (!res.ok) {
@@ -253,6 +261,62 @@
 		}
 	}
 
+	let userEmail = $state('');
+	let bookingDate = $state('');
+	let bookingTime = $state('');
+	let isAppointmentBooked = $state(false);
+	let clientSessionId = $state('ID-' + Math.random().toString(36).substring(2, 9).toUpperCase());
+	let copiedLink = $state(false);
+
+	function copySignatureLinkInline() {
+		const origin = window.location.origin;
+		const link = `${origin}/signer/${clientSessionId}`;
+		navigator.clipboard.writeText(link).then(() => {
+			copiedLink = true;
+			setTimeout(() => {
+				copiedLink = false;
+			}, 2000);
+		});
+	}
+
+	const nextDays = [
+		{ label: 'Lundi 27 juil. (Aujourd\'hui)', value: 'Lundi 27 juillet' },
+		{ label: 'Mardi 28 juil. (Demain)', value: 'Mardi 28 juillet' },
+		{ label: 'Mercredi 29 juil.', value: 'Mercredi 29 juillet' },
+		{ label: 'Jeudi 30 juil.', value: 'Jeudi 30 juillet' },
+		{ label: 'Vendredi 31 juil.', value: 'Vendredi 31 juillet' }
+	];
+
+	const timeSlots = [
+		'09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+		'14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
+	];
+
+	function confirmBooking() {
+		if (bookingDate && bookingTime) {
+			isAppointmentBooked = true;
+		}
+	}
+
+	/**
+	 * @param {string} email
+	 */
+	function isEmailValid(email) {
+		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return re.test(email);
+	}
+
+	function simulatePaymentSuccess() {
+		localStorage.setItem('ididem_captured_image', capturedImage);
+		localStorage.setItem('ididem_selected_formula', selectedFormula);
+		localStorage.setItem('ididem_selected_bg', selectedBgColor);
+		localStorage.setItem('ididem_user_email', userEmail);
+		localStorage.setItem('ididem_booking_date', bookingDate);
+		localStorage.setItem('ididem_booking_time', bookingTime);
+		localStorage.setItem('ididem_client_session_id', clientSessionId);
+		window.location.href = `/photo/success?session_id=${clientSessionId}`;
+	}
+
 	function restart() {
 		stopCamera();
 		capturedImage = '';
@@ -261,6 +325,11 @@
 		isProcessed = false;
 		selectedBgColor = 'blue-grad';
 		isRedirecting = false;
+		userEmail = '';
+		bookingDate = '';
+		bookingTime = '';
+		isAppointmentBooked = false;
+		clientSessionId = 'ID-' + Math.random().toString(36).substring(2, 9).toUpperCase();
 		startCamera();
 	}
 
@@ -274,6 +343,11 @@
 			isProcessed = false;
 			selectedBgColor = 'blue-grad';
 			isRedirecting = false;
+			userEmail = '';
+			bookingDate = '';
+			bookingTime = '';
+			isAppointmentBooked = false;
+			clientSessionId = 'ID-' + Math.random().toString(36).substring(2, 9).toUpperCase();
 		}
 		if (targetStep === 1) {
 			stopCamera();
@@ -499,35 +573,145 @@
 								</div>
 							{/if}
 
-							<h3>Prochaines étapes :</h3>
-							<ul>
-								{#if isProcessed}
-									<li>🔍 Vérification finale de conformité biométrique.</li>
-									<li>📧 Génération de la planche et du code e-photo.</li>
-									<li>💳 Finalisation de la commande et paiement sécurisé.</li>
-								{:else}
-									<li>🔍 Traitement IA : Détourage de précision et correction du fond de couleur réglementaire.</li>
-									<li>✅ Vérification de conformité par un opérateur agréé.</li>
-									<li>📧 Réception de votre code ANTS par e-mail sous 10 minutes.</li>
+							{#if selectedFormula === 'e-photo' && isProcessed}
+								<h3>Procédure : Signature & Code ANTS</h3>
+								<div class="legal-assurance-card">
+									<h5>🛡️ Protocole de Conformité ANTS (Obligatoire)</h5>
+									<p>Conformément à la réglementation française sur l'usage de faux, la e-Photo officielle nécessite le recueil de votre signature numérique <strong>en direct avec notre opérateur agréé</strong>. Cela vous garantit à 100% l'acceptation de votre e-photo par votre préfecture.</p>
+									
+									<div class="process-steps">
+										<div class="p-step">
+											<span class="badge">1</span>
+											<div class="p-step-content">
+												<strong>Créneau visio</strong>
+												<span>Choisissez votre rendez-vous de signature en direct (2 min).</span>
+											</div>
+										</div>
+										<div class="p-step">
+											<span class="badge">2</span>
+											<div class="p-step-content">
+												<strong>Empreinte CB</strong>
+												<span>Enregistrez votre paiement sécurisé <em>(Hold temporaire, aucun débit)</em>.</span>
+											</div>
+										</div>
+										<div class="p-step">
+											<span class="badge">3</span>
+											<div class="p-step-content">
+												<strong>Débit & Livraison</strong>
+												<span>Vous n'êtes débité qu'après validation et réception de votre code e-Photo.</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							{:else}
+								<h3>Prochaines étapes :</h3>
+								<ul>
+									{#if isProcessed}
+										<li>📧 Signature en protocole visio.</li>
+										<li>💳 Finalisation de la commande et paiement sécurisé.</li>
+									{:else}
+										<li>🔍 Traitement IA : Détourage de précision et correction du fond de couleur réglementaire.</li>
+										<li>✅ Vérification de conformité par un opérateur agréé.</li>
+										<li>📧 Signature par protocole visio.</li>
+										<li>📧 Obtention de votre code e-Photo ANTS.</li>
+										<li>📧 Création et envoi de votre e-photo.</li>
+									{/if}
+								</ul>
+							{/if}
+
+							{#if isProcessed}
+								<div class="email-collection-box">
+									<label for="client-email">📧 Votre adresse e-mail :</label>
+									<input 
+										type="email" 
+										id="client-email" 
+										placeholder="nom@exemple.com" 
+										bind:value={userEmail}
+										disabled={isRedirecting || isAppointmentBooked}
+									/>
+									<p class="email-tip">Requis pour l'envoi de vos photos et du suivi de votre commande.</p>
+								</div>
+
+								{#if selectedFormula === 'e-photo' && isEmailValid(userEmail)}
+									{#if !isAppointmentBooked}
+										<div class="booking-section-inline">
+											<h4>📅 Planifiez votre visioconférence de signature</h4>
+											<p class="booking-intro">Veuillez choisir un créneau horaire pour l'appel de signature en direct :</p>
+											
+											<div class="booking-fields">
+												<div class="form-group">
+													<label for="date-select">Choisir un jour :</label>
+													<select id="date-select" bind:value={bookingDate}>
+														<option value="">-- Sélectionnez un jour --</option>
+														{#each nextDays as day}
+															<option value={day.value}>{day.label}</option>
+														{/each}
+													</select>
+												</div>
+
+												<div class="form-group">
+													<label for="time-select">Choisir un créneau :</label>
+													<select id="time-select" bind:value={bookingTime} disabled={!bookingDate}>
+														<option value="">-- Sélectionnez une heure --</option>
+														{#each timeSlots as slot}
+															<option value={slot}>{slot}</option>
+														{/each}
+													</select>
+												</div>
+											</div>
+
+											<button class="btn-confirm-booking" onclick={confirmBooking} disabled={!bookingDate || !bookingTime}>
+												💾 Confirmer ce créneau
+											</button>
+										</div>
+									{:else}
+										<div class="booking-confirmed-card">
+											<div class="confirmed-header">
+												<span>✅ Créneau de rendez-vous réservé</span>
+												<button class="btn-change-booking" onclick={() => isAppointmentBooked = false}>Modifier</button>
+											</div>
+											<p>Le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong></p>
+											
+											<div class="inline-copy-link">
+												<span class="link-label">Copiez votre lien Visio pour accéder à votre signature en ligne, accompagné de notre agent. Collez votre lien dans un bloc note ou un fichier Word (...)</span>
+												<div class="copy-input-group">
+													<input type="text" readonly value="{window.location.origin}/signer/{clientSessionId}" />
+													<button onclick={copySignatureLinkInline}>
+														{copiedLink ? 'Copié !' : 'Copier'}
+													</button>
+												</div>
+											</div>
+										</div>
+									{/if}
 								{/if}
-							</ul>
+							{/if}
 
 							<div class="result-actions">
 								<button class="btn-retake" disabled={isRedirecting} onclick={restart}>Recommencer</button>
 								{#if isProcessed}
-									<button class="btn-confirm-photo" disabled={isRedirecting} onclick={handlePayment}>
-										{#if isRedirecting}
-											Redirection...
-										{:else}
-											Procéder au paiement
-										{/if}
-									</button>
+									{#if selectedFormula !== 'e-photo' || isAppointmentBooked}
+										<button class="btn-confirm-photo" disabled={isRedirecting || !isEmailValid(userEmail)} onclick={handlePayment}>
+											{#if isRedirecting}
+												Redirection...
+											{:else}
+												Procéder au paiement ({selectedFormula === 'casual' ? '9,99' : '4,99'} €)
+											{/if}
+										</button>
+									{/if}
 								{:else}
 									<button class="btn-confirm-photo" onclick={processBackground}>
 										Détourer ma photo
 									</button>
 								{/if}
 							</div>
+
+							{#if isProcessed && (selectedFormula !== 'e-photo' || isAppointmentBooked)}
+								<div class="dev-actions">
+									<button class="btn-dev-simulate" disabled={!isEmailValid(userEmail)} onclick={simulatePaymentSuccess}>
+										🧪 Simuler le paiement (Test Dev)
+									</button>
+								</div>
+							{/if}
 						</div>
 					{/if}
 				</div>
@@ -579,6 +763,71 @@
 	.color-btn.bg-light-gray { background: #f1f5f9; }
 	.color-btn.bg-dark-gray { background: #334155; }
 	.color-btn.bg-blue-grad { background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); }
+
+	.email-collection-box {
+		margin: 1.5rem 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		text-align: left;
+	}
+
+	.email-collection-box label {
+		font-weight: 700;
+		font-size: 0.95rem;
+		color: var(--gray-700);
+	}
+
+	.email-collection-box input {
+		padding: 0.75rem 1rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--gray-300);
+		font-size: 0.95rem;
+		outline: none;
+		color: var(--gray-800);
+		transition: var(--transition-fast);
+	}
+
+	.email-collection-box input:focus {
+		border-color: var(--blue-600);
+		box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+	}
+
+	.email-tip {
+		font-size: 0.75rem;
+		color: var(--gray-500);
+		line-height: 1.4;
+		margin: 0;
+	}
+
+	.dev-actions {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		margin-top: 1rem;
+		border-top: 1px dashed var(--gray-200);
+		padding-top: 1rem;
+	}
+
+	.btn-dev-simulate {
+		background: #fef3c7;
+		color: #92400e;
+		border: 1px dashed #f59e0b;
+		padding: 0.6rem 1.25rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.85rem;
+		cursor: pointer;
+		transition: var(--transition-fast);
+		width: 100%;
+		text-align: center;
+	}
+
+	.btn-dev-simulate:hover {
+		background: #fde68a;
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-sm);
+	}
 
 	.photo-preview-card.bg-gray {
 		background: #d1d5db; /* Gris réglementaire */
@@ -1381,5 +1630,234 @@
 		.camera-frame-wrapper {
 			padding: 1.5rem 1rem;
 		}
+	}
+
+	/* --- Inline Booking Widget styles --- */
+	.booking-section-inline {
+		background: #f8fafc;
+		border: 1px solid var(--gray-200);
+		border-radius: var(--radius-md);
+		padding: 1.25rem;
+		margin-top: 1rem;
+		text-align: left;
+	}
+
+	.booking-section-inline h4 {
+		margin: 0 0 0.5rem 0;
+		color: var(--blue-700);
+		font-size: 1rem;
+		font-weight: 800;
+	}
+
+	.booking-intro {
+		font-size: 0.8rem;
+		color: var(--gray-600);
+		line-height: 1.4;
+		margin: 0 0 1rem 0;
+	}
+
+	.booking-fields {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+	}
+
+	.booking-fields .form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.booking-fields label {
+		font-size: 0.75rem;
+		font-weight: 700;
+		color: var(--gray-600);
+	}
+
+	.booking-fields select {
+		padding: 0.6rem;
+		border: 1px solid var(--gray-300);
+		border-radius: var(--radius-sm);
+		font-size: 0.85rem;
+		background: var(--white);
+		color: var(--gray-800);
+		outline: none;
+	}
+
+	.btn-confirm-booking {
+		width: 100%;
+		background: var(--blue-600);
+		color: var(--white);
+		padding: 0.75rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.85rem;
+		transition: var(--transition-fast);
+		text-align: center;
+	}
+
+	.btn-confirm-booking:hover:not(:disabled) {
+		background: var(--blue-700);
+	}
+
+	.booking-confirmed-card {
+		background: #f0fdf4;
+		border: 1px solid #bbf7d0;
+		border-radius: var(--radius-md);
+		padding: 1rem;
+		margin-top: 1rem;
+		text-align: left;
+	}
+
+	.confirmed-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.5rem;
+	}
+
+	.confirmed-header span {
+		font-weight: 700;
+		font-size: 0.9rem;
+		color: #166534;
+	}
+
+	.btn-change-booking {
+		background: transparent;
+		color: var(--blue-600);
+		font-weight: 700;
+		font-size: 0.8rem;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+	}
+
+	.btn-change-booking:hover {
+		text-decoration: underline;
+	}
+
+	.booking-confirmed-card p {
+		margin: 0;
+		font-size: 0.95rem;
+		color: #14532d;
+	}
+
+	.legal-assurance-card {
+		background: rgba(37, 99, 235, 0.05);
+		border: 1px solid rgba(37, 99, 235, 0.15);
+		border-radius: var(--radius-md);
+		padding: 1.25rem;
+		margin: 1.25rem 0;
+		text-align: left;
+	}
+
+	.legal-assurance-card h5 {
+		margin: 0 0 0.5rem 0;
+		color: var(--blue-700);
+		font-size: 0.95rem;
+		font-weight: 800;
+	}
+
+	.legal-assurance-card p {
+		font-size: 0.8rem;
+		color: var(--gray-600);
+		line-height: 1.45;
+		margin: 0 0 1rem 0;
+	}
+
+	.process-steps {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		border-top: 1px dashed rgba(37, 99, 235, 0.15);
+		padding-top: 0.8rem;
+	}
+
+	.p-step {
+		font-size: 0.78rem;
+		color: var(--gray-700);
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		line-height: 1.35;
+	}
+
+	.p-step .badge {
+		background: var(--blue-600);
+		color: var(--white);
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.7rem;
+		font-weight: 700;
+		flex-shrink: 0;
+		margin-top: 2px;
+	}
+
+	.p-step-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+
+	.p-step-content strong {
+		font-size: 0.85rem;
+		color: var(--gray-800);
+	}
+
+	.p-step-content span {
+		font-size: 0.78rem;
+		color: var(--gray-600);
+	}
+
+	.inline-copy-link {
+		margin-top: 1rem;
+		border-top: 1px dashed rgba(22, 101, 52, 0.2);
+		padding-top: 0.8rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.link-label {
+		font-size: 0.78rem;
+		font-weight: 700;
+		color: #166534;
+	}
+
+	.copy-input-group {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.copy-input-group input {
+		flex: 1;
+		padding: 0.4rem 0.6rem;
+		font-size: 0.8rem;
+		border: 1px solid #bbf7d0;
+		background: var(--white);
+		border-radius: var(--radius-sm);
+		color: #14532d;
+		outline: none;
+	}
+
+	.copy-input-group button {
+		background: #15803d;
+		color: var(--white);
+		border: none;
+		border-radius: var(--radius-sm);
+		padding: 0.4rem 1rem;
+		font-size: 0.8rem;
+		font-weight: 700;
+		cursor: pointer;
+		transition: var(--transition-fast);
+	}
+
+	.copy-input-group button:hover {
+		background: #166534;
 	}
 </style>

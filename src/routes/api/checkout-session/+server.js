@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/private';
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	try {
-		const { formulaId } = await request.json();
+		const { formulaId, email, clientSessionId } = await request.json();
 		if (!formulaId) {
 			return json({ error: 'formulaId is required' }, { status: 400 });
 		}
@@ -39,6 +39,7 @@ export async function POST({ request }) {
 		console.log(`Création d'une session Stripe Checkout pour la formule : ${formulaId}...`);
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ['card'],
+			customer_email: email || undefined,
 			line_items: [
 				{
 					price_data: {
@@ -55,15 +56,18 @@ export async function POST({ request }) {
 			mode: 'payment',
 			metadata: {
 				application: 'ididem-web',
-				formulaId: formulaId
+				formulaId: formulaId,
+				clientSessionId: clientSessionId || 'unknown'
 			},
 			payment_intent_data: {
+				capture_method: formulaId === 'e-photo' ? 'manual' : 'automatic',
 				metadata: {
 					application: 'ididem-web',
-					formulaId: formulaId
+					formulaId: formulaId,
+					clientSessionId: clientSessionId || 'unknown'
 				}
 			},
-			success_url: `${origin}/photo/success?session_id={CHECKOUT_SESSION_ID}`,
+			success_url: `${origin}/photo/success?session_id=${clientSessionId || '{CHECKOUT_SESSION_ID}'}`,
 			cancel_url: `${origin}/photo/cancel`
 		});
 
