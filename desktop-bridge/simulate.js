@@ -2,12 +2,13 @@
 import robot from 'robotjs';
 import WebSocket from 'ws';
 
-// Config
-const wsUrl = 'ws://localhost:5001';
-
 // Récupération de l'ID de session depuis l'argument de commande (ex: node simulate.js ID-XXXXXX)
 const args = process.argv.slice(2);
 let sessionId = args[0] || '1234';
+
+// Config : utilise Render par défaut pour la prod, et localhost si le flag --local est présent
+const isLocal = args.includes('--local');
+const wsUrl = isLocal ? 'ws://localhost:5001' : 'wss://ididemwebapp.onrender.com';
 
 // Coordonnées de calibration
 let bounds = {

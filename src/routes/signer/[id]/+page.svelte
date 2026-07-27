@@ -18,7 +18,9 @@
 	onMount(() => {
 		// Connexion WebSocket en temps réel
 		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-		const wsUrl = `${protocol}//${window.location.hostname}:5001`;
+		const wsUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+			? `${protocol}//${window.location.hostname}:5001`
+			: 'wss://ididemwebapp.onrender.com';
 		
 		status = 'Connexion au serveur de signature...';
 		socket = new WebSocket(wsUrl);
