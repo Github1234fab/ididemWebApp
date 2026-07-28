@@ -1357,12 +1357,14 @@
 	}
 
 	.booklet-image-container {
-		width: 100%;
+		width: 180px;
 		height: 240px;
 		border-radius: var(--radius-md);
 		overflow: hidden;
 		background: var(--gray-900);
 		border: 1px solid var(--gray-200);
+		margin: 0 auto;
+		box-shadow: var(--shadow-sm);
 	}
 
 	.booklet-image-container img {
