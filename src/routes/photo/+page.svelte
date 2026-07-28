@@ -1400,6 +1400,7 @@
 		border: 1px solid var(--gray-200);
 		margin: 0 auto;
 		box-shadow: var(--shadow-sm);
+		border: 5px rgb(232, 232, 232) solid;
 	}
 
 	.booklet-image-container img {
@@ -1431,15 +1432,14 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: 1rem;
-		border-top: 1px solid var(--gray-100);
+		border-top: 3px solid var(--gray-100);
 		padding-top: 1.5rem;
 	}
 
 	.btn-booklet-prev {
 		background: var(--gray-100);
 		color: var(--gray-700);
-		padding: 0.6rem 1.25rem;
+		padding: 0.6rem 1rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		font-size: 0.9rem;
@@ -1573,17 +1573,7 @@
 		height: 26px;
 	}
 
-	.tutorial-header h2 {
-		font-size: 1.5rem;
-		font-weight: 800;
-	}
-
-	.tutorial-header p {
-		color: var(--blue-600);
-		font-weight: 700;
-		font-size: 0.9rem;
-	}
-
+	
 	.intro-text {
 		color: var(--gray-600);
 		font-size: 0.95rem;
@@ -1655,11 +1645,7 @@
 		transition: var(--transition-fast);
 	}
 
-	.checklist-item.checked .checkbox {
-		border-color: var(--green-500);
-		background: var(--green-500);
-		color: var(--white);
-	}
+	
 
 	.rule-text {
 		font-size: 0.95rem;
@@ -1667,9 +1653,7 @@
 		color: var(--gray-700);
 	}
 
-	.checklist-item.checked .rule-text {
-		color: #1b5e20;
-	}
+
 
 	.tutorial-actions {
 		display: flex;
