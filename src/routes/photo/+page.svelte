@@ -1377,11 +1377,13 @@
 
 	.video-container {
 		position: relative;
-		width: 100%;
+		height: 55vh; /* Limite la hauteur par rapport à l'écran pour tout afficher sans défilement */
+		max-width: 100%;
 		aspect-ratio: 3/4;
 		border-radius: var(--radius-md);
 		overflow: hidden;
 		background: #000;
+		margin: 0 auto;
 	}
 
 	video {
