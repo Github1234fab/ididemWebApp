@@ -1941,8 +1941,9 @@
 	.instructions-live ol {
 		display: inline-block;
 		text-align: left;
-		padding-left: 1.2rem;
+		padding-left: 1.5rem;
 		margin: 0.5rem 0 0 0;
+		list-style-type: decimal !important; /* Force l'affichage des numéros */
 	}
 
 	.instructions-live li {
