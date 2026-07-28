@@ -638,17 +638,68 @@
 								</div>
 							{:else}
 								<h3>Prochaines étapes :</h3>
-								<ul>
+								<ul class="steps-list">
 									{#if isProcessed}
-										<li>📧 Signature en protocole visio.</li>
-										<li>💳 Finalisation de la commande et paiement sécurisé.</li>
+										{#if selectedFormula === 'e-photo'}
+											<li class="animate-fade-in">
+												<span class="step-icon text-blue">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 9-3.75 3.75L8.25 9m0 0v6M12 9v6m3.75-6v6M3 6.75A2.25 2.25 0 0 1 5.25 4.5h13.5A2.25 2.25 0 0 1 21 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 17.25V6.75Z" /></svg>
+												</span>
+												<div class="step-text">
+													<strong>Rendez-vous visio & Signature</strong>
+													<span>Signature numérique en direct avec l'opérateur.</span>
+												</div>
+											</li>
+										{/if}
+										<li class="animate-fade-in">
+											<span class="step-icon text-green">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
+											</span>
+											<div class="step-text">
+												<strong>Paiement sécurisé</strong>
+												<span>Finalisation de la commande par CB.</span>
+											</div>
+										</li>
 									{:else}
-										<li>🔍 Traitement IA : Détourage de précision et correction du fond de couleur réglementaire.</li>
-										<li>✅ Vérification de conformité par un opérateur agréé.</li>
-										<li>📧 Signature par protocole visio.</li>
-										<li>📧 Obtention de votre code e-Photo ANTS.</li>
-										<li>📧 Création et envoi de votre e-photo.</li>
-									{/if}
+										<li>
+											<span class="step-icon text-purple">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 21l8.904-.813a18.502 18.502 0 1 0-8.091-4.283Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M11.99 3.01H12V3h-.01v.01Z" /></svg>
+											</span>
+											<div class="step-text">
+												<strong>Détourage intelligent par IA</strong>
+												<span>Suppression de l'arrière-plan et application du fond conforme.</span>
+											</div>
+										</li>
+										<li>
+											<span class="step-icon text-yellow">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
+											</span>
+											<div class="step-text">
+												<strong>Contrôle de conformité</strong>
+												<span>Validation finale par un photographe professionnel.</span>
+											</div>
+										</li>
+										{#if selectedFormula === 'e-photo'}
+											<li>
+												<span class="step-icon text-blue">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
+												</span>
+												<div class="step-text">
+													<strong>Signature électronique en direct</strong>
+													<span>Signature biométrique sécurisée en visioconférence.</span>
+												</div>
+											</li>
+										{/if}
+										<li>
+											<span class="step-icon text-teal">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" /></svg>
+												</span>
+												<div class="step-text">
+													<strong>Envoi par e-mail</strong>
+													<span>{selectedFormula === 'e-photo' ? 'Réception de votre code photo ANTS.' : 'Obtention de votre planche photo HD.'}</span>
+												</div>
+											</li>
+										{/if}
 								</ul>
 							{/if}
 
@@ -830,6 +881,62 @@
 		color: var(--blue-700);
 		box-shadow: 0 0 0 1px var(--blue-500);
 	}
+
+	.steps-list {
+		list-style: none;
+		padding: 0;
+		margin: 1.25rem 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.steps-list li {
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+		padding: 0 !important;
+	}
+
+	.steps-list li::before {
+		display: none !important;
+	}
+
+	.step-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 38px;
+		height: 38px;
+		border-radius: var(--radius-sm);
+		flex-shrink: 0;
+	}
+
+	.step-icon.text-blue { color: var(--blue-600); background: #eff6ff; }
+	.step-icon.text-green { color: #16a34a; background: #f0fdf4; }
+	.step-icon.text-purple { color: #9333ea; background: #faf5ff; }
+	.step-icon.text-yellow { color: #d97706; background: #fef3c7; }
+	.step-icon.text-teal { color: #0d9488; background: #f0fdfa; }
+
+	.step-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		text-align: left;
+	}
+
+	.step-text strong {
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: var(--gray-800);
+	}
+
+	.step-text span {
+		font-size: 0.85rem;
+		color: var(--gray-500);
+		line-height: 1.35;
+	}
+
 	.color-btn.bg-dark-gray { background: #334155; }
 	.color-btn.bg-blue-grad { background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); }
 
