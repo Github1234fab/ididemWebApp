@@ -546,7 +546,14 @@
 							{#if activeFormulaDetails}
 								<div class="biometric-gabarit {activeFormulaDetails.gabaritClass}">
 									<div class="vertical-line"></div>
-									<div class="face-oval"></div>
+									<div class="face-oval">
+										<div class="oval-limit-line limit-top animate-pulse">
+											<span>Haut du front</span>
+										</div>
+										<div class="oval-limit-line limit-bottom animate-pulse">
+											<span>Bas du menton</span>
+										</div>
+									</div>
 									<div class="eyes-line"></div>
 								</div>
 							{/if}
@@ -1770,6 +1777,40 @@
 		border-radius: 50%;
 		box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
 		transition: var(--transition-normal);
+		position: relative; /* Nécessaire pour positionner les lignes repères */
+	}
+
+	.oval-limit-line {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background: rgba(57, 255, 20, 0.6); /* Vert fluo transparent */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 10;
+	}
+
+	.oval-limit-line span {
+		position: absolute;
+		background: #39FF14;
+		color: #000000;
+		font-size: 0.65rem;
+		font-weight: 800;
+		padding: 0.15rem 0.5rem;
+		border-radius: var(--radius-sm);
+		text-transform: uppercase;
+		white-space: nowrap;
+		box-shadow: var(--shadow-sm);
+	}
+
+	.limit-top {
+		top: 15%;
+	}
+
+	.limit-bottom {
+		top: 87%;
 	}
 
 	.official-gabarit .face-oval {
@@ -1799,7 +1840,7 @@
 	.eyes-line {
 		position: absolute;
 		width: 100%;
-		height: 30px;
+		height: 100px;
 		background: rgba(0, 145, 255, 0.5); /* Bleu opacité 0.5 solid */
 		top: 40%;
 		transform: translateY(-50%);
