@@ -2,7 +2,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import ePhotoImg from '$lib/assets/EPhoto.png';
-	import photoIdentity from '$lib/assets/photos-identité.webp';
+	import photoIdentity from '$lib/assets/photos-identite.webp';
 
 	// Étape active : 1 = formule, 2 = consignes, 3 = caméra, 4 = résultat
 	let step = $state(1);
