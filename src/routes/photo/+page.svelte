@@ -735,13 +735,13 @@
 										{/if}
 										<li>
 											<span class="step-icon text-teal">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" /></svg>
-												</span>
-												<div class="step-text">
-													<strong>Téléchargement et partage de vos photos</strong>
-													<span>{selectedFormula === 'e-photo' ? 'Réception de votre code photo ANTS.' : 'Obtention de votre planche photo HD.'}</span>
-												</div>
-											</li>
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+											</span>
+											<div class="step-text">
+												<strong>Téléchargement et partage de vos photos</strong>
+												<span>{selectedFormula === 'e-photo' ? 'Réception de votre code photo ANTS.' : 'Obtention de votre planche photo HD.'}</span>
+											</div>
+										</li>
 										{/if}
 								</ul>
 							{/if}
@@ -979,27 +979,7 @@
 		text-align: left;
 	}
 
-	.email-collection-box label {
-		font-weight: 700;
-		font-size: 0.95rem;
-		color: var(--gray-700);
-	}
-
-	.email-collection-box input {
-		padding: 0.75rem 1rem;
-		border-radius: var(--radius-sm);
-		border: 1px solid var(--gray-300);
-		font-size: 0.95rem;
-		outline: none;
-		color: var(--gray-800);
-		transition: var(--transition-fast);
-	}
-
-	.email-collection-box input:focus {
-		border-color: var(--blue-600);
-		box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-	}
-
+	
 	.email-tip {
 		font-size: 0.75rem;
 		color: var(--gray-500);
