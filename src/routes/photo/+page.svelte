@@ -467,10 +467,7 @@
 					<!-- En-tête du livret -->
 					<div class="booklet-header">
 						<span class="booklet-badge">GUIDE DE RÉUSSITE BIOMÉTRIQUE</span>
-						<div class="booklet-header-actions">
-							<span class="booklet-progress">Conseil {currentTutoPage + 1}/{tutorialSteps.length}</span>
-							<button class="btn-skip-tuto" onclick={startCamera} type="button">Passer ✕</button>
-						</div>
+						<span class="booklet-progress">Conseil {currentTutoPage + 1}/{tutorialSteps.length}</span>
 					</div>
 
 					<!-- Barre de progression -->
@@ -514,9 +511,14 @@
 						{/if}
 					</div>
 
-					<button class="btn-booklet-cancel" onclick={() => step = 1}>
-						← Changer de formule
-					</button>
+					<div class="booklet-footer-links">
+						<button class="btn-booklet-cancel" onclick={() => step = 1}>
+							← Changer de formule
+						</button>
+						<button class="btn-booklet-cancel" onclick={startCamera}>
+							Passer le guide →
+						</button>
+					</div>
 				</div>
 			</section>
 		{/if}
@@ -1500,13 +1502,19 @@
 		font-size: 0.85rem;
 		font-weight: 600;
 		cursor: pointer;
-		align-self: center;
 		transition: var(--transition-fast);
-		margin-top: 0.5rem;
 	}
 
 	.btn-booklet-cancel:hover {
 		color: var(--blue-600);
+	}
+
+	.booklet-footer-links {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		margin-top: 0.5rem;
 	}
 
 	/* --- Étape 2 : Consignes/Tutoriel --- */
