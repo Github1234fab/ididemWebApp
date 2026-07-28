@@ -198,6 +198,7 @@
 	let processingError = $state('');
 	let isProcessed = $state(false);
 	let selectedBgColor = $state('blue-grad');
+	let customBgColor = $state('#3b82f6'); // Couleur sur mesure par défaut (Bleu)
 
 	/**
 	 * @param {string} formula
@@ -219,6 +220,11 @@
 				case 'light-gray': return 'background: #f1f5f9;';
 				case 'dark-gray': return 'background: #334155;';
 				case 'blue-grad': return 'background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);';
+				case 'navy-blue': return 'background: #1e3a8a;';
+				case 'emerald': return 'background: #064e3b;';
+				case 'terracotta': return 'background: #9a3412;';
+				case 'purple': return 'background: #581c87;';
+				case 'custom': return `background: ${customBgColor};`;
 				default: return '';
 			}
 		}
@@ -627,10 +633,20 @@
 								<div class="background-selector">
 									<h4>Couleur de fond du profil :</h4>
 									<div class="color-options">
-										<button class="color-btn bg-white" class:active={selectedBgColor === 'white'} onclick={() => selectedBgColor = 'white'} aria-label="Blanc"></button>
-										<button class="color-btn bg-light-gray" class:active={selectedBgColor === 'light-gray'} onclick={() => selectedBgColor = 'light-gray'} aria-label="Gris clair"></button>
-										<button class="color-btn bg-dark-gray" class:active={selectedBgColor === 'dark-gray'} onclick={() => selectedBgColor = 'dark-gray'} aria-label="Gris foncé"></button>
-										<button class="color-btn bg-blue-grad" class:active={selectedBgColor === 'blue-grad'} onclick={() => selectedBgColor = 'blue-grad'} aria-label="Bleu dégradé"></button>
+										<button class="color-btn bg-white" class:active={selectedBgColor === 'white'} onclick={() => selectedBgColor = 'white'} aria-label="Blanc" title="Blanc"></button>
+										<button class="color-btn bg-light-gray" class:active={selectedBgColor === 'light-gray'} onclick={() => selectedBgColor = 'light-gray'} aria-label="Gris clair" title="Gris clair"></button>
+										<button class="color-btn bg-dark-gray" class:active={selectedBgColor === 'dark-gray'} onclick={() => selectedBgColor = 'dark-gray'} aria-label="Gris foncé" title="Gris foncé"></button>
+										<button class="color-btn bg-blue-grad" class:active={selectedBgColor === 'blue-grad'} onclick={() => selectedBgColor = 'blue-grad'} aria-label="Bleu dégradé" title="Bleu dégradé"></button>
+										<button class="color-btn bg-navy-blue" class:active={selectedBgColor === 'navy-blue'} onclick={() => selectedBgColor = 'navy-blue'} aria-label="Bleu marine" title="Bleu marine"></button>
+										<button class="color-btn bg-emerald" class:active={selectedBgColor === 'emerald'} onclick={() => selectedBgColor = 'emerald'} aria-label="Vert émeraude" title="Vert émeraude"></button>
+										<button class="color-btn bg-terracotta" class:active={selectedBgColor === 'terracotta'} onclick={() => selectedBgColor = 'terracotta'} aria-label="Terracotta" title="Terracotta"></button>
+										<button class="color-btn bg-purple" class:active={selectedBgColor === 'purple'} onclick={() => selectedBgColor = 'purple'} aria-label="Violet" title="Violet"></button>
+										
+										<!-- Bouton pipette couleur sur mesure -->
+										<div class="color-btn custom-picker-btn" class:active={selectedBgColor === 'custom'} style="background: {selectedBgColor === 'custom' ? customBgColor : '#e2e8f0'}">
+											<input type="color" bind:value={customBgColor} oninput={() => selectedBgColor = 'custom'} aria-label="Choisir une couleur" />
+											<span class="picker-emoji">🎨</span>
+										</div>
 									</div>
 								</div>
 							{/if}
@@ -809,7 +825,7 @@
 											{#if isRedirecting}
 												Redirection...
 											{:else}
-												Procéder au paiement ({selectedFormula === 'casual' ? '9,99' : '4,99'} €)
+												Procéder au paiement ({selectedFormula === 'e-photo' ? '12,99' : (selectedFormula === 'officielle' ? '6,99' : '3,99')} €)
 											{/if}
 										</button>
 									{/if}
@@ -853,6 +869,8 @@
 	.color-options {
 		display: flex;
 		gap: 0.75rem;
+		flex-wrap: wrap; /* S'adapte sur plusieurs lignes si besoin */
+		max-width: 320px;
 	}
 
 	.color-btn {
@@ -970,6 +988,36 @@
 
 	.color-btn.bg-dark-gray { background: #334155; }
 	.color-btn.bg-blue-grad { background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); }
+	.color-btn.bg-navy-blue { background: #1e3a8a; }
+	.color-btn.bg-emerald { background: #064e3b; }
+	.color-btn.bg-terracotta { background: #9a3412; }
+	.color-btn.bg-purple { background: #581c87; }
+
+	.custom-picker-btn {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		border: 2px dashed var(--gray-400) !important;
+		box-shadow: 0 0 0 1px var(--gray-200);
+		transition: var(--transition-fast);
+	}
+
+	.custom-picker-btn input[type="color"] {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	.picker-emoji {
+		font-size: 0.85rem;
+		pointer-events: none;
+	}
 
 	.email-collection-box {
 		margin: 1.5rem 0;
@@ -1405,7 +1453,8 @@
 	}
 
 	.btn-booklet-prev {
-		background: var(--gray-100);
+		background: var(--white);
+		border: 1px solid var(--gray-300);
 		color: var(--gray-700);
 		padding: 0.6rem 1rem;
 		border-radius: var(--radius-sm);
@@ -1416,12 +1465,16 @@
 	}
 
 	.btn-booklet-prev:disabled {
-		opacity: 0.5;
+		opacity: 0.4;
 		cursor: not-allowed;
+		border-color: var(--gray-200);
+		color: var(--gray-400);
 	}
 
 	.btn-booklet-prev:hover:not(:disabled) {
-		background: var(--gray-200);
+		background: var(--gray-50);
+		border-color: var(--gray-400);
+		color: var(--gray-900);
 	}
 
 	.btn-booklet-next {
@@ -1478,8 +1531,8 @@
 	.btn-booklet-cancel {
 		background: none;
 		border: none;
-		color: var(--gray-500);
-		font-size: 0.85rem;
+		color: var(--gray-400); /* Plus discret */
+		font-size: 0.8rem; /* Plus petit pour marquer la hiérarchie */
 		font-weight: 600;
 		cursor: pointer;
 		transition: var(--transition-fast);
@@ -1494,7 +1547,9 @@
 		justify-content: space-between;
 		align-items: center;
 		width: 100%;
-		margin-top: 0.5rem;
+		border-top: 1px dashed var(--gray-200); /* Séparateur discret */
+		padding-top: 1rem;
+		margin-top: 0.25rem;
 	}
 
 	/* --- Étape 2 : Consignes/Tutoriel --- */

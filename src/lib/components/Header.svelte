@@ -12,7 +12,14 @@
 			<a href="#how-it-works">Comment ça marche</a>
 			<a href="#pricing">Tarifs</a>
 			<a href="#faq">FAQ</a>
-			<a href="https://apps.apple.com/fr/app/ididem" class="cta-button">Télécharger l'App</a>
+			<div class="header-store-buttons">
+				<a href="https://apps.apple.com/fr/iphone/search?term=ididem" target="_blank" rel="noopener noreferrer" class="header-store-btn" title="Télécharger dans l'App Store">
+					🍏 App Store
+				</a>
+				<a href="https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr" target="_blank" rel="noopener noreferrer" class="header-store-btn" title="Télécharger dans Google Play">
+					🤖 Google Play
+				</a>
+			</div>
 		</div>
 	</div>
 </nav>
@@ -71,18 +78,31 @@
 	.nav-links a:hover {
 		color: var(--blue-600);
 	}
-	.cta-button {
-		background: var(--gradient-cta);
-		color: var(--white) !important;
-		padding: 0.6rem 1.25rem;
-		border-radius: var(--radius-full);
-		font-weight: 600;
-		box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
-		transition: var(--transition-fast);
+	.header-store-buttons {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
 	}
-	.cta-button:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 6px 15px rgba(25, 118, 210, 0.3);
+
+	.header-store-btn {
+		background: #0f172a;
+		border: 1px solid #334155;
+		color: #ffffff !important;
+		padding: 0.4rem 0.8rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.8rem;
+		text-decoration: none;
+		transition: var(--transition-fast);
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.header-store-btn:hover {
+		background: #1e293b;
+		border-color: #475569;
+		transform: translateY(-1px);
 	}
 
 	@media (max-width: 768px) {

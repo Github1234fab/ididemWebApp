@@ -47,8 +47,8 @@
 
 	let faqs = [
 		{
-			q: "Comment fonctionne la garantie Conforme ou Remboursé ?",
-			a: "C'est simple : si votre photo est rejetée en mairie ou par l'ANTS, envoyez-nous une photo du courrier ou un screenshot du rejet à gralypho@gmail.com. Nous vous remboursons intégralement sous 48h."
+			q: "Comment fonctionne le tutoriel de conformité ?",
+			a: "Notre guide interactif pas à pas a été conçu par des photographes professionnels. Il vous indique exactement comment vous positionner, fixer le regard et ajuster la luminosité pour que votre cliché soit accepté à 100% par l'administration."
 		},
 		{
 			q: "Comment puis-je imprimer mes photos d'identité ?",
@@ -179,42 +179,133 @@
 		</div>
 	</section>
 
-	<!-- Guarantee -->
-	<section class="guarantee-section">
-		<div class="container guarantee-card">
-			<div class="badge-shield">🛡️</div>
-			<h2>Garantie Conforme ou Remboursé</h2>
-			<p>
-				Notre guidage intelligent en temps réel garantit la conformité de votre pose. Si, malgré tout, votre photo était refusée au guichet administratif, nous vous remboursons instantanément. Il vous suffit d'envoyer votre justificatif de refus par e-mail.
-			</p>
+	<!-- Section Expertise Photographe vs IA -->
+	<section class="expertise-section">
+		<div class="container">
+			<div class="expertise-content">
+				<span class="expertise-badge">💡 UNE CONCEPTION UNIQUE</span>
+				<h2>Une application conçue par des photographes professionnels</h2>
+				<p class="lead-text">
+					Faire une photo d'identité réglementaire est un métier de précision qui ne s'invente pas. 
+					IDidem a été développée par des artisans photographes cumulant <strong>20 ans d'expérience</strong> dans l'identité biométrique.
+				</p>
+				<div class="expertise-arguments">
+					<div class="arg-item">
+						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA ?</h4>
+						<p>
+							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle. 
+							Pourtant, à l'usage, l'IA valide plus de 98% de photos non conformes (par exemple, si vous esquissez un léger sourire ou si vos yeux ne fixent pas l'objectif). Le verdict final en mairie ou préfecture est alors le rejet.
+						</p>
+					</div>
+					<div class="arg-item">
+						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS</h4>
+						<p>
+							Chez IDidem, nous ne laissons rien au hasard. Toutes les étapes de capture et de cadrage ont été minutieusement pensées à partir des cahiers des charges réels de l'ANTS, des mairies et des préfectures. 
+							C'est notre tutoriel interactif précis et nos repères qui vous responsabilisent et vous guident pas à pas, pour que vous preniez votre cliché en parfaite connaissance de cause.
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 
 	<!-- Pricing -->
 	<section id="pricing" class="pricing-section">
 		<div class="container">
-			<h2 class="section-title text-center">Des prix justes et transparents</h2>
+			<h2 class="section-title text-center">Des tarifs simples et transparents</h2>
+			<p class="section-subtitle text-center" style="margin-bottom: 2rem;">Toutes nos formules incluent la validation réglementaire de notre équipe.</p>
+			
 			<div class="pricing-grid">
-				<div class="price-card">
-					<h3>Fichier Digital seul</h3>
-					<div class="price">1,99 €</div>
-					<p class="price-desc">Générez votre planche HD en 30 secondes et imprimez-la en borne photo ou chez vous.</p>
-					<ul>
-						<li>✓ Planche 6 photos d'identité certifiées</li>
-						<li>✓ Conforme ANTS / OACI</li>
-						<li>✓ Téléchargement instantané</li>
-					</ul>
-				</div>
+				<!-- e-Photo ANTS -->
 				<div class="price-card popular">
 					<div class="popular-badge">Recommandé</div>
-					<h3>Livraison par la poste</h3>
-					<div class="price">9,99 €</div>
-					<p class="price-desc">Idéal si vous n'avez pas d'imprimante ou de borne photo à proximité.</p>
-					<ul>
-						<li>✓ 6 photos imprimées sur papier photo labo</li>
-						<li>✓ Étui de protection carte d'identité offert</li>
-						<li>✓ Livraison gratuite en boîte aux lettres</li>
+					<h3>e-Photo ANTS</h3>
+					<div class="price">12,99 €</div>
+					<p class="price-desc">Permis de conduire & Titre de séjour. Inclus le code ANTS et la signature en direct.</p>
+					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
+						<li>✓ Code officiel ANTS fourni</li>
+						<li>✓ Visioconférence instantanée de signature</li>
+						<li>✓ Garantie conformité 100%</li>
+						<li>✓ Assistance guidée pas à pas</li>
 					</ul>
+					<a href="/photo?formula=e-photo" class="secondary-btn" style="display: block; text-align: center; text-decoration: none;">Choisir cette formule</a>
+				</div>
+
+				<!-- Officielle OACI -->
+				<div class="price-card">
+					<h3>Officielle OACI</h3>
+					<div class="price">6,99 €</div>
+					<p class="price-desc">Carte d'identité, Passeport, Visa, Carte vitale. Format planche 35x45mm.</p>
+					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
+						<li>✓ Planche de 6 photos d'identité HD</li>
+						<li>✓ Fond bleu/gris conforme France</li>
+						<li>✓ Option Fond Blanc (Maghreb)</li>
+						<li>✓ Téléchargement numérique immédiat</li>
+					</ul>
+					<a href="/photo?formula=officielle" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; background: var(--gray-100); color: var(--gray-700); box-shadow: none;">Choisir cette formule</a>
+				</div>
+
+				<!-- Portrait Pro CV -->
+				<div class="price-card">
+					<h3>Portrait Pro LinkedIn</h3>
+					<div class="price">3,99 €</div>
+					<p class="price-desc">Pour vos CV, réseaux sociaux et profils professionnels. Rendu studio haut de gamme.</p>
+					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
+						<li>✓ Détourage de précision par IA</li>
+						<li>✓ Palette de fonds de studio</li>
+						<li>✓ Pipette de couleur sur mesure</li>
+						<li>✓ Fichier HD haute résolution</li>
+					</ul>
+					<a href="/photo?formula=casual" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; background: var(--gray-100); color: var(--gray-700); box-shadow: none;">Choisir cette formule</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section Application Mobile (International) -->
+	<section class="app-mobile-section">
+		<div class="container">
+			<div class="app-mobile-card">
+				<div class="app-mobile-text">
+					<span class="app-badge">🌍 VISA & FORMATS INTERNATIONAUX</span>
+					<h2>Besoin d'un passeport étranger ou d'un visa international ?</h2>
+					<p>
+						Notre site web est spécialisé dans les normes de photos officielles françaises et du Maghreb. 
+						Si vous devez réaliser une photo pour un visa canadien, américain, chinois, ou un passeport étranger, utilisez notre application mobile <strong>IDidem</strong>.
+					</p>
+					<p class="app-details">
+						Disponible sur iOS et Android, elle prend en charge <strong>tous les formats officiels internationaux</strong> et est intégralement traduite en <strong>11 langues</strong>.
+					</p>
+					
+					<div class="store-buttons">
+						<a href="https://apps.apple.com/fr/iphone/search?term=ididem" target="_blank" rel="noopener noreferrer" class="store-btn">
+							<span class="store-icon">🍏</span>
+							<div class="store-btn-text">
+								<span class="sub-text">Télécharger dans l'</span>
+								<span class="main-text">App Store</span>
+							</div>
+						</a>
+						<a href="https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr" target="_blank" rel="noopener noreferrer" class="store-btn">
+							<span class="store-icon">🤖</span>
+							<div class="store-btn-text">
+								<span class="sub-text">Disponible sur</span>
+								<span class="main-text">Google Play</span>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="app-mobile-visual">
+					<div class="phone-mockup">
+						<div class="phone-screen">
+							<div class="phone-app-header">IDidem Mobile</div>
+							<div class="phone-app-body">
+								<div class="visa-badge">🍁 Visa Canada</div>
+								<div class="visa-badge">🗽 Visa USA</div>
+								<div class="visa-badge">🐉 Visa Chine</div>
+								<div class="visa-languages">🌐 11 Langues supportées</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -529,24 +620,7 @@
 		margin-bottom: 1rem;
 	}
 
-	/* Guarantee Section */
-	.guarantee-section {
-		background: var(--white);
-		padding: 6rem 0;
-	}
-	.guarantee-card {
-		background: var(--gray-50);
-		border: 1px solid var(--gray-200);
-		padding: 3rem;
-		border-radius: var(--radius-xl);
-		text-align: center;
-		max-width: 800px;
-	}
-	.badge-shield {
-		font-size: 3rem;
-		margin-bottom: 1rem;
-	}
-
+	
 	/* Pricing */
 	.pricing-section {
 		background: var(--gray-50);
@@ -642,6 +716,251 @@
 		.pricing-grid {
 			flex-direction: column;
 			align-items: center;
+		}
+	}
+
+	/* Expertise Section */
+	.expertise-section {
+		padding: 6rem 0;
+		background: var(--white);
+		border-top: 1px solid var(--gray-200);
+		border-bottom: 1px solid var(--gray-200);
+	}
+
+	.expertise-badge {
+		background: #fef3c7;
+		color: #d97706;
+		font-size: 0.75rem;
+		font-weight: 800;
+		padding: 0.35rem 0.85rem;
+		border-radius: var(--radius-full);
+		letter-spacing: 0.05em;
+		display: inline-block;
+		margin-bottom: 1.5rem;
+		text-align: left;
+	}
+
+	.expertise-content h2 {
+		font-size: 2.2rem;
+		font-weight: 800;
+		color: var(--gray-900);
+		margin-bottom: 1.5rem;
+		line-height: 1.25;
+		text-align: left;
+	}
+
+	.lead-text {
+		font-size: 1.15rem;
+		color: var(--gray-600);
+		margin-bottom: 3rem;
+		line-height: 1.6;
+		text-align: left;
+	}
+
+	.expertise-arguments {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2.5rem;
+		text-align: left;
+	}
+
+	.arg-item {
+		background: var(--gray-50);
+		padding: 2rem;
+		border-radius: var(--radius-lg);
+		border-left: 4px solid var(--blue-500);
+		border-top: 1px solid var(--gray-200);
+		border-right: 1px solid var(--gray-200);
+		border-bottom: 1px solid var(--gray-200);
+	}
+
+	.arg-item h4 {
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: var(--gray-900);
+		margin-bottom: 0.75rem;
+	}
+
+	.arg-item p {
+		font-size: 0.95rem;
+		color: var(--gray-600);
+		margin: 0;
+		line-height: 1.6;
+	}
+
+	/* App Mobile Section */
+	.app-mobile-section {
+		padding: 6rem 0;
+		background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+		color: #ffffff;
+	}
+
+	.app-mobile-card {
+		display: grid;
+		grid-template-columns: 1.2fr 0.8fr;
+		gap: 4rem;
+		align-items: center;
+		text-align: left;
+	}
+
+	.app-badge {
+		background: #2563eb;
+		color: #ffffff;
+		font-size: 0.75rem;
+		font-weight: 800;
+		padding: 0.35rem 0.85rem;
+		border-radius: var(--radius-full);
+		letter-spacing: 0.05em;
+		display: inline-block;
+		margin-bottom: 1.5rem;
+	}
+
+	.app-mobile-text h2 {
+		font-size: 2.25rem;
+		font-weight: 800;
+		margin: 0 0 1.5rem 0;
+		line-height: 1.25;
+		color: #ffffff;
+	}
+
+	.app-mobile-text p {
+		color: #cbd5e1;
+		font-size: 1.1rem;
+		margin: 0 0 1.25rem 0;
+		line-height: 1.6;
+	}
+
+	.app-details {
+		font-size: 0.95rem !important;
+		color: #94a3b8 !important;
+	}
+
+	.store-buttons {
+		display: flex;
+		gap: 1rem;
+		margin-top: 2rem;
+		flex-wrap: wrap;
+	}
+
+	.store-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		padding: 0.6rem 1.25rem;
+		border-radius: var(--radius-md);
+		color: #ffffff;
+		text-decoration: none;
+		transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+	}
+
+	.store-btn:hover {
+		transform: translateY(-2px);
+		border-color: #475569;
+		background: #1e293b;
+	}
+
+	.store-icon {
+		font-size: 1.5rem;
+	}
+
+	.store-btn-text {
+		display: flex;
+		flex-direction: column;
+		text-align: left;
+	}
+
+	.store-btn-text .sub-text {
+		font-size: 0.6rem;
+		color: #94a3b8;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		line-height: 1.2;
+	}
+
+	.store-btn-text .main-text {
+		font-size: 0.95rem;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
+	/* Phone Mockup */
+	.phone-mockup {
+		width: 240px;
+		height: 440px;
+		background: #000000;
+		border: 8px solid #334155;
+		border-radius: 2.25rem;
+		margin: 0 auto;
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+		padding: 0.75rem;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.phone-screen {
+		flex-grow: 1;
+		background: #1e293b;
+		border-radius: 1.5rem;
+		padding: 1.5rem 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+	}
+
+	.phone-app-header {
+		font-weight: 800;
+		font-size: 1rem;
+		color: #38bdf8;
+		margin-bottom: 1.5rem;
+	}
+
+	.phone-app-body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		width: 100%;
+	}
+
+	.visa-badge {
+		background: #0f172a;
+		border: 1px solid #334155;
+		color: #ffffff;
+		padding: 0.6rem;
+		border-radius: 0.375rem;
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-align: center;
+	}
+
+	.visa-languages {
+		margin-top: 1rem;
+		color: #38bdf8;
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-align: center;
+	}
+
+	@media (max-width: 768px) {
+		.app-mobile-card {
+			grid-template-columns: 1fr;
+			text-align: center;
+			gap: 2rem;
+		}
+
+		.app-mobile-text h2 {
+			font-size: 1.75rem;
+		}
+
+		.store-buttons {
+			justify-content: center;
+		}
+
+		.phone-mockup {
+			display: none;
 		}
 	}
 </style>
