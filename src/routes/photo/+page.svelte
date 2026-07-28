@@ -579,7 +579,7 @@
 						</div>
 
 						<div class="instructions-live">
-							<p>💡 Alignez vos yeux sur la ligne bleue et votre visage dans l'ovale en pointillés.</p>
+							<p>💡 Alignez vos yeux sur la ligne bleue et votre visage dans l'ovale en pointillés. <br/>Fixer votre regard droit devant comem si vous regardiez au loin l'horizon.</p>
 						</div>
 					{/if}
 				</div>
@@ -1806,11 +1806,11 @@
 	}
 
 	.limit-top {
-		top: 15%;
+		top: 0%;
 	}
 
 	.limit-bottom {
-		top: 87%;
+		top: 100%;
 	}
 
 	.official-gabarit .face-oval {
@@ -1931,6 +1931,11 @@
 		text-align: center;
 		color: var(--gray-400);
 		font-size: 0.85rem;
+		line-height: 1.4;
+	}
+
+	.instructions-live p {
+		margin: 0.25rem 0 0 0; /* Réduit le décalage et l'espace vertical */
 	}
 
 	/* --- Étape 4 : Aperçu & Validation --- */
