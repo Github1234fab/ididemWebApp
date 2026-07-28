@@ -78,21 +78,40 @@
 
 	const activeFormulaDetails = $derived(formulas.find(f => f.id === selectedFormula));
 
-	// Liste des consignes lues pour l'étape 2
-	let checklistChecked = $state([false, false, false, false, false]);
+	let currentTutoPage = $state(0);
 
-	/**
-	 * @param {number} index
-	 */
-	function toggleChecklist(index) {
-		checklistChecked[index] = !checklistChecked[index];
-	}
-
-	const allChecked = $derived(checklistChecked.every(Boolean));
-
-	function checkAll() {
-		checklistChecked = [true, true, true, true, true];
-	}
+	const tutorialSteps = [
+		{
+			id: 1,
+			title: "1. Lumière naturelle & diffuse",
+			description: "Placez-vous face à une grande source de lumière douce (une fenêtre par exemple). Évitez le soleil direct ou les lampes qui créent des contrastes trop violents sur votre visage.",
+			image: "/assets/tutorial/face-fenetre.png"
+		},
+		{
+			id: 2,
+			title: "2. Choisissez le bon fond",
+			description: "Un mur clair et uni est idéal. Pas de panique si vous n'en avez pas : notre intelligence artificielle détourera l'arrière-plan, mais un bon contraste avec le fond aide grandement à la précision du détourage.",
+			image: "/assets/tutorial/dos-mur.png"
+		},
+		{
+			id: 3,
+			title: "3. Éliminez toutes les ombres",
+			description: "Ne tournez pas la tête. Restez bien de face pour que la lumière éclaire votre visage de manière symétrique. Aucune ombre ne doit apparaître sur les joues, sous le nez ou sur le cou.",
+			image: "/assets/tutorial/face-sans-ombre.jpg"
+		},
+		{
+			id: 4,
+			title: "4. Téléphone à hauteur des yeux",
+			description: "Demandez à un proche de prendre la photo ou tenez le smartphone bien droit devant vous. Il ne doit pas pointer vers le bas (plongée) ni vers le haut (contre-plongée) pour respecter la géométrie biométrique.",
+			image: "/assets/tutorial/plan-horizontal.jpg"
+		},
+		{
+			id: 5,
+			title: "5. Attention à la surexposition",
+			description: "Évitez d'avoir des zones trop blanches ou réfléchissantes sur votre peau. La texture de votre peau doit rester visible pour que la photo soit acceptée par l'administration.",
+			image: "/assets/tutorial/visage-surex-ididem.png"
+		}
+	];
 
 	/**
 	 * @param {string} id
@@ -104,7 +123,7 @@
 		} else {
 			selectedBgColor = 'light-gray'; // Gris standard par défaut pour e-photo et officielle
 		}
-		checklistChecked = [false, false, false, false, false];
+		currentTutoPage = 0;
 		step = 2;
 	}
 
@@ -375,7 +394,7 @@
 		} else if (targetStep === 2 && selectedFormula) {
 			stopCamera();
 			step = 2;
-		} else if (targetStep === 3 && selectedFormula && allChecked) {
+		} else if (targetStep === 3 && selectedFormula) {
 			startCamera();
 		} else if (targetStep === 4 && capturedImage) {
 			stopCamera();
@@ -412,7 +431,7 @@
 				<span class="step-num">2</span> Consignes
 			</button>
 			<div class="indicator-line"></div>
-			<button class="indicator-step" class:clickable={!!selectedFormula && allChecked} class:active={step === 3} class:done={step > 3} onclick={() => goToStep(3)} disabled={!selectedFormula || !allChecked}>
+			<button class="indicator-step" class:clickable={!!selectedFormula} class:active={step === 3} class:done={step > 3} onclick={() => goToStep(3)} disabled={!selectedFormula}>
 				<span class="step-num">3</span> Prise de vue
 			</button>
 			<div class="indicator-line"></div>
@@ -449,45 +468,57 @@
 		<!-- ============================================== -->
 		{#if step === 2 && activeFormulaDetails}
 			<section class="tutorial-section animate-fade-in">
-				<div class="tutorial-card">
-					<div class="tutorial-header">
-						<div class="tutorial-icon-wrapper">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="tutorial-icon-svg">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-							</svg>
+				<div class="booklet-card">
+					<!-- En-tête du livret -->
+					<div class="booklet-header">
+						<span class="booklet-badge">GUIDE DE RÉUSSITE BIOMÉTRIQUE</span>
+						<span class="booklet-progress">Conseil {currentTutoPage + 1} sur {tutorialSteps.length}</span>
+					</div>
+
+					<!-- Barre de progression -->
+					<div class="booklet-progress-bar">
+						<div class="fill" style="width: {((currentTutoPage + 1) / tutorialSteps.length) * 100}%"></div>
+					</div>
+
+					<!-- Corps du livre (Page active) -->
+					{#key currentTutoPage}
+						<div class="booklet-page animate-fade-in">
+							<div class="booklet-image-container">
+								<img src={tutorialSteps[currentTutoPage].image} alt={tutorialSteps[currentTutoPage].title} />
+							</div>
+							<div class="booklet-content">
+								<h2>{tutorialSteps[currentTutoPage].title}</h2>
+								<p>{tutorialSteps[currentTutoPage].description}</p>
+							</div>
 						</div>
-						<div>
-							<h2>Règles de conformité à valider</h2>
-							<p>{activeFormulaDetails.title} — {activeFormulaDetails.subtitle}</p>
-						</div>
-					</div>
+					{/key}
 
-					<div class="checklist-header">
-						<p class="intro-text">
-							Pour assurer la validation automatique de votre photo par notre IA et les administrations, veuillez lire et valider chaque consigne :
-						</p>
-						<button class="btn-check-all" onclick={checkAll}>Tout cocher</button>
-					</div>
-
-					<div class="checklist">
-						{#each activeFormulaDetails.rules as rule, i}
-							<button class="checklist-item" class:checked={checklistChecked[i]} onclick={() => toggleChecklist(i)}>
-								<span class="checkbox">
-									{#if checklistChecked[i]}
-										✓
-									{/if}
-								</span>
-								<span class="rule-text">{rule}</span>
-							</button>
-						{/each}
-					</div>
-
-					<div class="tutorial-actions">
-						<button class="btn-back" onclick={() => step = 1}>← Modifier la formule</button>
-						<button class="btn-start" disabled={!allChecked} onclick={startCamera}>
-							Activer ma caméra & Commencer
+					<!-- Actions de navigation -->
+					<div class="booklet-footer">
+						<button class="btn-booklet-prev" disabled={currentTutoPage === 0} onclick={() => currentTutoPage--}>
+							← Précédent
 						</button>
+						
+						<div class="page-dots">
+							{#each tutorialSteps as _, i}
+								<button class="dot" class:active={currentTutoPage === i} onclick={() => currentTutoPage = i} aria-label="Conseil {i + 1}" type="button"></button>
+							{/each}
+						</div>
+
+						{#if currentTutoPage < tutorialSteps.length - 1}
+							<button class="btn-booklet-next" onclick={() => currentTutoPage++}>
+								Suivant →
+							</button>
+						{:else}
+							<button class="btn-booklet-start" onclick={startCamera}>
+								Démarrer la caméra
+							</button>
+						{/if}
 					</div>
+
+					<button class="btn-booklet-cancel" onclick={() => step = 1}>
+						← Changer de formule
+					</button>
 				</div>
 			</section>
 		{/if}
@@ -1268,6 +1299,191 @@
 	.formula-card:hover .action-arrow {
 		color: var(--blue-900);
 		transform: translateX(4px);
+	}
+
+	.booklet-card {
+		background: var(--white);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-xl);
+		padding: 2.5rem;
+		max-width: 580px;
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		border: 1px solid var(--gray-200);
+	}
+
+	.booklet-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+
+	.booklet-badge {
+		color: var(--blue-600);
+		background: #eff6ff;
+		padding: 0.25rem 0.75rem;
+		border-radius: var(--radius-full);
+	}
+
+	.booklet-progress {
+		color: var(--gray-500);
+	}
+
+	.booklet-progress-bar {
+		width: 100%;
+		height: 6px;
+		background: var(--gray-100);
+		border-radius: var(--radius-full);
+		overflow: hidden;
+	}
+
+	.booklet-progress-bar .fill {
+		height: 100%;
+		background: var(--gradient-cta);
+		border-radius: var(--radius-full);
+		transition: width 0.3s ease;
+	}
+
+	.booklet-page {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		min-height: 380px;
+	}
+
+	.booklet-image-container {
+		width: 100%;
+		height: 240px;
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		background: var(--gray-900);
+		border: 1px solid var(--gray-200);
+	}
+
+	.booklet-image-container img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.booklet-content {
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.booklet-content h2 {
+		font-size: 1.35rem;
+		font-weight: 800;
+		color: var(--gray-800);
+	}
+
+	.booklet-content p {
+		font-size: 0.95rem;
+		color: var(--gray-600);
+		line-height: 1.5;
+	}
+
+	.booklet-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 1rem;
+		border-top: 1px solid var(--gray-100);
+		padding-top: 1.5rem;
+	}
+
+	.btn-booklet-prev {
+		background: var(--gray-100);
+		color: var(--gray-700);
+		padding: 0.6rem 1.25rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: var(--transition-fast);
+	}
+
+	.btn-booklet-prev:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.btn-booklet-prev:hover:not(:disabled) {
+		background: var(--gray-200);
+	}
+
+	.btn-booklet-next {
+		background: var(--blue-600);
+		color: var(--white);
+		padding: 0.6rem 1.5rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: var(--transition-fast);
+	}
+
+	.btn-booklet-next:hover {
+		background: var(--blue-800);
+	}
+
+	.btn-booklet-start {
+		background: var(--gradient-cta);
+		color: var(--white);
+		padding: 0.6rem 1.5rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: var(--transition-fast);
+		box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
+	}
+
+	.btn-booklet-start:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 6px 15px rgba(25, 118, 210, 0.3);
+	}
+
+	.page-dots {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.page-dots .dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--gray-300);
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.page-dots .dot.active {
+		background: var(--blue-600);
+		transform: scale(1.25);
+	}
+
+	.btn-booklet-cancel {
+		background: none;
+		border: none;
+		color: var(--gray-500);
+		font-size: 0.85rem;
+		font-weight: 600;
+		cursor: pointer;
+		align-self: center;
+		transition: var(--transition-fast);
+		margin-top: 0.5rem;
+	}
+
+	.btn-booklet-cancel:hover {
+		color: var(--blue-600);
 	}
 
 	/* --- Étape 2 : Consignes/Tutoriel --- */
