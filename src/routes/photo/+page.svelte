@@ -545,6 +545,7 @@
 							<!-- Gabarit biométrique dynamique -->
 							{#if activeFormulaDetails}
 								<div class="biometric-gabarit {activeFormulaDetails.gabaritClass}">
+									<div class="vertical-line"></div>
 									<div class="face-oval"></div>
 									<div class="eyes-line"></div>
 								</div>
@@ -1456,13 +1457,13 @@
 	}
 
 	.btn-booklet-next:hover {
-		background: var(--blue-800);
+		transform: scale(1.1);
 	}
 
 	.btn-booklet-start {
 		background: var(--gradient-cta);
 		color: var(--white);
-		padding: 0.6rem 1.5rem;
+		padding: 1rem 1rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		font-size: 0.9rem;
@@ -1784,12 +1785,25 @@
 		border-radius: 45%;
 	}
 
+	.vertical-line {
+		position: absolute;
+		left: 50%;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		background: rgba(0, 229, 255, 0.5); /* Cyan translucide comme URFace */
+		transform: translateX(-50%);
+		z-index: 1;
+	}
+
 	.eyes-line {
 		position: absolute;
 		width: 100%;
-		height: 1px;
-		border-top: 2px dashed rgba(66, 165, 245, 0.7);
-		top: 45%;
+		height: 30px;
+		background: rgba(0, 145, 255, 0.5); /* Bleu opacité 0.5 solid */
+		top: 40%;
+		transform: translateY(-50%);
+		z-index: 2;
 	}
 
 	.countdown-overlay {
