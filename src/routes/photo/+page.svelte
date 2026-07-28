@@ -1376,7 +1376,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
-		min-height: 440px; /* Hauteur stable pour éviter tout décalage du bouton Suivant lors des clics successifs */
+		min-height: 380px;
 	}
 
 	.booklet-image-container {
