@@ -1306,7 +1306,7 @@
 		border-radius: var(--radius-lg);
 		box-shadow: var(--shadow-xl);
 		padding: 2.5rem;
-		max-width: 580px;
+		max-width: 440px;
 		width: 100%;
 		margin: 0 auto;
 		display: flex;
