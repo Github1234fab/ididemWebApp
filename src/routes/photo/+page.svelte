@@ -579,7 +579,11 @@
 						</div>
 
 						<div class="instructions-live">
-							<p>💡 Alignez vos yeux sur la ligne bleue et votre visage dans l'ovale en pointillés. <br/>Fixer votre regard droit devant comem si vous regardiez au loin l'horizon.</p>
+							<ol>
+								<li>Alignez votre visage dans l'ovale en pointillés entre les guides.</li>
+								<li>Alignez vos yeux sur la ligne bleue.</li>
+								<li>Fixez votre regard droit devant, comme si vous regardiez au loin l'horizon.</li>
+							</ol>
 						</div>
 					{/if}
 				</div>
@@ -1934,10 +1938,16 @@
 		line-height: 1.4;
 	}
 
-	.instructions-live p {
-		margin: 0.25rem 0 0 0; /* Réduit le décalage et l'espace vertical */
+	.instructions-live ol {
+		display: inline-block;
+		text-align: left;
+		padding-left: 1.2rem;
+		margin: 0.5rem 0 0 0;
 	}
 
+	.instructions-live li {
+		margin-bottom: 0.4rem;
+	}
 	/* --- Étape 4 : Aperçu & Validation --- */
 	.result-section {
 		text-align: center;
