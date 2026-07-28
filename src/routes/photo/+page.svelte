@@ -84,13 +84,13 @@
 		{
 			id: 1,
 			title: "1. Lumière naturelle & diffuse",
-			description: "Placez-vous face à une grande source de lumière douce (une fenêtre par exemple). Évitez le soleil direct ou les lampes qui créent des contrastes trop violents sur votre visage.",
+			description: "Placez-vous face à une grande source de lumière douce (une fenêtre avec un voilage par exemple). Évitez le soleil direct ou les lampes qui créent des contrastes trop violents sur votre visage.",
 			image: "/assets/tutorial/face-fenetre.png"
 		},
 		{
 			id: 2,
 			title: "2. Choisissez le bon fond",
-			description: "Un mur clair et uni est idéal. Pas de panique si vous n'en avez pas : notre intelligence artificielle détourera l'arrière-plan, mais un bon contraste avec le fond aide grandement à la précision du détourage.",
+			description: "Un mur clair et uni est idéal. Pas de panique si vous n'en avez pas : notre intelligence artificielle détourera l'arrière-plan.",
 			image: "/assets/tutorial/dos-mur.png"
 		},
 		{
@@ -99,15 +99,10 @@
 			description: "Ne tournez pas la tête. Restez bien de face pour que la lumière éclaire votre visage de manière symétrique. Aucune ombre ne doit apparaître sur les joues, sous le nez ou sur le cou.",
 			image: "/assets/tutorial/face-sans-ombre.jpg"
 		},
+	
 		{
 			id: 4,
-			title: "4. Téléphone à hauteur des yeux",
-			description: "Demandez à un proche de prendre la photo ou tenez le smartphone bien droit devant vous. Il ne doit pas pointer vers le bas (plongée) ni vers le haut (contre-plongée) pour respecter la géométrie biométrique.",
-			image: "/assets/tutorial/plan-horizontal.jpg"
-		},
-		{
-			id: 5,
-			title: "5. Attention à la surexposition",
+			title: "4. Attention à la surexposition",
 			description: "Évitez d'avoir des zones trop blanches ou réfléchissantes sur votre peau. La texture de votre peau doit rester visible pour que la photo soit acceptée par l'administration.",
 			image: "/assets/tutorial/visage-surex-ididem.png"
 		}
@@ -472,7 +467,10 @@
 					<!-- En-tête du livret -->
 					<div class="booklet-header">
 						<span class="booklet-badge">GUIDE DE RÉUSSITE BIOMÉTRIQUE</span>
-						<span class="booklet-progress">Conseil {currentTutoPage + 1} sur {tutorialSteps.length}</span>
+						<div class="booklet-header-actions">
+							<span class="booklet-progress">Conseil {currentTutoPage + 1}/{tutorialSteps.length}</span>
+							<button class="btn-skip-tuto" onclick={startCamera} type="button">Passer ✕</button>
+						</div>
 					</div>
 
 					<!-- Barre de progression -->
@@ -1305,7 +1303,7 @@
 		background: var(--white);
 		border-radius: var(--radius-lg);
 		box-shadow: var(--shadow-xl);
-		padding: 2.5rem;
+		padding: 2rem;
 		max-width: 440px;
 		width: 100%;
 		margin: 0 auto;
@@ -1334,6 +1332,29 @@
 		color: var(--gray-500);
 	}
 
+	.booklet-header-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.btn-skip-tuto {
+		background: none;
+		border: none;
+		color: var(--gray-500);
+		font-size: 0.8rem;
+		font-weight: 700;
+		cursor: pointer;
+		transition: var(--transition-fast);
+		padding: 0.25rem 0.5rem;
+		border-radius: var(--radius-sm);
+	}
+
+	.btn-skip-tuto:hover {
+		color: var(--blue-600);
+		background: var(--blue-50);
+	}
+
 	.booklet-progress-bar {
 		width: 100%;
 		height: 6px;
@@ -1357,7 +1378,7 @@
 	}
 
 	.booklet-image-container {
-		width: 180px;
+		width: 340px;
 		height: 240px;
 		border-radius: var(--radius-md);
 		overflow: hidden;
