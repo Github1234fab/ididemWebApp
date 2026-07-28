@@ -1,15 +1,9 @@
-<!-- Header.svelte -->
+
 <nav class="header">
 	<div class="header-container">
 		<a href="/" class="logo">
 			<div class="logo-icon">
-				<svg viewBox="0 0 100 100" class="logo-svg">
-					<circle cx="50" cy="50" r="45" fill="#1e88e5"/>
-					<circle cx="50" cy="50" r="35" fill="#ffffff"/>
-					<circle cx="35" cy="45" r="5" fill="#1e88e5"/>
-					<circle cx="65" cy="45" r="5" fill="#1e88e5"/>
-					<path d="M 35 60 A 15 15 0 0 0 65 60" fill="none" stroke="#1e88e5" stroke-width="5" stroke-linecap="round"/>
-				</svg>
+				<img src="/logoIdidem_1024.png" alt="logo Ididem" />
 			</div>
 			<span class="logo-text">IDidem</span>
 		</a>
@@ -54,13 +48,15 @@
 		color: var(--blue-700);
 	}
 	.logo-icon {
-		width: 38px;
-		height: 38px;
+		width: 48px;
+		height: 48px;
 	}
-	.logo-svg {
+	.logo-icon img {
 		width: 100%;
 		height: 100%;
+		object-fit: contain;
 	}
+	
 	.nav-links {
 		display: flex;
 		align-items: center;

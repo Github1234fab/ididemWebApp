@@ -15,7 +15,7 @@
 				<span class="logo-text">IDidem </span>
 			</div>
 			<p class="description">
-				La solution de création de photos d'identité certifiées conformes dans votre poche. Conçue par des photographes professionnels.
+				La solution de création de photos d'identité certifiées conformes ANTS dans votre poche. Conçue par des photographes professionnels.
 			</p>
 			<p class="copyright">
 				&copy; {new Date().getFullYear()} IDidem. Tous droits réservés.

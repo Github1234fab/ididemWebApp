@@ -11,12 +11,12 @@
 	let steps = [
 		{
 			num: "1",
-			title: "Cadrez avec le guide",
-			desc: "Le guide vert dynamique s'aligne automatiquement sur votre visage pour un cadrage biométrique parfait."
+			title: "Cadrez avec les guides",
+			desc: "Placez votre visage au centre des guides verts dynamiques pour un cadrage biométrique parfait."
 		},
 		{
 			num: "2",
-			title: "Dérapage & Fond automatique",
+			title: "Détourage & Fond automatique",
 			desc: "Notre IA de précision supprime le fond de votre pièce et crée le fond uni réglementaire (bleu, gris, blanc)."
 		},
 		{
@@ -28,20 +28,20 @@
 
 	let advantages = [
 		{
-			title: "Guidage en temps réel",
-			desc: "Ne devinez plus. L'écran affiche un contour dynamique vert dès que la luminosité, la distance et l'expression sont idéales."
+			title: "Prise de vue simplifiée",
+			desc: "Suivez les guides pour placer votre visage, le recadrage et le fond sont gérés automatiquement."
 		},
 		{
-			title: "15 ans d'expertise photo",
+			title: "+20 ans d'expertise en photo d'identité",
 			desc: "Créée par des photographes professionnels. Nous connaissons les moindres exigences des mairies et des consulats."
 		},
 		{
 			title: "Idéal pour toute la famille",
-			desc: "Plus de pleurs ou de contorsions en cabine. Prenez vos nourrissons, enfants et seniors tranquillement chez vous."
+			desc: "Plus de pleurs ou de contorsions en cabine. Prenez en photo vos nourrissons, enfants et même vos seniors tranquillement chez vous."
 		},
 		{
 			title: "Accessibilité totale",
-			desc: "Notre solution permet aux aidants et personnes à mobilité réduite de faire leurs démarches sans fatigue ni déplacement."
+			desc: "Notre solution permet à tous, y compris aux personnes à mobilité réduite, de faire leurs démarches sans fatigue ni déplacement."
 		}
 	];
 
@@ -52,7 +52,7 @@
 		},
 		{
 			q: "Comment puis-je imprimer mes photos d'identité ?",
-			a: "L'application génère une planche au format standard 10x15cm (contenant 6 photos d'identité). Vous pouvez l'imprimer pour quelques centimes dans n'importe quelle borne photo de supermarché ou pharmacie."
+			a: "L'application génère une planche au format standard 10x15cm (contenant 6 photos d'identité). Vous pouvez l'imprimer pour quelques centimes dans n'importe quelle borne photo de supermarché ou sur une imprimante photo domestique."
 		},
 		{
 			q: "Les photos de bébé sont-elles acceptées ?",
@@ -73,8 +73,8 @@
 	<section class="hero">
 		<div class="container hero-grid">
 			<div class="hero-text animate-fade-in-up">
-				<div class="badge">🇫🇷 Technologie Française & Expertise Photographe</div>
-				<h1>Vos photos d'identité en <span class="highlight">2 minutes</span></h1>
+				<div class="badge">🇫🇷 Technologie Française & Expertise Photographes professionnels</div>
+				<h1>Vos photos d'identité en <span class="highlight2">2 minutes</span></h1>
 				<p class="subtitle">Plus de 190 normes officielles. Prenez votre photo chez vous avec notre guide intelligent en temps réel. Simple, rapide et 100% conforme.</p>
 				
 				<div class="cta-group">
@@ -141,7 +141,7 @@
 	<section id="features" class="features-section">
 		<div class="container">
 			<h2 class="section-title text-center">Pourquoi choisir <span class="highlight">IDidem</span> ?</h2>
-			<p class="section-subtitle text-center">L'expertise de photographes d'identité de plus de 15 ans directement sur votre smartphone.</p>
+			<p class="section-subtitle text-center">L'expertise de photographes professionnels d'identité depuis plus de 20 ans directement sur votre smartphone.</p>
 			
 			<div class="features-grid">
 				{#each advantages as adv}
@@ -271,8 +271,12 @@
 		margin-bottom: 1.5rem;
 	}
 	.highlight {
-		color: #e3f2fd;
-		text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+		color: #1D70C8;
+		
+	}
+	.highlight2 {
+		color: #87b7eb;
+		
 	}
 	.subtitle {
 		font-size: 1.2rem;

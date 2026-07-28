@@ -1,6 +1,8 @@
 <!-- src/routes/photo/+page.svelte -->
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import ePhotoImg from '$lib/assets/EPhoto.png';
+	import photoIdentity from '$lib/assets/photos-identité.webp';
 
 	// Étape active : 1 = formule, 2 = consignes, 3 = caméra, 4 = résultat
 	let step = $state(1);
@@ -23,12 +25,12 @@
 	const formulas = [
 		{
 			id: 'e-photo',
-			title: 'e-Photo Officielle',
+			title: 'E-Photo Officielle',
 			subtitle: 'Permis de conduire & Titre de séjour',
 			desc: 'Planche de photos biométriques certifiées conforme ANTS avec code e-photo unique.',
 			badge: 'ANTS & OACI',
 			icon: '🚗',
-			image: '/photo_homme.png',
+			image: ePhotoImg,
 			rules: [
 				'Oreilles dégagées (les cheveux doivent être tirés en arrière)',
 				'Tête nue (sans chapeau, serre-tête, bonnet ou voile masquant)',
@@ -42,10 +44,10 @@
 			id: 'officielle',
 			title: 'Photo d\'identité standard',
 			subtitle: 'Passeport & Carte d\'identité',
-			desc: 'Planche 100% conforme pour vos documents d\'identité physiques et démarches consulaires.',
-			badge: 'Conforme Mairie',
+			desc: 'Planche de 6 photos 100% conforme aux normes OACI et ANTS pour vos démarches en mairie et préfecture.',
+			badge: 'Mairie & préfecture',
 			icon: '🛂',
-			image: '/photo_enfant.png',
+			image: photoIdentity,
 			rules: [
 				'Oreilles dégagées (cheveux derrière les oreilles)',
 				'Visage bien au centre, droit et de face',
@@ -97,6 +99,11 @@
 	 */
 	function selectFormula(id) {
 		selectedFormula = id;
+		if (id === 'casual') {
+			selectedBgColor = 'blue-grad';
+		} else {
+			selectedBgColor = 'light-gray'; // Gris standard par défaut pour e-photo et officielle
+		}
 		checklistChecked = [false, false, false, false, false];
 		step = 2;
 	}
@@ -179,16 +186,29 @@
 	let selectedBgColor = $state('blue-grad');
 
 	/**
+	 * @param {string} formula
 	 * @param {string} color
 	 */
-	function getCasualBgStyle(color) {
-		switch (color) {
-			case 'white': return 'background: #ffffff;';
-			case 'light-gray': return 'background: #f1f5f9;';
-			case 'dark-gray': return 'background: #334155;';
-			case 'blue-grad': return 'background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);';
-			default: return '';
+	function getBgStyleForFormula(formula, color) {
+		if (formula === 'e-photo') {
+			return 'background: #e2e8f0;'; // Gris clair réglementaire ANTS
 		}
+		if (formula === 'officielle') {
+			if (color === 'white') {
+				return 'background: #ffffff;'; // Maghreb (Blanc)
+			}
+			return 'background: #d1d5db;'; // France & Europe (Gris standard)
+		}
+		if (formula === 'casual') {
+			switch (color) {
+				case 'white': return 'background: #ffffff;';
+				case 'light-gray': return 'background: #f1f5f9;';
+				case 'dark-gray': return 'background: #334155;';
+				case 'blue-grad': return 'background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);';
+				default: return '';
+			}
+		}
+		return '';
 	}
 
 	async function processBackground() {
@@ -539,13 +559,12 @@
 					{#if isProcessing}
 						<div class="processing-loader text-center">
 							<div class="spinner"></div>
-							<h3>Détorage de précision par IA...</h3>
+							<h3>Détourage de précision par IA...</h3>
 							<p>Veuillez patienter pendant la suppression automatique de l'arrière-plan.</p>
 						</div>
 					{:else}
 						<div class="photo-preview-card"
-							class:bg-gray={isProcessed && selectedFormula !== 'casual'}
-							style={isProcessed && selectedFormula === 'casual' ? getCasualBgStyle(selectedBgColor) : ''}
+							style={isProcessed ? getBgStyleForFormula(selectedFormula, selectedBgColor) : ''}
 						>
 							<img src={capturedImage} alt="Cliché capturé" />
 						</div>
@@ -569,6 +588,20 @@
 										<button class="color-btn bg-light-gray" class:active={selectedBgColor === 'light-gray'} onclick={() => selectedBgColor = 'light-gray'} aria-label="Gris clair"></button>
 										<button class="color-btn bg-dark-gray" class:active={selectedBgColor === 'dark-gray'} onclick={() => selectedBgColor = 'dark-gray'} aria-label="Gris foncé"></button>
 										<button class="color-btn bg-blue-grad" class:active={selectedBgColor === 'blue-grad'} onclick={() => selectedBgColor = 'blue-grad'} aria-label="Bleu dégradé"></button>
+									</div>
+								</div>
+							{/if}
+
+							{#if selectedFormula === 'officielle' && isProcessed}
+								<div class="background-selector">
+									<h4>Pays / Norme du fond :</h4>
+									<div class="destination-options">
+										<button class="dest-btn animate-fade-in" class:active={selectedBgColor === 'light-gray'} onclick={() => selectedBgColor = 'light-gray'}>
+											🇫🇷 France & Europe (Gris)
+										</button>
+										<button class="dest-btn animate-fade-in" class:active={selectedBgColor === 'white'} onclick={() => selectedBgColor = 'white'}>
+											🇲🇦 🇩🇿 🇹🇳 Maghreb (Blanc)
+										</button>
 									</div>
 								</div>
 							{/if}
@@ -761,6 +794,42 @@
 
 	.color-btn.bg-white { background: #ffffff; }
 	.color-btn.bg-light-gray { background: #f1f5f9; }
+
+	.destination-options {
+		display: flex;
+		gap: 0.75rem;
+		width: 100%;
+	}
+
+	.dest-btn {
+		flex: 1;
+		padding: 0.75rem 1rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--gray-300);
+		background: var(--white);
+		color: var(--gray-700);
+		cursor: pointer;
+		transition: var(--transition-fast);
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+
+	.dest-btn:hover {
+		background: var(--gray-50);
+		border-color: var(--gray-400);
+	}
+
+	.dest-btn.active {
+		background: var(--blue-50);
+		border-color: var(--blue-500);
+		color: var(--blue-700);
+		box-shadow: 0 0 0 1px var(--blue-500);
+	}
 	.color-btn.bg-dark-gray { background: #334155; }
 	.color-btn.bg-blue-grad { background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); }
 
@@ -1039,8 +1108,8 @@
 	}
 
 	.formula-photo-frame {
-		width: 120px;
-		height: 155px;
+		width: 205px;
+		height: 220px;
 		background: var(--gray-100);
 		border-radius: var(--radius-sm);
 		overflow: hidden;
@@ -1051,6 +1120,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		padding: 5px
 	}
 
 	.formula-photo {
@@ -1347,8 +1417,8 @@
 
 	.official-gabarit .face-oval {
 		border-color: var(--green-400);
-		width: 55%;
-		height: 55%;
+		width: 78%;
+		height: 75%;
 	}
 
 	.casual-gabarit .face-oval {
