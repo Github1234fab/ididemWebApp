@@ -1246,7 +1246,7 @@
 	}
 
 	.formula-photo-frame {
-		width: 205px;
+		width: 170px;
 		height: 220px;
 		background: var(--gray-100);
 		border-radius: var(--radius-sm);
