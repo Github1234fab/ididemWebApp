@@ -747,19 +747,7 @@
 							{/if}
 
 							{#if isProcessed}
-								<div class="email-collection-box">
-									<label for="client-email">📧 Votre adresse e-mail :</label>
-									<input 
-										type="email" 
-										id="client-email" 
-										placeholder="nom@exemple.com" 
-										bind:value={userEmail}
-										disabled={isRedirecting || isAppointmentBooked}
-									/>
-									<p class="email-tip">Requis pour l'envoi de vos photos et du suivi de votre commande.</p>
-								</div>
-
-								{#if selectedFormula === 'e-photo' && isEmailValid(userEmail)}
+								{#if selectedFormula === 'e-photo'}
 									{#if !isAppointmentBooked}
 										<div class="booking-section-inline">
 											<h4>📅 Planifiez votre visioconférence de signature</h4>
@@ -817,7 +805,7 @@
 								<button class="btn-retake" disabled={isRedirecting} onclick={restart}>Recommencer</button>
 								{#if isProcessed}
 									{#if selectedFormula !== 'e-photo' || isAppointmentBooked}
-										<button class="btn-confirm-photo" disabled={isRedirecting || !isEmailValid(userEmail)} onclick={handlePayment}>
+										<button class="btn-confirm-photo" disabled={isRedirecting} onclick={handlePayment}>
 											{#if isRedirecting}
 												Redirection...
 											{:else}
@@ -834,7 +822,7 @@
 
 							{#if isProcessed && (selectedFormula !== 'e-photo' || isAppointmentBooked)}
 								<div class="dev-actions">
-									<button class="btn-dev-simulate" disabled={!isEmailValid(userEmail)} onclick={simulatePaymentSuccess}>
+									<button class="btn-dev-simulate" onclick={simulatePaymentSuccess}>
 										🧪 Simuler le paiement (Test Dev)
 									</button>
 								</div>
