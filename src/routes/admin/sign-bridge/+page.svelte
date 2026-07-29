@@ -13,6 +13,15 @@
 	/** @type {{ sessionId: string, clientEmail: string } | null} */
 	let incomingCall = $state(null);
 
+	let isManualOnline = $state(false);
+	let manualPresenceUntil = $state(0);
+
+	function toggleManualPresence(/** @type {boolean} */ online) {
+		if (socket && isConnected) {
+			socket.send(JSON.stringify({ type: 'set-manual-presence', online }));
+		}
+	}
+
 	function playRingtone() {
 		try {
 			// @ts-ignore
@@ -164,6 +173,11 @@
 					playRingtone();
 					break;
 
+				case 'manual-presence-status':
+					isManualOnline = data.online;
+					manualPresenceUntil = data.until;
+					break;
+
 				case 'drawstart':
 					if (ctx && canvas) {
 						// Conversion des coordonnées normalisées (0->1) à la taille locale du canvas d'Easy Photo
@@ -285,6 +299,27 @@
 				{#if captureMessage}
 					<span class="capture-status-msg" class:success-msg={captureSuccess} class:error-msg={!captureSuccess}>
 						{captureMessage}
+					</span>
+				{/if}
+			</div>
+
+			<div class="manual-presence-action" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-200); width: 100%; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+				<span style="font-size: 0.85rem; font-weight: 700; color: var(--gray-700);">Disponibilité globale (sans garder l'onglet ouvert) :</span>
+				<div style="display: flex; gap: 0.5rem;">
+					<button style="background: var(--success); color: var(--white); padding: 0.5rem 1rem; border-radius: var(--radius-sm); border: none; font-weight: 700; cursor: pointer;" onclick={() => toggleManualPresence(true)} disabled={!isConnected}>
+						🟢 Me rendre disponible (6h)
+					</button>
+					<button style="background: var(--danger); color: var(--white); padding: 0.5rem 1rem; border-radius: var(--radius-sm); border: none; font-weight: 700; cursor: pointer;" onclick={() => toggleManualPresence(false)} disabled={!isConnected}>
+						🔴 Me rendre indisponible
+					</button>
+				</div>
+				{#if isManualOnline}
+					<span style="font-size: 0.8rem; font-weight: 600; color: #16a34a;">
+						Statut : Disponible (jusqu'à {new Date(manualPresenceUntil).toLocaleTimeString()})
+					</span>
+				{:else}
+					<span style="font-size: 0.8rem; font-weight: 600; color: var(--gray-500);">
+						Statut : Indisponible
 					</span>
 				{/if}
 			</div>

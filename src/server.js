@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 5001;
 
 // Suivi de la présence admin globale
 let activeAdminsCount = 0;
+let manualPresenceUntil = 0;
 
 // Gestion des sessions de signature actives
 // Structure : { [sessionId]: { clientSocket: ws, adminSocket: ws } }
@@ -25,7 +26,7 @@ const server = createServer((req, res) => {
 	}
 
 	if (req.method === 'GET' && req.url === '/api/admin-presence') {
-		const isAdminOnline = Object.values(sessions).some(s => s.adminSocket && s.adminSocket.readyState === 1); // 1 = OPEN
+		const isAdminOnline = Date.now() < manualPresenceUntil || Object.values(sessions).some(s => s.adminSocket && s.adminSocket.readyState === 1); // 1 = OPEN
 		res.writeHead(200, { 'Content-Type': 'application/json' });
 		res.end(JSON.stringify({ online: isAdminOnline }));
 	} else {
@@ -89,21 +90,43 @@ wss.on('connection', (ws) => {
 					sessions[currentSessionId].adminSocket = ws;
 					console.log(`[Session ${currentSessionId}] Admin connecté`);
 					
-					// Signaler le statut du client à l'admin
+					// Signaler le statut du client à l'admin et renvoyer le statut de présence manuelle
 					const clientExists = !!sessions[currentSessionId].clientSocket;
 					ws.send(JSON.stringify({
 						type: 'client-status',
 						connected: clientExists
 					}));
+					ws.send(JSON.stringify({
+						type: 'manual-presence-status',
+						online: Date.now() < manualPresenceUntil,
+						until: manualPresenceUntil
+					}));
 					break;
 
 				case 'check-admin-presence':
-					const anyAdminOnline = Object.values(sessions).some(
+					const anyAdminOnline = Date.now() < manualPresenceUntil || Object.values(sessions).some(
 						s => s.adminSocket && s.adminSocket.readyState === 1 // 1 = OPEN
 					);
 					ws.send(JSON.stringify({
 						type: 'admin-presence-response',
 						online: anyAdminOnline
+					}));
+					break;
+
+				case 'set-manual-presence':
+					if (data.online) {
+						// Disponible pour 6 heures (21600000 ms)
+						manualPresenceUntil = Date.now() + 21600000;
+					} else {
+						manualPresenceUntil = 0;
+					}
+					console.log(`Statut de disponibilité manuelle mis à jour : ${data.online ? 'En Ligne (6h)' : 'Hors-Ligne'}`);
+					
+					// Envoyer la confirmation à l'admin
+					ws.send(JSON.stringify({
+						type: 'manual-presence-status',
+						online: Date.now() < manualPresenceUntil,
+						until: manualPresenceUntil
 					}));
 					break;
 
