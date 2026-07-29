@@ -140,6 +140,14 @@
 	}
 
 	function connectToBridge() {
+		if (socket) {
+			try {
+				socket.close();
+			} catch (e) {
+				console.error(e);
+			}
+		}
+
 		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 		const wsUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
 			? `${protocol}//${window.location.hostname}:5001`
@@ -315,7 +323,7 @@
 				</div>
 				{#if isManualOnline}
 					<span style="font-size: 0.8rem; font-weight: 600; color: #16a34a;">
-						Statut : Disponible (jusqu'à {new Date(manualPresenceUntil).toLocaleTimeString()})
+						Statut : Disponible (jusqu'à {manualPresenceUntil ? new Date(manualPresenceUntil).toLocaleTimeString() : ''})
 					</span>
 				{:else}
 					<span style="font-size: 0.8rem; font-weight: 600; color: var(--gray-500);">
