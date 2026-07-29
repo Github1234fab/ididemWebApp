@@ -31,20 +31,34 @@
 	}
 
 	let isAdminOnline = $state(false);
+	/** @type {WebSocket | null} */
+	let presenceSocket = null;
 
-	async function checkAdminPresence() {
-		try {
-			const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-			const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-				? `${protocol}//${window.location.hostname}:5001`
-				: 'https://ididemwebapp.onrender.com';
-			const res = await fetch(`${apiHost}/api/admin-presence`);
-			const data = await res.json();
-			isAdminOnline = !!data.online;
-		} catch (err) {
-			console.error('Erreur de détection présence admin:', err);
-			isAdminOnline = false;
-		}
+	function initPresenceSocket() {
+		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+		const wsUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+			? `${protocol}//${window.location.hostname}:5001`
+			: 'wss://ididemwebapp.onrender.com';
+		
+		presenceSocket = new WebSocket(wsUrl);
+		presenceSocket.onopen = () => {
+			if (presenceSocket) {
+				presenceSocket.send(JSON.stringify({ type: 'check-admin-presence' }));
+			}
+		};
+		presenceSocket.onmessage = (event) => {
+			try {
+				const data = JSON.parse(event.data);
+				if (data.type === 'admin-presence-response') {
+					isAdminOnline = !!data.online;
+				}
+			} catch (e) {
+				console.error(e);
+			}
+		};
+		presenceSocket.onerror = (err) => {
+			console.error('Erreur websocket présence:', err);
+		};
 	}
 
 	onMount(() => {
@@ -56,7 +70,7 @@
 		bookingDate = localStorage.getItem('ididem_booking_date') || 'bientôt';
 		bookingTime = localStorage.getItem('ididem_booking_time') || 'à l\'heure prévue';
 
-		checkAdminPresence();
+		initPresenceSocket();
 
 		if (capturedImage) {
 			if (formulaId === 'officielle' || formulaId === 'e-photo') {
@@ -65,6 +79,10 @@
 				generateCasualPhoto();
 			}
 		}
+
+		return () => {
+			if (presenceSocket) presenceSocket.close();
+		};
 	});
 
 	function generatePlanche() {

@@ -97,6 +97,16 @@ wss.on('connection', (ws) => {
 					}));
 					break;
 
+				case 'check-admin-presence':
+					const anyAdminOnline = Object.values(sessions).some(
+						s => s.adminSocket && s.adminSocket.readyState === 1 // 1 = OPEN
+					);
+					ws.send(JSON.stringify({
+						type: 'admin-presence-response',
+						online: anyAdminOnline
+					}));
+					break;
+
 				case 'instant-call-request':
 					console.log(`[Appel Entrant] Client demande signature instantanée pour la session: ${data.sessionId}`);
 					
