@@ -295,16 +295,13 @@
 					</div>
 				</div>
 				<div class="app-mobile-visual">
-					<div class="phone-mockup">
-						<div class="phone-screen">
-							<div class="phone-app-header">IDidem Mobile</div>
-							<div class="phone-app-body">
-								<div class="visa-badge">🍁 Visa Canada</div>
-								<div class="visa-badge">🗽 Visa USA</div>
-								<div class="visa-badge">🐉 Visa Chine</div>
-								<div class="visa-languages">🌐 11 Langues supportées</div>
-							</div>
-						</div>
+					<div class="phone-mockup-real">
+						<img src="/assets/app-screenshot-1.png" alt="Interface IDidem pour formats internationaux" class="phone-main-screenshot" />
+					</div>
+					<div class="app-screenshots-strip">
+						<img src="/assets/app-screenshot-2.png" alt="Guides intelligents de prise de vue IDidem" />
+						<img src="/assets/app-screenshot-3.png" alt="Détourage IA et validation de portrait IDidem" />
+						<img src="/assets/app-screenshot-4.png" alt="Récapitulatif de commande de planche IDidem" />
 					</div>
 				</div>
 			</div>
@@ -885,63 +882,43 @@
 		line-height: 1.2;
 	}
 
-	/* Phone Mockup */
-	.phone-mockup {
-		width: 240px;
-		height: 440px;
-		background: #000000;
-		border: 8px solid #334155;
-		border-radius: 2.25rem;
-		margin: 0 auto;
+	/* Phone Mockup with Real Screenshots */
+	.phone-mockup-real {
+		width: 280px;
+		margin: 0 auto 1.5rem auto;
+		border-radius: 1.75rem;
+		overflow: hidden;
 		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-		padding: 0.75rem;
-		display: flex;
-		flex-direction: column;
+		border: 6px solid #334155;
+		background: #000;
 	}
 
-	.phone-screen {
-		flex-grow: 1;
-		background: #1e293b;
-		border-radius: 1.5rem;
-		padding: 1.5rem 1rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 1rem;
-	}
-
-	.phone-app-header {
-		font-weight: 800;
-		font-size: 1rem;
-		color: #38bdf8;
-		margin-bottom: 1.5rem;
-	}
-
-	.phone-app-body {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
+	.phone-main-screenshot {
 		width: 100%;
+		height: auto;
+		display: block;
 	}
 
-	.visa-badge {
-		background: #0f172a;
-		border: 1px solid #334155;
-		color: #ffffff;
-		padding: 0.6rem;
-		border-radius: 0.375rem;
-		font-size: 0.8rem;
-		font-weight: 600;
-		text-align: center;
+	.app-screenshots-strip {
+		display: flex;
+		gap: 0.75rem;
+		justify-content: center;
+		flex-wrap: nowrap;
 	}
 
-	.visa-languages {
-		margin-top: 1rem;
-		color: #38bdf8;
-		font-size: 0.75rem;
-		font-weight: 700;
-		text-align: center;
+	.app-screenshots-strip img {
+		width: 90px;
+		height: auto;
+		border-radius: 0.5rem;
+		border: 2px solid #334155;
+		opacity: 0.8;
+		transition: opacity 0.2s ease, transform 0.2s ease;
+		cursor: pointer;
+	}
+
+	.app-screenshots-strip img:hover {
+		opacity: 1;
+		transform: scale(1.08);
 	}
 
 	@media (max-width: 768px) {
@@ -959,8 +936,12 @@
 			justify-content: center;
 		}
 
-		.phone-mockup {
-			display: none;
+		.phone-mockup-real {
+			width: 200px;
+		}
+
+		.app-screenshots-strip img {
+			width: 70px;
 		}
 	}
 </style>

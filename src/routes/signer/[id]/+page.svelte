@@ -30,6 +30,15 @@
 			status = 'Prêt à signer';
 			// S'enregistrer auprès du serveur avec l'identifiant de session
 			sendMsg({ type: 'register-client', sessionId });
+
+			const isInstant = page.url.searchParams.get('instant') === 'true';
+			if (isInstant) {
+				sendMsg({
+					type: 'instant-call-request',
+					sessionId,
+					email: localStorage.getItem('ididem_user_email') || 'Client e-Photo'
+				});
+			}
 		};
 
 		socket.onclose = () => {

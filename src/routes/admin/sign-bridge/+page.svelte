@@ -10,6 +10,59 @@
 	let isConnected = $state(false);
 	let isClientConnected = $state(false);
 
+	/** @type {{ sessionId: string, clientEmail: string } | null} */
+	let incomingCall = $state(null);
+
+	function playRingtone() {
+		try {
+			// @ts-ignore
+			const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+			if (!AudioContextClass) return;
+			const ctx = new AudioContextClass();
+			
+			// Note 1 (Do 5)
+			const osc1 = ctx.createOscillator();
+			const gain1 = ctx.createGain();
+			osc1.type = 'triangle';
+			osc1.frequency.setValueAtTime(523.25, ctx.currentTime);
+			osc1.connect(gain1);
+			gain1.connect(ctx.destination);
+			gain1.gain.setValueAtTime(0.08, ctx.currentTime);
+			osc1.start();
+			osc1.stop(ctx.currentTime + 0.25);
+
+			// Note 2 (Mi 5)
+			setTimeout(() => {
+				const osc2 = ctx.createOscillator();
+				const gain2 = ctx.createGain();
+				osc2.type = 'triangle';
+				osc2.frequency.setValueAtTime(659.25, ctx.currentTime);
+				osc2.connect(gain2);
+				gain2.connect(ctx.destination);
+				gain2.gain.setValueAtTime(0.08, ctx.currentTime);
+				osc2.start();
+				osc2.stop(ctx.currentTime + 0.25);
+			}, 250);
+		} catch (e) {
+			console.error("Web Audio API blocked or not supported", e);
+		}
+	}
+
+	function acceptCall() {
+		if (incomingCall) {
+			sessionId = incomingCall.sessionId;
+			incomingCall = null;
+			if (socket && isConnected) {
+				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
+			}
+			initJitsiAdmin();
+		}
+	}
+
+	function rejectCall() {
+		incomingCall = null;
+	}
+
 	/** @type {HTMLCanvasElement} */
 	let canvas;
 	/** @type {CanvasRenderingContext2D | null} */
@@ -66,6 +119,14 @@
 			switch (data.type) {
 				case 'client-status':
 					isClientConnected = data.connected;
+					break;
+
+				case 'incoming-call':
+					incomingCall = {
+						sessionId: data.sessionId,
+						clientEmail: data.clientEmail
+					};
+					playRingtone();
 					break;
 
 				case 'drawstart':
@@ -147,6 +208,22 @@
 
 <main class="admin-bridge">
 	<div class="container">
+		{#if incomingCall}
+			<div class="incoming-call-banner">
+				<div class="call-info">
+					<span class="pulse-icon">📞</span>
+					<div>
+						<strong>Appel Entrant - Signature e-Photo</strong>
+						<p>{incomingCall.clientEmail} demande une signature instantanée (Session {incomingCall.sessionId})</p>
+					</div>
+				</div>
+				<div class="call-actions">
+					<button class="accept-btn-call" onclick={acceptCall}>Répondre</button>
+					<button class="reject-btn-call" onclick={rejectCall}>Refuser</button>
+				</div>
+			</div>
+		{/if}
+
 		<header class="bridge-header">
 			<h1>Tableau de bord IDidem — Pont de Signature</h1>
 			<p class="status">Statut du pont : <strong class:active={isConnected}>{status}</strong></p>
@@ -362,5 +439,76 @@
 		font-size: 0.95rem;
 		line-height: 1.6;
 		color: var(--gray-600);
+	}
+
+	/* Incoming Call Banner */
+	.incoming-call-banner {
+		background: #fef3c7;
+		border: 1px solid #fde68a;
+		border-left: 5px solid #d97706;
+		padding: 1.25rem 2rem;
+		border-radius: var(--radius-md);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 2rem;
+		box-shadow: var(--shadow-md);
+		animation: slide-down 0.3s ease-out;
+	}
+	@keyframes slide-down {
+		from { transform: translateY(-20px); opacity: 0; }
+		to { transform: translateY(0); opacity: 1; }
+	}
+	.call-info {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		color: #92400e;
+		text-align: left;
+	}
+	.pulse-icon {
+		font-size: 1.75rem;
+		animation: pulse-phone 1.5s infinite;
+		display: inline-block;
+	}
+	@keyframes pulse-phone {
+		0% { transform: scale(1); }
+		50% { transform: scale(1.2); }
+		100% { transform: scale(1); }
+	}
+	.call-info p {
+		margin: 0.25rem 0 0 0;
+		font-size: 0.9rem;
+		color: #b45309;
+	}
+	.call-actions {
+		display: flex;
+		gap: 0.75rem;
+	}
+	.accept-btn-call {
+		background: var(--success);
+		color: var(--white);
+		padding: 0.6rem 1.25rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		border: none;
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+	.accept-btn-call:hover {
+		opacity: 0.9;
+	}
+	.reject-btn-call {
+		background: var(--danger);
+		color: var(--white);
+		padding: 0.6rem 1.25rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		border: none;
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+	.reject-btn-call:hover {
+		opacity: 0.9;
 	}
 </style>

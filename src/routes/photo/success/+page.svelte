@@ -30,6 +30,23 @@
 		});
 	}
 
+	let isAdminOnline = $state(false);
+
+	async function checkAdminPresence() {
+		try {
+			const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+			const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+				? `${protocol}//${window.location.hostname}:5001`
+				: 'https://ididemwebapp.onrender.com';
+			const res = await fetch(`${apiHost}/api/admin-presence`);
+			const data = await res.json();
+			isAdminOnline = !!data.online;
+		} catch (err) {
+			console.error('Erreur de détection présence admin:', err);
+			isAdminOnline = false;
+		}
+	}
+
 	onMount(() => {
 		sessionId = page.url.searchParams.get('session_id') || localStorage.getItem('ididem_client_session_id') || '1234';
 		capturedImage = localStorage.getItem('ididem_captured_image') || '';
@@ -38,6 +55,8 @@
 		userEmail = localStorage.getItem('ididem_user_email') || 'votre adresse e-mail';
 		bookingDate = localStorage.getItem('ididem_booking_date') || 'bientôt';
 		bookingTime = localStorage.getItem('ididem_booking_time') || 'à l\'heure prévue';
+
+		checkAdminPresence();
 
 		if (capturedImage) {
 			if (formulaId === 'officielle' || formulaId === 'e-photo') {
@@ -194,20 +213,37 @@
 				<div class="product-success-box e-photo-box">
 					<h2>Signature & Validation en ligne</h2>
 					
-					<div class="success-booking-alert">
-						<p>🎉 <strong>Rendez-vous réservé et commande validée !</strong></p>
-						<p>Nous nous retrouverons en ligne le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong>.</p>
-						<p class="small-desc">Un e-mail de confirmation contenant votre lien de connexion sécurisé vous a été envoyé à l'adresse <strong>{userEmail}</strong>. Le jour du rendez-vous, il vous suffira de vous connecter pour signer en direct avec notre photographe.</p>
-					</div>
+					{#if isAdminOnline}
+						<div class="success-booking-alert instant-alert">
+							<p>⚡ <strong>Un photographe est disponible en direct !</strong></p>
+							<p>Vous pouvez signer votre e-photo immédiatement sans attendre.</p>
+							<p class="small-desc">Cliquez sur le bouton ci-dessous pour lancer la visioconférence instantanée (durée : 30 secondes) et valider votre dossier e-photo.</p>
+						</div>
 
-					<div class="actions-group horizontal-actions">
-						<a href="/signer/{sessionId}" class="primary-btn pulse">
-							✍️ Accéder à l'espace de signature
-						</a>
-						<button class="secondary-btn" onclick={copySignatureLink}>
-							{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
-						</button>
-					</div>
+						<div class="actions-group horizontal-actions">
+							<a href="/signer/{sessionId}?instant=true" class="primary-btn pulse instant-btn">
+								📞 Lancer la signature en direct (30s)
+							</a>
+							<button class="secondary-btn" onclick={copySignatureLink}>
+								{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
+							</button>
+						</div>
+					{:else}
+						<div class="success-booking-alert">
+							<p>🎉 <strong>Rendez-vous réservé et commande validée !</strong></p>
+							<p>Nous nous retrouverons en ligne le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong>.</p>
+							<p class="small-desc">Notre équipe est actuellement hors-ligne. Un e-mail de confirmation contenant votre lien de connexion sécurisé vous a été envoyé à l'adresse <strong>{userEmail}</strong>. Le jour du rendez-vous, il vous suffira de vous connecter pour signer en direct avec notre photographe.</p>
+						</div>
+
+						<div class="actions-group horizontal-actions">
+							<a href="/signer/{sessionId}" class="primary-btn">
+								✍️ Accéder à l'espace de signature
+							</a>
+							<button class="secondary-btn" onclick={copySignatureLink}>
+								{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
+							</button>
+						</div>
+					{/if}
 
 					<div class="benefits-grid">
 						<div class="benefit-card">
