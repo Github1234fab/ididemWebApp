@@ -138,6 +138,23 @@
 			ctx.lineJoin = 'round';
 		}
 	}
+	function disconnectFromBridge() {
+		if (socket) {
+			try {
+				socket.close();
+			} catch (e) {
+				console.error(e);
+			}
+			socket = null;
+		}
+		isConnected = false;
+		status = 'Déconnecté';
+		isClientConnected = false;
+		if (jitsiApi) {
+			jitsiApi.dispose();
+			jitsiApi = null;
+		}
+	}
 
 	function connectToBridge() {
 		if (socket) {
@@ -290,9 +307,15 @@
 			<div class="input-group">
 				<label for="session">Identifiant de session client :</label>
 				<input type="text" id="session" bind:value={sessionId} disabled={isConnected} />
-				<button class="connect-btn" onclick={connectToBridge} disabled={isConnected}>
-					Activer le Pont
-				</button>
+				{#if isConnected}
+					<button class="connect-btn disconnect-btn" onclick={disconnectFromBridge}>
+						Désactiver le Pont
+					</button>
+				{:else}
+					<button class="connect-btn" onclick={connectToBridge}>
+						Activer le Pont
+					</button>
+				{/if}
 			</div>
 
 			<div class="client-indicator">
@@ -420,9 +443,14 @@
 		padding: 0.6rem 1.25rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
+		cursor: pointer;
+	}
+	.connect-btn.disconnect-btn {
+		background: var(--danger);
 	}
 	.connect-btn:disabled {
 		background: var(--gray-400);
+		cursor: not-allowed;
 	}
 	.client-indicator {
 		display: flex;
