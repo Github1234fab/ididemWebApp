@@ -25,8 +25,9 @@ const server = createServer((req, res) => {
 	}
 
 	if (req.method === 'GET' && req.url === '/api/admin-presence') {
+		const isAdminOnline = Object.values(sessions).some(s => s.adminSocket && s.adminSocket.readyState === 1); // 1 = OPEN
 		res.writeHead(200, { 'Content-Type': 'application/json' });
-		res.end(JSON.stringify({ online: activeAdminsCount > 0 }));
+		res.end(JSON.stringify({ online: isAdminOnline }));
 	} else {
 		res.writeHead(404);
 		res.end('Not Found');
