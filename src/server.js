@@ -140,11 +140,13 @@ wss.on('connection', (ws) => {
 						body: `Client : ${data.email || 'Client e-Photo'}`,
 						headers: {
 							'Title': '📞 IDidem - Appel Entrant',
-							'Priority': 'high',
+							'Priority': '5',
 							'Tags': 'phone,bell',
 							'Actions': `view, Rejoindre la session, https://ididemwebapp.netlify.app/admin/sign-bridge?session_id=${data.sessionId}`
 						}
-					}).catch(err => console.error('Erreur d\'envoi ntfy:', err));
+					})
+					.then(res => console.log(`Notification ntfy envoyée. Statut: ${res.status}`))
+					.catch(err => console.error('Erreur d\'envoi ntfy:', err));
 
 					Object.values(sessions).forEach(session => {
 						if (session.adminSocket && session.adminSocket.readyState === ws.OPEN) {
