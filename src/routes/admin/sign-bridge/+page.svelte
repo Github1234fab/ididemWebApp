@@ -63,6 +63,41 @@
 		incomingCall = null;
 	}
 
+	let isCapturing = $state(false);
+	let captureMessage = $state('');
+	let captureSuccess = $state(false);
+
+	async function capturePayment() {
+		if (!sessionId) return;
+		isCapturing = true;
+		captureMessage = 'Capture en cours...';
+		captureSuccess = false;
+
+		try {
+			const response = await fetch('/api/capture-payment', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ sessionId })
+			});
+			const data = await response.json();
+			if (response.ok && data.success) {
+				captureSuccess = true;
+				captureMessage = 'Paiement de 12,99 € capturé avec succès !';
+			} else {
+				captureSuccess = false;
+				captureMessage = `Erreur: ${data.error || 'Erreur inconnue'}`;
+			}
+		} catch (err) {
+			captureSuccess = false;
+			captureMessage = 'Erreur réseau lors de la capture';
+			console.error(err);
+		} finally {
+			isCapturing = false;
+		}
+	}
+
 	/** @type {HTMLCanvasElement} */
 	let canvas;
 	/** @type {CanvasRenderingContext2D | null} */
@@ -241,6 +276,17 @@
 			<div class="client-indicator">
 				<span class="dot" class:active={isClientConnected}></span>
 				<span>Client : {isClientConnected ? 'En ligne et connecté' : 'En attente de connexion client'}</span>
+			</div>
+
+			<div class="stripe-capture-action">
+				<button class="capture-btn" onclick={capturePayment} disabled={isCapturing || !sessionId}>
+					{isCapturing ? 'Capture...' : '💳 Débiter l\'empreinte (12,99 €)'}
+				</button>
+				{#if captureMessage}
+					<span class="capture-status-msg" class:success-msg={captureSuccess} class:error-msg={!captureSuccess}>
+						{captureMessage}
+					</span>
+				{/if}
 			</div>
 		</div>
 
@@ -510,5 +556,44 @@
 	}
 	.reject-btn-call:hover {
 		opacity: 0.9;
+	}
+
+	/* Stripe Capture action styling */
+	.stripe-capture-action {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		align-items: flex-start;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--gray-200);
+		width: 100%;
+	}
+	.capture-btn {
+		background: #6366f1; /* Indigo color */
+		color: var(--white);
+		padding: 0.65rem 1.25rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		border: none;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+	.capture-btn:hover:not(:disabled) {
+		background: #4f46e5;
+	}
+	.capture-btn:disabled {
+		background: var(--gray-300);
+		cursor: not-allowed;
+	}
+	.capture-status-msg {
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+	.success-msg {
+		color: #15803d;
+	}
+	.error-msg {
+		color: #b91c1c;
 	}
 </style>

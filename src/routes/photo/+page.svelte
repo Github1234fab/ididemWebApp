@@ -764,71 +764,37 @@
 
 							{#if isProcessed}
 								{#if selectedFormula === 'e-photo'}
-									{#if !isAppointmentBooked}
-										<div class="booking-section-inline">
-											<h4>📅 Planifiez votre visioconférence de signature</h4>
-											<p class="booking-intro">Veuillez choisir un créneau horaire pour l'appel de signature en direct :</p>
-											
-											<div class="booking-fields">
-												<div class="form-group">
-													<label for="date-select">Choisir un jour :</label>
-													<select id="date-select" bind:value={bookingDate}>
-														<option value="">-- Sélectionnez un jour --</option>
-														{#each nextDays as day}
-															<option value={day.value}>{day.label}</option>
-														{/each}
-													</select>
-												</div>
-
-												<div class="form-group">
-													<label for="time-select">Choisir un créneau :</label>
-													<select id="time-select" bind:value={bookingTime} disabled={!bookingDate}>
-														<option value="">-- Sélectionnez une heure --</option>
-														{#each timeSlots as slot}
-															<option value={slot}>{slot}</option>
-														{/each}
-													</select>
-												</div>
+									<div class="booking-section-inline reassurance-card">
+										<h4>💳 Empreinte bancaire uniquement</h4>
+										<p class="reassurance-text">
+											Votre carte bancaire ne sera <strong>débitée qu'après la validation finale</strong> de votre e-photo par notre photographe professionnel.
+										</p>
+										<div class="steps-indicator-mini">
+											<div class="step-indicator-item">
+												<span class="step-dot">1</span>
+												<span>Validation de l'empreinte bancaire</span>
 											</div>
-
-											<button class="btn-confirm-booking" onclick={confirmBooking} disabled={!bookingDate || !bookingTime}>
-												💾 Confirmer ce créneau
-											</button>
-										</div>
-									{:else}
-										<div class="booking-confirmed-card">
-											<div class="confirmed-header">
-												<span>✅ Créneau de rendez-vous réservé</span>
-												<button class="btn-change-booking" onclick={() => isAppointmentBooked = false}>Modifier</button>
-											</div>
-											<p>Le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong></p>
-											
-											<div class="inline-copy-link">
-												<span class="link-label">Copiez votre lien Visio pour accéder à votre signature en ligne, accompagné de notre agent. Collez votre lien dans un bloc note ou un fichier Word (...)</span>
-												<div class="copy-input-group">
-													<input type="text" readonly value="{window.location.origin}/signer/{clientSessionId}" />
-													<button onclick={copySignatureLinkInline}>
-														{copiedLink ? 'Copié !' : 'Copier'}
-													</button>
-												</div>
+											<div class="step-indicator-item">
+												<span class="step-dot">2</span>
+												<span>Signature en direct (30s) si dispo, ou choix d'un rendez-vous en ligne</span>
 											</div>
 										</div>
-									{/if}
+									</div>
 								{/if}
 							{/if}
 
 							<div class="result-actions">
 								<button class="btn-retake" disabled={isRedirecting} onclick={restart}>Recommencer</button>
 								{#if isProcessed}
-									{#if selectedFormula !== 'e-photo' || isAppointmentBooked}
-										<button class="btn-confirm-photo" disabled={isRedirecting} onclick={handlePayment}>
-											{#if isRedirecting}
-												Redirection...
-											{:else}
-												Procéder au paiement ({selectedFormula === 'e-photo' ? '12,99' : (selectedFormula === 'officielle' ? '6,99' : '3,99')} €)
-											{/if}
-										</button>
-									{/if}
+									<button class="btn-confirm-photo" disabled={isRedirecting} onclick={handlePayment}>
+										{#if isRedirecting}
+											Redirection...
+										{:else if selectedFormula === 'e-photo'}
+											Valider mon empreinte et continuer (12,99 €)
+										{:else}
+											Procéder au paiement ({selectedFormula === 'officielle' ? '6,99' : '3,99'} €)
+										{/if}
+									</button>
 								{:else}
 									<button class="btn-confirm-photo" onclick={processBackground}>
 										Détourer ma photo
@@ -836,7 +802,7 @@
 								{/if}
 							</div>
 
-							{#if isProcessed && (selectedFormula !== 'e-photo' || isAppointmentBooked)}
+							{#if isProcessed}
 								<div class="dev-actions">
 									<button class="btn-dev-simulate" onclick={simulatePaymentSuccess}>
 										🧪 Simuler le paiement (Test Dev)
@@ -2136,115 +2102,61 @@
 		}
 	}
 
-	/* --- Inline Booking Widget styles --- */
-	.booking-section-inline {
+	/* --- Reassurance card styles --- */
+	.reassurance-card {
 		background: #f8fafc;
 		border: 1px solid var(--gray-200);
+		border-left: 4px solid var(--blue-600);
 		border-radius: var(--radius-md);
 		padding: 1.25rem;
 		margin-top: 1rem;
 		text-align: left;
 	}
 
-	.booking-section-inline h4 {
+	.reassurance-card h4 {
 		margin: 0 0 0.5rem 0;
 		color: var(--blue-700);
 		font-size: 1rem;
 		font-weight: 800;
 	}
 
-	.booking-intro {
-		font-size: 0.8rem;
+	.reassurance-text {
+		font-size: 0.85rem;
 		color: var(--gray-600);
-		line-height: 1.4;
+		line-height: 1.5;
 		margin: 0 0 1rem 0;
 	}
 
-	.booking-fields {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 0.75rem;
-		margin-bottom: 1rem;
-	}
-
-	.booking-fields .form-group {
+	.steps-indicator-mini {
 		display: flex;
 		flex-direction: column;
-		gap: 0.35rem;
-	}
-
-	.booking-fields label {
-		font-size: 0.75rem;
-		font-weight: 700;
-		color: var(--gray-600);
-	}
-
-	.booking-fields select {
-		padding: 0.6rem;
-		border: 1px solid var(--gray-300);
-		border-radius: var(--radius-sm);
-		font-size: 0.85rem;
+		gap: 0.5rem;
 		background: var(--white);
-		color: var(--gray-800);
-		outline: none;
-	}
-
-	.btn-confirm-booking {
-		width: 100%;
-		background: var(--blue-600);
-		color: var(--white);
 		padding: 0.75rem;
 		border-radius: var(--radius-sm);
-		font-weight: 700;
-		font-size: 0.85rem;
-		transition: var(--transition-fast);
-		text-align: center;
+		border: 1px solid var(--gray-100);
 	}
 
-	.btn-confirm-booking:hover:not(:disabled) {
-		background: var(--blue-700);
-	}
-
-	.booking-confirmed-card {
-		background: #f0fdf4;
-		border: 1px solid #bbf7d0;
-		border-radius: var(--radius-md);
-		padding: 1rem;
-		margin-top: 1rem;
-		text-align: left;
-	}
-
-	.confirmed-header {
+	.step-indicator-item {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 0.5rem;
-	}
-
-	.confirmed-header span {
-		font-weight: 700;
-		font-size: 0.9rem;
-		color: #166534;
-	}
-
-	.btn-change-booking {
-		background: transparent;
-		color: var(--blue-600);
-		font-weight: 700;
+		gap: 0.75rem;
 		font-size: 0.8rem;
-		border: none;
-		cursor: pointer;
-		padding: 0;
+		color: var(--gray-700);
 	}
 
-	.btn-change-booking:hover {
-		text-decoration: underline;
-	}
-
-	.booking-confirmed-card p {
-		margin: 0;
-		font-size: 0.95rem;
-		color: #14532d;
+	.step-dot {
+		background: var(--blue-50);
+		color: var(--blue-700);
+		font-weight: 800;
+		width: 1.25rem;
+		height: 1.25rem;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.7rem;
+		flex-shrink: 0;
 	}
 
 	.legal-assurance-card {
@@ -2316,52 +2228,5 @@
 	.p-step-content span {
 		font-size: 0.78rem;
 		color: var(--gray-600);
-	}
-
-	.inline-copy-link {
-		margin-top: 1rem;
-		border-top: 1px dashed rgba(22, 101, 52, 0.2);
-		padding-top: 0.8rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-
-	.link-label {
-		font-size: 0.78rem;
-		font-weight: 700;
-		color: #166534;
-	}
-
-	.copy-input-group {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.copy-input-group input {
-		flex: 1;
-		padding: 0.4rem 0.6rem;
-		font-size: 0.8rem;
-		border: 1px solid #bbf7d0;
-		background: var(--white);
-		border-radius: var(--radius-sm);
-		color: #14532d;
-		outline: none;
-	}
-
-	.copy-input-group button {
-		background: #15803d;
-		color: var(--white);
-		border: none;
-		border-radius: var(--radius-sm);
-		padding: 0.4rem 1rem;
-		font-size: 0.8rem;
-		font-weight: 700;
-		cursor: pointer;
-		transition: var(--transition-fast);
-	}
-
-	.copy-input-group button:hover {
-		background: #166534;
 	}
 </style>

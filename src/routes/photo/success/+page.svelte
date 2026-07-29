@@ -61,14 +61,54 @@
 		};
 	}
 
+	let isAppointmentBooked = $state(false);
+
+	/** @type {Array<{label: string, value: string}>} */
+	const nextDays = [];
+	const daysOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+	const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+
+	// Générer les 5 prochains jours dynamiquement
+	for (let i = 0; i < 5; i++) {
+		const d = new Date();
+		d.setDate(d.getDate() + i);
+		const dayName = daysOfWeek[d.getDay()];
+		const dateNum = d.getDate();
+		const monthName = months[d.getMonth()];
+		
+		let label = `${dayName} ${dateNum} ${monthName}`;
+		if (i === 0) label += " (Aujourd'hui)";
+		else if (i === 1) label += " (Demain)";
+
+		nextDays.push({
+			label,
+			value: `${dayName} ${dateNum} ${monthName}`
+		});
+	}
+
+	const timeSlots = [
+		'09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+		'14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
+	];
+
+	function confirmBooking() {
+		if (bookingDate && bookingTime) {
+			isAppointmentBooked = true;
+			localStorage.setItem('ididem_booking_date', bookingDate);
+			localStorage.setItem('ididem_booking_time', bookingTime);
+			localStorage.setItem('ididem_is_appointment_booked', 'true');
+		}
+	}
+
 	onMount(() => {
 		sessionId = page.url.searchParams.get('session_id') || localStorage.getItem('ididem_client_session_id') || '1234';
 		capturedImage = localStorage.getItem('ididem_captured_image') || '';
 		formulaId = localStorage.getItem('ididem_selected_formula') || '';
 		selectedBg = localStorage.getItem('ididem_selected_bg') || '';
 		userEmail = localStorage.getItem('ididem_user_email') || 'votre adresse e-mail';
-		bookingDate = localStorage.getItem('ididem_booking_date') || 'bientôt';
-		bookingTime = localStorage.getItem('ididem_booking_time') || 'à l\'heure prévue';
+		bookingDate = localStorage.getItem('ididem_booking_date') || '';
+		bookingTime = localStorage.getItem('ididem_booking_time') || '';
+		isAppointmentBooked = localStorage.getItem('ididem_is_appointment_booked') === 'true';
 
 		initPresenceSocket();
 
@@ -247,20 +287,55 @@
 							</button>
 						</div>
 					{:else}
-						<div class="success-booking-alert">
-							<p>🎉 <strong>Rendez-vous réservé et commande validée !</strong></p>
-							<p>Nous nous retrouverons en ligne le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong>.</p>
-							<p class="small-desc">Notre équipe est actuellement hors-ligne. Un e-mail de confirmation contenant votre lien de connexion sécurisé vous a été envoyé à l'adresse <strong>{userEmail}</strong>. Le jour du rendez-vous, il vous suffira de vous connecter pour signer en direct avec notre photographe.</p>
-						</div>
+						{#if !isAppointmentBooked}
+							<div class="success-booking-alert offline-alert">
+								<p>⏰ <strong>Notre équipe est actuellement hors-ligne</strong></p>
+								<p class="small-desc">Veuillez choisir un créneau ci-dessous pour planifier votre visioconférence de signature (durée : 30 secondes) afin que notre agent certifie votre e-photo.</p>
+							</div>
 
-						<div class="actions-group horizontal-actions">
-							<a href="/signer/{sessionId}" class="primary-btn">
-								✍️ Accéder à l'espace de signature
-							</a>
-							<button class="secondary-btn" onclick={copySignatureLink}>
-								{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
-							</button>
-						</div>
+							<div class="booking-section-inline">
+								<div class="booking-fields">
+									<div class="form-group">
+										<label for="date-select">Choisir un jour :</label>
+										<select id="date-select" bind:value={bookingDate}>
+											<option value="">-- Sélectionnez un jour --</option>
+											{#each nextDays as day}
+												<option value={day.value}>{day.label}</option>
+											{/each}
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="time-select">Choisir un créneau :</label>
+										<select id="time-select" bind:value={bookingTime} disabled={!bookingDate}>
+											<option value="">-- Sélectionnez une heure --</option>
+											{#each timeSlots as slot}
+												<option value={slot}>{slot}</option>
+											{/each}
+										</select>
+									</div>
+								</div>
+
+								<button class="btn-confirm-booking" onclick={confirmBooking} disabled={!bookingDate || !bookingTime}>
+									📅 Confirmer le rendez-vous
+								</button>
+							</div>
+						{:else}
+							<div class="success-booking-alert">
+								<p>🎉 <strong>Rendez-vous réservé et commande validée !</strong></p>
+								<p>Nous nous retrouverons en ligne le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong>.</p>
+								<p class="small-desc">Un e-mail de confirmation contenant votre lien de connexion sécurisé vous a été envoyé à l'adresse <strong>{userEmail}</strong>. Le jour du rendez-vous, il vous suffira de vous connecter pour signer en direct avec notre photographe.</p>
+							</div>
+
+							<div class="actions-group horizontal-actions">
+								<a href="/signer/{sessionId}" class="primary-btn">
+									✍️ Accéder à l'espace de signature
+								</a>
+								<button class="secondary-btn" onclick={copySignatureLink}>
+									{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
+								</button>
+							</div>
+						{/if}
 					{/if}
 
 					<div class="benefits-grid">
@@ -598,6 +673,64 @@
 		margin-top: 0.5rem;
 	}
 
+	/* Offline booking card styles */
+	.offline-alert {
+		background: #fef2f2;
+		border-color: #fca5a5;
+		color: #991b1b;
+	}
+	.offline-alert .small-desc {
+		color: #b91c1c;
+	}
+	.booking-section-inline {
+		background: #f8fafc;
+		border: 1px solid var(--gray-200);
+		border-radius: var(--radius-md);
+		padding: 1.5rem;
+		margin: 1.5rem 0;
+		text-align: left;
+	}
+	.booking-fields {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-bottom: 1.25rem;
+	}
+	.booking-fields .form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.booking-fields label {
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--gray-700);
+	}
+	.booking-fields select {
+		padding: 0.65rem;
+		border: 1px solid var(--gray-300);
+		border-radius: var(--radius-sm);
+		font-size: 0.9rem;
+		background: var(--white);
+		color: var(--gray-800);
+		outline: none;
+	}
+	.btn-confirm-booking {
+		width: 100%;
+		background: var(--blue-600);
+		color: var(--white);
+		padding: 0.8rem;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		font-size: 0.95rem;
+		border: none;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+	.btn-confirm-booking:hover:not(:disabled) {
+		background: var(--blue-700);
+	}
+
 	@media (max-width: 576px) {
 		.success-card {
 			padding: 2.5rem 1.25rem;
@@ -612,6 +745,10 @@
 		}
 
 		.benefits-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.booking-fields {
 			grid-template-columns: 1fr;
 		}
 	}
