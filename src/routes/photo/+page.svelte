@@ -8,6 +8,14 @@
 	// Étape active : 1 = formule, 2 = consignes, 3 = caméra, 4 = résultat
 	let step = $state(1);
 
+	onMount(() => {
+		// Clear previous booking state when starting a new session
+		localStorage.removeItem('ididem_booking_date');
+		localStorage.removeItem('ididem_booking_time');
+		localStorage.removeItem('ididem_is_appointment_booked');
+		localStorage.removeItem('ididem_booking_phone');
+	});
+
 	// Formule choisie
 	let selectedFormula = $state(''); // 'e-photo', 'officielle', 'casual'
 
