@@ -9,7 +9,7 @@
 						<circle cx="50" cy="50" r="35" fill="#ffffff"/>
 						<circle cx="35" cy="45" r="5" fill="#1e88e5"/>
 						<circle cx="65" cy="45" r="5" fill="#1e88e5"/>
-						<path d="M 35 60 A 15 15 0 0 0 65 60" fill="none" stroke="#1e88e5" stroke-width="5" stroke-linecap="round"/>
+						<path d="M 35 60 A 15 15 0 0 0 65 60" fill="none" stroke="#1e88e5" stroke-width="6" stroke-linecap="round"/>
 					</svg>
 				</div>
 				<span class="logo-text">IDidem </span>
