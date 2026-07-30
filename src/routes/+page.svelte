@@ -944,4 +944,40 @@
 			width: 70px;
 		}
 	}
+
+	@media (max-width: 640px) {
+		.cta-group {
+			flex-direction: column;
+			width: 100%;
+			align-items: center;
+			gap: 1rem;
+		}
+		.primary-btn, .secondary-btn {
+			width: 100%;
+			max-width: 300px;
+			text-align: center;
+			box-sizing: border-box;
+		}
+		.cards-fan {
+			max-width: 260px;
+			height: 280px;
+			margin-top: 2rem;
+		}
+		.card-wrapper {
+			width: 130px;
+		}
+		.id-photo-frame {
+			width: 90px;
+			height: 115px;
+		}
+		.card-back-left {
+			transform: rotate(-10deg) translateX(-80px) translateY(10px);
+		}
+		.card-center {
+			transform: rotate(0deg) translateY(-10px);
+		}
+		.card-back-right {
+			transform: rotate(10deg) translateX(80px) translateY(10px);
+		}
+	}
 </style>

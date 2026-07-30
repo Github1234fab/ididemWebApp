@@ -425,19 +425,19 @@
 		<!-- ÉTAPES DU DESIGN -->
 		<div class="steps-indicator">
 			<button class="indicator-step clickable" class:active={step === 1} class:done={step > 1} onclick={() => goToStep(1)}>
-				<span class="step-num">1</span> Formule
+				<span class="step-num">1</span> <span class="indicator-step-text">Formule</span>
 			</button>
 			<div class="indicator-line"></div>
 			<button class="indicator-step" class:clickable={!!selectedFormula} class:active={step === 2} class:done={step > 2} onclick={() => goToStep(2)} disabled={!selectedFormula}>
-				<span class="step-num">2</span> Consignes
+				<span class="step-num">2</span> <span class="indicator-step-text">Consignes</span>
 			</button>
 			<div class="indicator-line"></div>
 			<button class="indicator-step" class:clickable={!!selectedFormula} class:active={step === 3} class:done={step > 3} onclick={() => goToStep(3)} disabled={!selectedFormula}>
-				<span class="step-num">3</span> Prise de vue
+				<span class="step-num">3</span> <span class="indicator-step-text">Prise de vue</span>
 			</button>
 			<div class="indicator-line"></div>
 			<button class="indicator-step" class:clickable={!!capturedImage} class:active={step === 4} onclick={() => goToStep(4)} disabled={!capturedImage}>
-				<span class="step-num">4</span> Finalisation
+				<span class="step-num">4</span> <span class="indicator-step-text">Finalisation</span>
 			</button>
 		</div>
 
@@ -1374,7 +1374,8 @@
 	}
 
 	.booklet-image-container {
-		width: 340px;
+		width: 100%;
+		max-width: 340px;
 		height: 240px;
 		border-radius: var(--radius-md);
 		overflow: hidden;
@@ -2099,6 +2100,58 @@
 
 		.camera-frame-wrapper {
 			padding: 1.5rem 1rem;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.indicator-step-text {
+			display: none;
+		}
+		.indicator-line {
+			margin: 0 0.5rem;
+		}
+		.booklet-image-container {
+			height: 200px;
+		}
+		.booklet-footer {
+			flex-direction: column;
+			gap: 1.25rem;
+			align-items: center;
+		}
+		.btn-booklet-prev, .btn-booklet-next, .btn-booklet-start {
+			width: 100%;
+			text-align: center;
+			box-sizing: border-box;
+		}
+		.page-dots {
+			order: -1;
+		}
+		.video-container {
+			height: auto;
+			width: 100%;
+			max-width: 280px;
+			aspect-ratio: 3/4;
+		}
+		.camera-controls {
+			gap: 10px;
+			justify-content: space-around;
+			padding: 0;
+		}
+		.btn-capture-now {
+			padding: 0.5rem 0.75rem;
+			font-size: 0.8rem;
+		}
+		.btn-abort {
+			font-size: 0.85rem;
+		}
+		.shutter-button {
+			width: 60px;
+			height: 60px;
+			border-width: 3px;
+		}
+		.inner-circle {
+			width: 44px;
+			height: 44px;
 		}
 	}
 

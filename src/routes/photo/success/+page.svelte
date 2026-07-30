@@ -412,15 +412,15 @@
 	.success-page {
 		min-height: 100vh;
 		background: var(--gray-50);
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		padding: 3rem 1.5rem;
+		box-sizing: border-box;
 	}
 
 	.success-container {
 		max-width: 650px;
 		width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
 	.success-card {
@@ -433,6 +433,8 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 1.25rem;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.success-icon-wrapper {
@@ -707,6 +709,9 @@
 		color: var(--gray-700);
 	}
 	.booking-fields select {
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
 		padding: 0.65rem;
 		border: 1px solid var(--gray-300);
 		border-radius: var(--radius-sm);
@@ -732,8 +737,27 @@
 	}
 
 	@media (max-width: 576px) {
+		.success-page {
+			padding: 1.5rem 0.75rem;
+		}
+
 		.success-card {
-			padding: 2.5rem 1.25rem;
+			padding: 1.5rem 1rem;
+			gap: 1rem;
+		}
+
+		.product-success-box {
+			padding: 1.25rem 1rem;
+			gap: 1rem;
+		}
+
+		.booking-section-inline {
+			padding: 1rem;
+			margin: 1rem 0;
+		}
+
+		.benefit-card {
+			padding: 0.75rem;
 		}
 
 		h1 {
@@ -746,6 +770,7 @@
 
 		.benefits-grid {
 			grid-template-columns: 1fr;
+			gap: 0.75rem;
 		}
 
 		.booking-fields {
