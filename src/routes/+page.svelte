@@ -1,5 +1,19 @@
 <!-- src/routes/+page.svelte -->
 <script>
+	import { onMount } from 'svelte';
+	import childImg from '$lib/assets/enfant.jpg';
+
+	let storeLink = $state("https://apps.apple.com/fr/iphone/search?term=ididem");
+	let storeText = $state("Télécharger sur l'App Store");
+
+	onMount(() => {
+		const userAgent = navigator.userAgent || navigator.vendor;
+		if (/android/i.test(userAgent)) {
+			storeLink = "https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr";
+			storeText = "Télécharger sur Google Play";
+		}
+	});
+
 	// Data and references for the landing page
 	let stats = [
 		{ value: "190+", label: "Pays compatibles" },
@@ -52,7 +66,7 @@
 		},
 		{
 			q: "Comment puis-je imprimer mes photos d'identité ?",
-			a: "L'application génère une planche au format standard 10x15cm (contenant 6 photos d'identité). Vous pouvez l'imprimer pour quelques centimes dans n'importe quelle borne photo de supermarché ou sur une imprimante photo domestique."
+			a: "L'application génère une planche au format standard 10x15cm (contenant 6 photos d'identité). Vous pouvez l'imprimer pour quelques centimes dans n'importe quel borne photo de supermarché ou sur une imprimante photo domestique."
 		},
 		{
 			q: "Les photos de bébé sont-elles acceptées ?",
@@ -78,7 +92,7 @@
 				<p class="subtitle">Plus de 190 normes officielles. Prenez votre photo chez vous avec notre guide intelligent en temps réel. Simple, rapide et 100% conforme.</p>
 				
 				<div class="cta-group">
-					<a href="https://apps.apple.com/fr/app/ididem" class="primary-btn">Télécharger sur l'App Store</a>
+					<a href={storeLink} class="primary-btn">{storeText}</a>
 					<a href="/photo" class="secondary-btn">Prendre une photo</a>
 				</div>
 
@@ -95,9 +109,9 @@
 					<div class="card-wrapper card-back-left">
 						<div class="id-card">
 							<div class="id-photo-frame">
-								<div class="avatar-placeholder child"></div>
+								<div class="avatar-placeholder child" style="background-image: url({childImg})"></div>
 							</div>
-							<div class="card-badge">Passeport FR</div>
+							<div class="card-badge">Passeport & CNI</div>
 						</div>
 					</div>
 					
@@ -107,7 +121,7 @@
 							<div class="id-photo-frame">
 								<div class="avatar-placeholder woman"></div>
 							</div>
-							<div class="card-badge primary">Conforme ANTS</div>
+							<div class="card-badge primary">E-photo ANTS</div>
 						</div>
 					</div>
 					
@@ -117,7 +131,7 @@
 							<div class="id-photo-frame">
 								<div class="avatar-placeholder man"></div>
 							</div>
-							<div class="card-badge">Visa US</div>
+							<div class="card-badge">Formats internationaux</div>
 						</div>
 					</div>
 				</div>
@@ -470,8 +484,8 @@
 	}
 	.avatar-placeholder.child {
 		background-image: url('/photo_enfant.png');
-		background-size: 150%;
-		background-position: center 30%;
+		background-size: 115%;
+		background-position: center 15%;
 	}
 	.avatar-placeholder.woman {
 		background-image: url('/photo_femme.png');

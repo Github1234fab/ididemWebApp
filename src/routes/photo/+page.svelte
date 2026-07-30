@@ -1,8 +1,9 @@
 <!-- src/routes/photo/+page.svelte -->
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import ePhotoImg from '$lib/assets/EPhoto.png';
-	import photoIdentity from '$lib/assets/photos-identite.webp';
+	import ePhotoImg from '$lib/assets/e-photo_site.jpg';
+	import photoIdentity from '$lib/assets/identite.jpg';
+	import linkedin from '$lib/assets/linkedin.jpg';
 
 	// Étape active : 1 = formule, 2 = consignes, 3 = caméra, 4 = résultat
 	let step = $state(1);
@@ -64,7 +65,7 @@
 			desc: 'Mettez en valeur votre image avec un portrait clair, moderne et optimisé pour le web.',
 			badge: 'Réseaux & CV',
 			icon: '✨',
-			image: '/photo_femme.png',
+			image: linkedin,
 			rules: [
 				'Sourire chaleureux et naturel fortement recommandé !',
 				'Arrière-plan neutre, professionnel ou légèrement flouté',

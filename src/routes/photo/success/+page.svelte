@@ -91,8 +91,28 @@
 		'14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
 	];
 
-	function confirmBooking() {
+	async function confirmBooking() {
 		if (bookingDate && bookingTime) {
+			try {
+				const response = await fetch('/api/book-appointment', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						email: userEmail,
+						date: bookingDate,
+						time: bookingTime,
+						sessionId: sessionId
+					})
+				});
+				if (!response.ok) {
+					console.error('Failed to register booking in Google Sheets');
+				}
+			} catch (e) {
+				console.error('Error confirming booking:', e);
+			}
+
 			isAppointmentBooked = true;
 			localStorage.setItem('ididem_booking_date', bookingDate);
 			localStorage.setItem('ididem_booking_time', bookingTime);
