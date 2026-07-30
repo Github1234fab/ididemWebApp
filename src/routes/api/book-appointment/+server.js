@@ -4,7 +4,7 @@ import { env } from '$env/dynamic/private';
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	try {
-		const { email, date, time, sessionId } = await request.json();
+		const { email, phone, date, time, sessionId } = await request.json();
 		
 		const webappUrl = env.GOOGLE_SHEET_WEBAPP_URL;
 		if (!webappUrl) {
@@ -12,7 +12,7 @@ export async function POST({ request }) {
 			return json({ success: true, message: 'Google Sheet Webapp URL missing (local mock success)' });
 		}
 
-		console.log(`Sending booking to Google Sheet: ${email} - ${date} à ${time} (session: ${sessionId})...`);
+		console.log(`Sending booking to Google Sheet: ${email} - ${phone} - ${date} à ${time} (session: ${sessionId})...`);
 		
 		// Send request to Google Apps Script Web App
 		const response = await fetch(webappUrl, {
@@ -23,6 +23,7 @@ export async function POST({ request }) {
 			body: JSON.stringify({
 				action: 'book-appointment',
 				email,
+				phone,
 				date,
 				time,
 				sessionId

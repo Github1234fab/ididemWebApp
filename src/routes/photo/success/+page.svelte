@@ -9,6 +9,7 @@
 	let formulaId = $state('');
 	let selectedBg = $state('');
 	let userEmail = $state('');
+	let userPhone = $state('');
 	
 	/** @type {HTMLCanvasElement | null} */
 	let canvas = $state(null);
@@ -92,7 +93,7 @@
 	];
 
 	async function confirmBooking() {
-		if (bookingDate && bookingTime) {
+		if (bookingDate && bookingTime && userEmail && userPhone) {
 			try {
 				const response = await fetch('/api/book-appointment', {
 					method: 'POST',
@@ -101,6 +102,7 @@
 					},
 					body: JSON.stringify({
 						email: userEmail,
+						phone: userPhone,
 						date: bookingDate,
 						time: bookingTime,
 						sessionId: sessionId
@@ -116,6 +118,8 @@
 			isAppointmentBooked = true;
 			localStorage.setItem('ididem_booking_date', bookingDate);
 			localStorage.setItem('ididem_booking_time', bookingTime);
+			localStorage.setItem('ididem_booking_phone', userPhone);
+			localStorage.setItem('ididem_user_email', userEmail);
 			localStorage.setItem('ididem_is_appointment_booked', 'true');
 		}
 	}
@@ -125,7 +129,8 @@
 		capturedImage = localStorage.getItem('ididem_captured_image') || '';
 		formulaId = localStorage.getItem('ididem_selected_formula') || '';
 		selectedBg = localStorage.getItem('ididem_selected_bg') || '';
-		userEmail = localStorage.getItem('ididem_user_email') || 'votre adresse e-mail';
+		userEmail = localStorage.getItem('ididem_user_email') || '';
+		userPhone = localStorage.getItem('ididem_booking_phone') || '';
 		bookingDate = localStorage.getItem('ididem_booking_date') || '';
 		bookingTime = localStorage.getItem('ididem_booking_time') || '';
 		isAppointmentBooked = localStorage.getItem('ididem_is_appointment_booked') === 'true';
@@ -334,9 +339,19 @@
 											{/each}
 										</select>
 									</div>
+
+									<div class="form-group">
+										<label for="booking-email">Votre adresse e-mail :</label>
+										<input type="email" id="booking-email" bind:value={userEmail} placeholder="Ex: jean.dupont@email.com" required />
+									</div>
+
+									<div class="form-group">
+										<label for="booking-phone">Votre numéro de téléphone :</label>
+										<input type="tel" id="booking-phone" bind:value={userPhone} placeholder="Ex: 06 12 34 56 78" required />
+									</div>
 								</div>
 
-								<button class="btn-confirm-booking" onclick={confirmBooking} disabled={!bookingDate || !bookingTime}>
+								<button class="btn-confirm-booking" onclick={confirmBooking} disabled={!bookingDate || !bookingTime || !userEmail || !userPhone}>
 									📅 Confirmer le rendez-vous
 								</button>
 							</div>
@@ -728,7 +743,7 @@
 		font-weight: 700;
 		color: var(--gray-700);
 	}
-	.booking-fields select {
+	.booking-fields select, .booking-fields input {
 		width: 100%;
 		max-width: 100%;
 		box-sizing: border-box;
