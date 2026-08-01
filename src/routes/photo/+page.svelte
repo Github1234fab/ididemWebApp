@@ -1,6 +1,6 @@
 <!-- src/routes/photo/+page.svelte -->
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import ePhotoImg from '$lib/assets/e-photo_site.jpg';
 	import photoIdentity from '$lib/assets/identite.jpg';
 	import linkedin from '$lib/assets/linkedin.jpg';
@@ -8,12 +8,28 @@
 	// Étape active : 1 = formule, 2 = consignes, 3 = caméra, 4 = résultat
 	let step = $state(1);
 
+	// Remonter automatiquement en haut de la page quand on change d'étape ou quand le détourage est terminé
+	$effect(() => {
+		step;
+		isProcessed;
+		if (typeof window !== 'undefined') {
+			window.scrollTo({ top: 0, behavior: 'instant' });
+		}
+	});
+
 	onMount(() => {
 		// Clear previous booking state when starting a new session
 		localStorage.removeItem('ididem_booking_date');
 		localStorage.removeItem('ididem_booking_time');
 		localStorage.removeItem('ididem_is_appointment_booked');
 		localStorage.removeItem('ididem_booking_phone');
+
+		// Pré-sélectionner la formule depuis la requête d'URL (?formula=...)
+		const params = new URLSearchParams(window.location.search);
+		const formulaParam = params.get('formula');
+		if (formulaParam && ['e-photo', 'officielle', 'casual'].includes(formulaParam)) {
+			selectFormula(formulaParam);
+		}
 	});
 
 	// Formule choisie
@@ -261,7 +277,7 @@
 
 			const data = await res.json();
 			capturedImage = data.image;
-			isProcessed = true;
+			isProcessed = true; // Le $effect scrollera automatiquement en haut
 		} catch (err) {
 			console.error('Erreur détourage:', err);
 			processingError = err instanceof Error ? err.message : 'Le détourage automatique a échoué. Veuillez réessayer.';
@@ -482,7 +498,7 @@
 					<!-- En-tête du livret -->
 					<div class="booklet-header">
 						<span class="booklet-badge">GUIDE DE RÉUSSITE BIOMÉTRIQUE</span>
-						<span class="booklet-progress">Conseil {currentTutoPage + 1}/{tutorialSteps.length}</span>
+						<span class="booklet-progress">{currentTutoPage + 1}/{tutorialSteps.length}</span>
 					</div>
 
 					<!-- Barre de progression -->
@@ -528,10 +544,18 @@
 
 					<div class="booklet-footer-links">
 						<button class="btn-booklet-cancel" onclick={() => step = 1}>
-							← Changer de formule
+							<span class="desktop-text">← Changer de formule</span>
+							<span class="mobile-text">
+								<span class="arrow">←</span>
+								<span class="label">revenir</span>
+							</span>
 						</button>
 						<button class="btn-booklet-cancel" onclick={startCamera}>
-							Passer le guide →
+							<span class="desktop-text">Passer le guide →</span>
+							<span class="mobile-text">
+								<span class="arrow">→</span>
+								<span class="label">passer</span>
+							</span>
 						</button>
 					</div>
 				</div>
@@ -665,10 +689,10 @@
 									<h4>Pays / Norme du fond :</h4>
 									<div class="destination-options">
 										<button class="dest-btn animate-fade-in" class:active={selectedBgColor === 'light-gray'} onclick={() => selectedBgColor = 'light-gray'}>
-											🇫🇷 France & Europe (Gris)
+											 France (Gris)
 										</button>
 										<button class="dest-btn animate-fade-in" class:active={selectedBgColor === 'white'} onclick={() => selectedBgColor = 'white'}>
-											🇲🇦 🇩🇿 🇹🇳 Maghreb (Blanc)
+											 Maghreb (Blanc)
 										</button>
 									</div>
 								</div>
@@ -889,6 +913,7 @@
 		transition: var(--transition-fast);
 		text-align: center;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 0.5rem;
@@ -1320,21 +1345,23 @@
 
 	.booklet-header {
 		display: flex;
-		justify-content: space-between;
+		justify-content: space-around;
 		align-items: center;
 		font-size: 0.85rem;
 		font-weight: 700;
+		gap: 20px;
 	}
 
 	.booklet-badge {
 		color: var(--blue-600);
 		background: #eff6ff;
-		padding: 0.25rem 0.75rem;
+		padding: 0.45rem 1rem;
 		border-radius: var(--radius-full);
 	}
 
 	.booklet-progress {
 		color: var(--gray-500);
+		font-size: 10px;
 	}
 
 	.booklet-header-actions {
@@ -1362,7 +1389,7 @@
 
 	.booklet-progress-bar {
 		width: 100%;
-		height: 6px;
+		height: 5px;
 		background: var(--gray-100);
 		border-radius: var(--radius-full);
 		overflow: hidden;
@@ -1988,13 +2015,15 @@
 		background: #eaf6ec;
 		color: #2e7d32;
 		font-weight: 700;
-		padding: 0.6rem 1.25rem;
+		padding: 0.8rem 1.25rem;
 		border-radius: var(--radius-sm);
-		display: inline-flex;
+		display: flex;
+		flex-direction: column;
+		align-content: center;
 		align-items: center;
 		gap: 0.5rem;
-		align-self: flex-start;
-		font-size: 0.9rem;
+		justify-content: center;
+		font-size: 0.7rem;
 	}
 
 	.status-success-badge span {
@@ -2038,15 +2067,17 @@
 
 	.result-actions {
 		display: flex;
-		gap: 1.25rem;
+		gap: 1rem;
 		margin-top: 1rem;
+		overflow: hidden;
 	}
 
 	.btn-retake {
 		flex: 1;
+		min-width: 0;
 		background: var(--gray-100);
 		color: var(--gray-700);
-		padding: 0.9rem;
+		padding: 0.9rem 1rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		transition: var(--transition-fast);
@@ -2058,10 +2089,11 @@
 	}
 
 	.btn-confirm-photo {
-		flex: 1.5;
+		flex: 2;
+		min-width: 0;
 		background: var(--blue-700);
 		color: var(--white);
-		padding: 0.9rem;
+		padding: 0.9rem 1rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		transition: var(--transition-fast);
@@ -2084,6 +2116,14 @@
 		.steps-indicator {
 			padding: 1rem;
 			gap: 0.5rem;
+		}
+
+		.page-header {
+			display: none;
+		}
+
+		.steps-indicator {
+			display: none;
 		}
 
 		.indicator-step {
@@ -2112,7 +2152,36 @@
 		}
 	}
 
+	.mobile-text {
+		display: none;
+	}
+
 	@media (max-width: 500px) {
+		.desktop-text {
+			display: none;
+		}
+		.mobile-text {
+			display: inline-flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 0.15rem;
+			padding: 0.4rem 0.9rem;
+			background: var(--gray-100);
+			border-radius: var(--radius-md);
+			border: 1px solid var(--gray-200);
+			color: var(--gray-700);
+		}
+		.mobile-text .arrow {
+			font-size: 1.2rem;
+			font-weight: 700;
+			line-height: 1;
+		}
+		.mobile-text .label {
+			font-size: 12px;
+			font-weight: 500;
+			color: var(--gray-500);
+			line-height: 1;
+		}
 		.indicator-step-text {
 			display: none;
 		}
@@ -2142,12 +2211,14 @@
 			aspect-ratio: 3/4;
 		}
 		.official-gabarit .face-oval {
-			width: 60%;
-			height: 52%;
+			width: 80%;
+			height: 68%;
+			border-radius: 50% / 40%;
 		}
 		.casual-gabarit .face-oval {
-			width: 50%;
-			height: 48%;
+			width: 60%;
+			height: 55%;
+			border-radius: 50% / 40%;
 		}
 		.camera-controls {
 			gap: 10px;
@@ -2161,6 +2232,15 @@
 		.btn-abort {
 			font-size: 0.85rem;
 		}
+		.result-actions {
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+		.btn-retake,
+		.btn-confirm-photo {
+			width: 100%;
+			flex: none;
+		}
 		.shutter-button {
 			width: 60px;
 			height: 60px;
@@ -2169,6 +2249,13 @@
 		.inner-circle {
 			width: 44px;
 			height: 44px;
+		}
+		.dest-btn {
+			flex-direction: column;
+			gap: 0.3rem;
+			padding: 0.65rem 0.5rem;
+			font-size: 0.75rem;
+			line-height: 1.2;
 		}
 	}
 

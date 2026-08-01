@@ -776,11 +776,11 @@
 
 	@media (max-width: 576px) {
 		.success-page {
-			padding: 1.5rem 0.75rem;
+			padding: 1rem 0.25rem;
 		}
 
 		.success-card {
-			padding: 1.5rem 1rem;
+			padding: 1.5rem 0.75rem;
 			gap: 1rem;
 		}
 
@@ -790,7 +790,7 @@
 		}
 
 		.booking-section-inline {
-			padding: 1rem;
+			padding: 1rem 0.5rem;
 			margin: 1rem 0;
 		}
 

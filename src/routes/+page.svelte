@@ -4,13 +4,13 @@
 	import childImg from '$lib/assets/enfant.jpg';
 
 	let storeLink = $state("https://apps.apple.com/fr/iphone/search?term=ididem");
-	let storeText = $state("Télécharger sur l'App Store");
+	let storeText = $state("Télécharger pour Apple");
 
 	onMount(() => {
 		const userAgent = navigator.userAgent || navigator.vendor;
 		if (/android/i.test(userAgent)) {
 			storeLink = "https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr";
-			storeText = "Télécharger sur Google Play";
+			storeText = "Télécharger pour Android";
 		}
 	});
 
