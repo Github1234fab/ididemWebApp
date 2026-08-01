@@ -180,9 +180,12 @@
 					const x = gapX + col * (photoW + gapX);
 					const y = gapY + row * (photoH + gapY);
 
-					// Si la formule est e-photo, on applique le fond gris réglementaire sous le détourage
+					// Appliquer le fond réglementaire sous le détourage pour e-photo et officielle
 					if (formulaId === 'e-photo') {
-						ctx.fillStyle = '#d1d5db';
+						ctx.fillStyle = '#e2e8f0'; // Gris clair réglementaire ANTS
+						ctx.fillRect(x, y, photoW, photoH);
+					} else if (formulaId === 'officielle') {
+						ctx.fillStyle = selectedBg === 'white' ? '#ffffff' : '#d1d5db'; // Blanc ou Gris standard
 						ctx.fillRect(x, y, photoW, photoH);
 					}
 

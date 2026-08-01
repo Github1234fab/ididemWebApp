@@ -2141,6 +2141,14 @@
 			max-width: 280px;
 			aspect-ratio: 3/4;
 		}
+		.official-gabarit .face-oval {
+			width: 60%;
+			height: 52%;
+		}
+		.casual-gabarit .face-oval {
+			width: 50%;
+			height: 48%;
+		}
 		.camera-controls {
 			gap: 10px;
 			justify-content: space-around;
