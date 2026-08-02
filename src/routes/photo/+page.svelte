@@ -203,9 +203,9 @@
 		if (ctx) {
 			// Crop correspondant au viseur ovale (80% width, 68% height sur mobile)
 			// On prend un ratio cohérent pour que le résultat = ce que l'user voit
-			const isMobile = window.innerWidth <= 500;
-			const cropW = isMobile ? width * 0.80 : width * 0.75;
-			const cropH = isMobile ? height * 0.68 : height * 0.75;
+			const isMobile = window.innerWidth <= 300;
+			const cropW = isMobile ? width * 0.99 : width * 0.99;
+			const cropH = isMobile ? height * 0.99 : height * 0.99;
 			// Trouver la dimension de crop pour remplir le canvas 480x640 (ratio 3:4)
 			// sans déformer l'image
 			const targetRatio = 3 / 4; // largeur / hauteur
@@ -512,7 +512,9 @@
 			<section class="tutorial-section animate-fade-in">
 				<div class="booklet-card">
 					<!-- En-tête du livret -->
+					 <h2>Tutoriel</h2>
 					<div class="booklet-header">
+					
 						<span class="booklet-badge">GUIDE DE RÉUSSITE BIOMÉTRIQUE</span>
 						<span class="booklet-progress">{currentTutoPage + 1}/{tutorialSteps.length}</span>
 					</div>
@@ -538,7 +540,7 @@
 					<!-- Actions de navigation -->
 					<div class="booklet-footer">
 						<button class="btn-booklet-prev" disabled={currentTutoPage === 0} onclick={() => currentTutoPage--}>
-							← Précédent
+							← 
 						</button>
 						
 						<div class="page-dots">
@@ -549,7 +551,7 @@
 
 						{#if currentTutoPage < tutorialSteps.length - 1}
 							<button class="btn-booklet-next" onclick={() => currentTutoPage++}>
-								Suivant →
+							 →
 							</button>
 						{:else}
 							<button class="btn-booklet-start" onclick={startCamera}>
@@ -562,15 +564,15 @@
 						<button class="btn-booklet-cancel" onclick={() => step = 1}>
 							<span class="desktop-text">← Changer de formule</span>
 							<span class="mobile-text">
-								<span class="arrow">←</span>
-								<span class="label">revenir</span>
+								<!-- <span class="arrow">←</span> -->
+								<span class="label">Changer de formule</span>
 							</span>
 						</button>
 						<button class="btn-booklet-cancel" onclick={startCamera}>
-							<span class="desktop-text">Passer le guide →</span>
+							<span class="desktop-text">Passer le tuto →</span>
 							<span class="mobile-text">
-								<span class="arrow">→</span>
-								<span class="label">passer</span>
+								<!-- <span class="arrow">→</span> -->
+								<span class="label">Passer le tuto</span>
 							</span>
 						</button>
 					</div>
@@ -1430,7 +1432,7 @@
 	.booklet-image-container {
 		width: 100%;
 		max-width: 340px;
-		height: 240px;
+		height: 340px;
 		border-radius: var(--radius-md);
 		overflow: hidden;
 		background: var(--gray-900);
@@ -1474,10 +1476,9 @@
 	}
 
 	.btn-booklet-prev {
-		background: var(--white);
-		border: 1px solid var(--gray-300);
-		color: var(--gray-700);
-		padding: 0.6rem 1rem;
+			background: var(--blue-600);
+		color: var(--white);
+		padding: 0.6rem 1.5rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		font-size: 0.9rem;
@@ -1557,6 +1558,9 @@
 		font-weight: 600;
 		cursor: pointer;
 		transition: var(--transition-fast);
+		border: 1px solid rgb(198, 198, 198);
+		border-radius: 10px;
+		padding: 1rem 1rem;
 	}
 
 	.btn-booklet-cancel:hover {
@@ -2007,15 +2011,30 @@
 	}
 
 	.photo-preview-card {
-		width: 100%;
-		max-width: 320px;
-		aspect-ratio: 3/4;
-		border-radius: var(--radius-md);
-		overflow: hidden;
-		border: 4px solid var(--white);
-		box-shadow: var(--shadow-lg);
-		margin: 0 auto;
-	}
+	/* 1. Définir le ratio cible (Largeur / Hauteur = 3/4 = 0.75) */
+    aspect-ratio: 3 / 4;
+    
+    /* 2. Largeur responsive fluide */
+    width: 100%;
+    
+    /* 3. Limite maximale basée sur la largeur */
+    max-width: 320px; 
+    
+    /* 4. Limite maximale basée sur la hauteur de l'écran 
+          (320px * 0.75 = 240px de largeur max si la hauteur atteint 65vh) */
+    max-height: 65vh;
+
+    /* 5. Empêcher l'étirement si max-height est atteint */
+    height: auto;
+    object-fit: contain;
+
+    /* Vos styles visuels */
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 4px solid var(--white);
+    box-shadow: var(--shadow-lg);
+    margin: 0 auto;
+}
 
 	.photo-preview-card img {
 		width: 100%;
@@ -2125,8 +2144,13 @@
 		box-shadow: var(--shadow-md);
 	}
 
+
 	/* --- Responsive --- */
 	@media (max-width: 768px) {
+		.page-dots {
+		
+		display: none;
+	}
 		.formula-grid {
 			grid-template-columns: 1fr;
 		}
@@ -2183,22 +2207,19 @@
 			flex-direction: column;
 			align-items: center;
 			gap: 0.15rem;
-			padding: 0.4rem 0.9rem;
+			padding: 0.7rem 0.9rem;
 			background: var(--gray-100);
 			border-radius: var(--radius-md);
 			border: 1px solid var(--gray-200);
-			color: var(--gray-700);
+			color: rgb(34, 34, 34);
+			min-width: 200px;
+			font-weight: 900;
 		}
-		.mobile-text .arrow {
-			font-size: 1.2rem;
-			font-weight: 700;
-			line-height: 1;
-		}
+		
 		.mobile-text .label {
 			font-size: 12px;
-			font-weight: 500;
-			color: var(--gray-500);
-			line-height: 1;
+			font-weight: 700;
+			color: rgb(47, 47, 47);
 		}
 		.indicator-step-text {
 			display: none;
@@ -2207,17 +2228,45 @@
 			margin: 0 0.5rem;
 		}
 		.booklet-image-container {
-			height: 200px;
+			height: 260px;
+			width: 230px;
 		}
 		.booklet-footer {
-			flex-direction: column;
+			flex-direction: row;
 			gap: 1.25rem;
 			align-items: center;
 		}
+		.booklet-footer-links {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		align-items: center;
+		width: 100%;
+		border-top: 1px dashed var(--gray-200); /* Séparateur discret */
+		/* padding-top: 1rem; */
+		margin-top: 0.25rem;
+		gap: 0px;
+	}
+		.btn-booklet-cancel {
+		background:none;
+		border: none;
+		color: var(--gray-400); /* Plus discret */
+		font-size: 0.8rem; /* Plus petit pour marquer la hiérarchie */
+		font-weight: 600;
+		cursor: pointer;
+		transition: var(--transition-fast);
+		
+	}
+
+	.btn-booklet-cancel:hover {
+		color: var(--blue-600);
+	}
+
 		.btn-booklet-prev, .btn-booklet-next, .btn-booklet-start {
-			width: 100%;
+			max-width: 50%;
 			text-align: center;
 			box-sizing: border-box;
+			
 		}
 		.page-dots {
 			order: -1;
@@ -2250,6 +2299,9 @@
 		.btn-abort {
 			font-size: 0.85rem;
 		}
+		/* .photo-preview-card {
+			max-width: 280px;
+		} */
 		.result-actions {
 			flex-direction: column;
 			gap: 0.75rem;
@@ -2404,4 +2456,12 @@
 		font-size: 0.78rem;
 		color: var(--gray-600);
 	}
+		.booklet-badge {
+		color: var(--blue-600);
+		background: #eff6ff;
+		padding: 0.45rem 1rem;
+		border-radius: var(--radius-full);
+		font-size: 0.6rem;
+	}
+
 </style>

@@ -98,7 +98,6 @@
 
 				<div class="trust-indicators">
 					<span>✔️ ANTS & OACI Conforme</span>
-					<span>•</span>
 					<span>🔒 Données 100% Privées</span>
 				</div>
 			</div>
@@ -978,7 +977,7 @@
 			margin-top: 2rem;
 		}
 		.card-wrapper {
-			width: 130px;
+			width: 140px;
 		}
 		.id-photo-frame {
 			width: 90px;
@@ -993,5 +992,24 @@
 		.card-back-right {
 			transform: rotate(10deg) translateX(80px) translateY(10px);
 		}
+			.trust-indicators {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		font-size: 0.65rem;
+		opacity: 0.85;
+		
+	}
+	.trust-indicators span{
+	border: 1px solid grey;
+	border-radius: var(--radius-full);
+		padding: 0.5rem 1rem;
+		text-align: center;
+	}
+	.hero-grid {
+	
+		gap: 0rem;
+		
+	}
 	}
 </style>
