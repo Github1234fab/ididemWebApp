@@ -192,23 +192,39 @@
 		if (!videoEl) return;
 		
 		const canvas = document.createElement('canvas');
-		// On garde un format 4:3 portrait idéal pour l'identité
+		// On garde un format 3:4 portrait idéal pour l'identité
 		const width = videoEl.videoWidth;
 		const height = videoEl.videoHeight;
 		
-		// Déterminer la zone de crop carrée ou rectangulaire verticale au milieu
-		const size = Math.min(width, height);
 		canvas.width = 480;
 		canvas.height = 640; // Ratio 3:4 typique photo d'identité
 
 		const ctx = canvas.getContext('2d');
 		if (ctx) {
-			// Calcul du centrage
-			const sourceX = (width - (size * 0.75)) / 2;
-			const sourceY = (height - size) / 2;
+			// Crop correspondant au viseur ovale (80% width, 68% height sur mobile)
+			// On prend un ratio cohérent pour que le résultat = ce que l'user voit
+			const isMobile = window.innerWidth <= 500;
+			const cropW = isMobile ? width * 0.80 : width * 0.75;
+			const cropH = isMobile ? height * 0.68 : height * 0.75;
+			// Trouver la dimension de crop pour remplir le canvas 480x640 (ratio 3:4)
+			// sans déformer l'image
+			const targetRatio = 3 / 4; // largeur / hauteur
+			const cropRatio = cropW / cropH;
+			let sourceW, sourceH;
+			if (cropRatio > targetRatio) {
+				// Zone source plus large que le canvas ratio → limiter par hauteur
+				sourceH = cropH;
+				sourceW = cropH * targetRatio;
+			} else {
+				// Zone source plus haute que le canvas ratio → limiter par largeur
+				sourceW = cropW;
+				sourceH = cropW / targetRatio;
+			}
+			const sourceX = (width - sourceW) / 2;
+			const sourceY = (height - sourceH) / 2;
 			ctx.drawImage(
 				videoEl,
-				sourceX, sourceY, size * 0.75, size,
+				sourceX, sourceY, sourceW, sourceH,
 				0, 0, 480, 640
 			);
 			capturedImage = canvas.toDataURL('image/jpeg', 0.95);
@@ -689,9 +705,11 @@
 									<h4>Pays / Norme du fond :</h4>
 									<div class="destination-options">
 										<button class="dest-btn animate-fade-in" class:active={selectedBgColor === 'light-gray'} onclick={() => selectedBgColor = 'light-gray'}>
+											<span class="icon">🇫🇷</span>
 											 France (Gris)
 										</button>
 										<button class="dest-btn animate-fade-in" class:active={selectedBgColor === 'white'} onclick={() => selectedBgColor = 'white'}>
+											<span class="icon">🇲🇦 🇩🇿 🇹🇳</span>
 											 Maghreb (Blanc)
 										</button>
 									</div>
