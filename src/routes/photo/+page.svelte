@@ -708,7 +708,7 @@ function capturePhoto() {
 
 		<!-- ============================================== -->
 		<!-- ÉTAPE 3 : CAMÉRA ET GABARIT -->
-		<!-- ============================================== -->
+		{#if step === 3}
 			<section class="camera-section animate-fade-in">
 				<div class="camera-frame-wrapper">
 					<!-- Boutons de contrôle du Zoom (Syntaxe Svelte 5) -->
