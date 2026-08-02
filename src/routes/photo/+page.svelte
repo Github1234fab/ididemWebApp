@@ -709,41 +709,37 @@ function capturePhoto() {
 		<!-- ============================================== -->
 		<!-- ÉTAPE 3 : CAMÉRA ET GABARIT -->
 		<!-- ============================================== -->
-		{#if step === 3}
-
-<!-- Boutons de contrôle du Zoom (Syntaxe Svelte 5) -->
-
-<div class="zoom-controls">
-  <button 
-    type="button" 
-    class="zoom-btn" 
-    class:active={currentZoom === 1} 
-    onclick={() => setZoom(1)}
-  >
-    <span class="icon">👤</span> Normal
-  </button>
-  
-  <button 
-    type="button" 
-    class="zoom-btn" 
-    class:active={currentZoom === 1.4} 
-    onclick={() => setZoom(1.4)}
-  >
-  <span class="icon">✨</span> Anti-déformation
-  </button>
-  
-  <button 
-    type="button" 
-    class="zoom-btn" 
-    class:active={currentZoom === 1.8} 
-    onclick={() => setZoom(1.8)}
-  >
-    <span class="icon">🔍</span> Grand-angle
-  </button>
-</div>
-
 			<section class="camera-section animate-fade-in">
 				<div class="camera-frame-wrapper">
+					<!-- Boutons de contrôle du Zoom (Syntaxe Svelte 5) -->
+					<div class="zoom-controls">
+						<button 
+							type="button" 
+							class="zoom-btn" 
+							class:active={currentZoom === 1} 
+							onclick={() => setZoom(1)}
+						>
+							<span class="icon">👤</span> Normal
+						</button>
+						
+						<button 
+							type="button" 
+							class="zoom-btn" 
+							class:active={currentZoom === 1.4} 
+							onclick={() => setZoom(1.4)}
+						>
+							<span class="icon">✨</span> Anti-déformation
+						</button>
+						
+						<button 
+							type="button" 
+							class="zoom-btn" 
+							class:active={currentZoom === 1.8} 
+							onclick={() => setZoom(1.8)}
+						>
+							<span class="icon">🔍</span> Grand-angle
+						</button>
+					</div>
 					
 
 					{#if cameraError}
@@ -1033,7 +1029,7 @@ function capturePhoto() {
 <style>
 .zoom-controls {
   position: absolute;
-  bottom: 300px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -1945,6 +1941,7 @@ function capturePhoto() {
 	}
 
 	.camera-frame-wrapper {
+		position: relative;
 		background: var(--gray-900);
 		border-radius: var(--radius-lg);
 		padding: 2.5rem;
