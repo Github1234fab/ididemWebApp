@@ -188,52 +188,178 @@
 		}, 1000);
 	}
 
-	function capturePhoto() {
-		if (!videoEl) return;
-		
-		const canvas = document.createElement('canvas');
-		// On garde un format 3:4 portrait idéal pour l'identité
-		const width = videoEl.videoWidth;
-		const height = videoEl.videoHeight;
-		
-		canvas.width = 480;
-		canvas.height = 640; // Ratio 3:4 typique photo d'identité
+	// +++++++++++++++++++++ essai zoom interactif sur l'image
 
-		const ctx = canvas.getContext('2d');
-		if (ctx) {
-			// Crop correspondant au viseur ovale (80% width, 68% height sur mobile)
-			// On prend un ratio cohérent pour que le résultat = ce que l'user voit
-			const isMobile = window.innerWidth <= 300;
-			const cropW = isMobile ? width * 0.99 : width * 0.99;
-			const cropH = isMobile ? height * 0.99 : height * 0.99;
-			// Trouver la dimension de crop pour remplir le canvas 480x640 (ratio 3:4)
-			// sans déformer l'image
-			const targetRatio = 3 / 4; // largeur / hauteur
-			const cropRatio = cropW / cropH;
-			let sourceW, sourceH;
-			if (cropRatio > targetRatio) {
-				// Zone source plus large que le canvas ratio → limiter par hauteur
-				sourceH = cropH;
-				sourceW = cropH * targetRatio;
-			} else {
-				// Zone source plus haute que le canvas ratio → limiter par largeur
-				sourceW = cropW;
-				sourceH = cropW / targetRatio;
-			}
-			const sourceX = (width - sourceW) / 2;
-			const sourceY = (height - sourceH) / 2;
-			ctx.drawImage(
-				videoEl,
-				sourceX, sourceY, sourceW, sourceH,
-				0, 0, 480, 640
-			);
-			capturedImage = canvas.toDataURL('image/jpeg', 0.95);
-		}
+	let currentZoom = $state(1); // 1 = normal, 1.3 = zoom léger (recommandé pour iPhone), 1.6 = fort zoom
 
-		stopCamera();
-		isShutterActive = false;
-		step = 4;
-	}
+// Fonction pour changer le zoom via les boutons UX
+// On spécifie que zoomValue est un nombre
+
+/**
+ * @param {number} zoomValue
+ */
+function setZoom(zoomValue) {
+    currentZoom = zoomValue;
+    
+    if (videoEl) {
+      videoEl.style.transform = `scaleX(-1) scale(${currentZoom})`;
+        videoEl.style.transformOrigin = 'center center';
+    }
+}
+
+// +++++++++++++++++++++++++++++++++++
+
+	// function capturePhoto() {
+	// 	if (!videoEl) return;
+		
+	// 	const canvas = document.createElement('canvas');
+	// 	// On garde un format 3:4 portrait idéal pour l'identité
+	// 	const width = videoEl.videoWidth;
+	// 	const height = videoEl.videoHeight;
+		
+	// 	canvas.width = 480;
+	// 	canvas.height = 640; // Ratio 3:4 typique photo d'identité
+
+	// 	const ctx = canvas.getContext('2d');
+	// 	if (ctx) {
+	// 		// Crop correspondant au viseur ovale (80% width, 68% height sur mobile)
+	// 		// On prend un ratio cohérent pour que le résultat = ce que l'user voit
+	// 		const isMobile = window.innerWidth <= 300;
+	// 		const cropW = isMobile ? width * 0.99 : width * 0.99;
+	// 		const cropH = isMobile ? height * 0.99 : height * 0.99;
+	// 		// Trouver la dimension de crop pour remplir le canvas 480x640 (ratio 3:4)
+	// 		// sans déformer l'image
+	// 		const targetRatio = 3 / 4; // largeur / hauteur
+	// 		const cropRatio = cropW / cropH;
+	// 		let sourceW, sourceH;
+	// 		if (cropRatio > targetRatio) {
+	// 			// Zone source plus large que le canvas ratio → limiter par hauteur
+	// 			sourceH = cropH;
+	// 			sourceW = cropH * targetRatio;
+	// 		} else {
+	// 			// Zone source plus haute que le canvas ratio → limiter par largeur
+	// 			sourceW = cropW;
+	// 			sourceH = cropW / targetRatio;
+	// 		}
+	// 		const sourceX = (width - sourceW) / 2;
+	// 		const sourceY = (height - sourceH) / 2;
+	// 		ctx.drawImage(
+	// 			videoEl,
+	// 			sourceX, sourceY, sourceW, sourceH,
+	// 			0, 0, 480, 640
+	// 		);
+	// 		capturedImage = canvas.toDataURL('image/jpeg', 0.95);
+	// 	}
+
+	// 	stopCamera();
+	// 	isShutterActive = false;
+	// 	step = 4;
+	// }
+
+// function capturePhoto() {
+//     if (!videoEl) return;
+    
+//     const canvas = document.createElement('canvas');
+//     const width = videoEl.videoWidth;
+//     const height = videoEl.videoHeight;
+    
+//     // Canvas final aux normes d'export (Ratio 3:4)
+//     canvas.width = 480;
+//     canvas.height = 640; 
+
+//     const ctx = canvas.getContext('2d');
+//     if (ctx) {
+//         // En photo d'identité, le visage doit occuper environ 70% à 80% de la hauteur du cadre
+//         // On définit la zone capturée au centre du flux vidéo
+        
+//         const targetRatio = 3 / 4; // Ratio 0.75
+        
+//         // On prélève un cadre central représentant environ 75% du flux vidéo
+//         // Cela force un léger recul visuel tout en gardant une excellente résolution
+//         const cropFactor = 0.99; 
+        
+//         let sourceW, sourceH;
+        
+//         if ((width / height) > targetRatio) {
+//             // Flux vidéo plus large que 3:4
+//             sourceH = height * cropFactor;
+//             sourceW = sourceH * targetRatio;
+//         } else {
+//             // Flux vidéo plus haut que 3:4
+//             sourceW = width * cropFactor;
+//             sourceH = sourceW / targetRatio;
+//         }
+
+//         // Centrage parfait du crop sur le flux
+//         const sourceX = (width - sourceW) / 2;
+//         const sourceY = (height - sourceH) / 2;
+
+//         ctx.drawImage(
+//             videoEl,
+//             sourceX, sourceY, sourceW, sourceH, // Source
+//             0, 0, 480, 640                      // Destination
+//         );
+        
+//         capturedImage = canvas.toDataURL('image/jpeg', 0.95);
+//     }
+
+//     stopCamera();
+//     isShutterActive = false;
+//     step = 4;
+// }
+
+function capturePhoto() {
+    if (!videoEl) return;
+    
+    const canvas = document.createElement('canvas');
+    const width = videoEl.videoWidth;
+    const height = videoEl.videoHeight;
+    
+    canvas.width = 480;
+    canvas.height = 640; // Ratio 3:4
+
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+        // Vos 0.99 d'origine, mais divisés par le zoom courant
+        // Exemple : si zoom = 1.3, la zone de vidéo découpée est 1.3x plus petite au centre
+        // ce qui correspond EXACTEMENT au scale CSS de la vidéo !
+        const cropW = (width * 0.99) / currentZoom;
+        const cropH = (height * 0.99) / currentZoom;
+
+        const targetRatio = 3 / 4;
+        const cropRatio = cropW / cropH;
+        let sourceW, sourceH;
+
+        if (cropRatio > targetRatio) {
+            sourceH = cropH;
+            sourceW = cropH * targetRatio;
+        } else {
+            sourceW = cropW;
+            sourceH = cropW / targetRatio;
+        }
+
+        // Extraction centrée
+        const sourceX = (width - sourceW) / 2;
+        const sourceY = (height - sourceH) / 2;
+
+        ctx.drawImage(
+            videoEl,
+            sourceX, sourceY, sourceW, sourceH, // Source zoomée
+            0, 0, 480, 640                      // Canvas final
+        );
+
+        capturedImage = canvas.toDataURL('image/jpeg', 0.95);
+    }
+
+    stopCamera();
+    isShutterActive = false;
+    step = 4;
+}
+
+
+
+
+
 
 	let isProcessing = $state(false);
 	let processingError = $state('');
@@ -584,9 +710,42 @@
 		<!-- ÉTAPE 3 : CAMÉRA ET GABARIT -->
 		<!-- ============================================== -->
 		{#if step === 3}
+
+<!-- Boutons de contrôle du Zoom (Syntaxe Svelte 5) -->
+
+<div class="zoom-controls">
+  <button 
+    type="button" 
+    class="zoom-btn" 
+    class:active={currentZoom === 1} 
+    onclick={() => setZoom(1)}
+  >
+    <span class="icon">👤</span> Normal
+  </button>
+  
+  <button 
+    type="button" 
+    class="zoom-btn" 
+    class:active={currentZoom === 1.4} 
+    onclick={() => setZoom(1.4)}
+  >
+  <span class="icon">✨</span> Anti-déformation
+  </button>
+  
+  <button 
+    type="button" 
+    class="zoom-btn" 
+    class:active={currentZoom === 1.8} 
+    onclick={() => setZoom(1.8)}
+  >
+    <span class="icon">🔍</span> Grand-angle
+  </button>
+</div>
+
 			<section class="camera-section animate-fade-in">
 				<div class="camera-frame-wrapper">
 					
+
 					{#if cameraError}
 						<div class="camera-error">
 							<p>⚠️ {cameraError}</p>
@@ -872,6 +1031,40 @@
 </main>
 
 <style>
+.zoom-controls {
+  position: absolute;
+  bottom: 300px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  padding: 4px 6px;
+  border-radius: 24px;
+  z-index: 10;
+}
+.zoom-btn {
+  background: transparent;
+  border: 2px solid grey;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.zoom-btn.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-weight: 600;
+}
 	.background-selector {
 		margin-top: 0.5rem;
 		display: flex;
