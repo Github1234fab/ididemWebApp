@@ -320,9 +320,10 @@ function capturePhoto() {
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
-        // Vos 0.99 d'origine, mais divisés par le zoom courant
-        // Exemple : si zoom = 1.3, la zone de vidéo découpée est 1.3x plus petite au centre
-        // ce qui correspond EXACTEMENT au scale CSS de la vidéo !
+        // Appliquer un effet miroir sur le canvas pour correspondre à l'écran de shooting
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+
         const cropW = (width * 0.99) / currentZoom;
         const cropH = (height * 0.99) / currentZoom;
 
@@ -345,7 +346,7 @@ function capturePhoto() {
         ctx.drawImage(
             videoEl,
             sourceX, sourceY, sourceW, sourceH, // Source zoomée
-            0, 0, 480, 640                      // Canvas final
+            0, 0, 480, 640                      // Canvas final (miroirisé via scale(-1, 1))
         );
 
         capturedImage = canvas.toDataURL('image/jpeg', 0.95);
@@ -719,7 +720,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1} 
 							onclick={() => setZoom(1)}
 						>
-							<span class="icon">👤</span> Normal
+							<span class="icon">👤</span> De loin
 						</button>
 						
 						<button 
@@ -728,7 +729,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1.4} 
 							onclick={() => setZoom(1.4)}
 						>
-							<span class="icon">✨</span> Anti-déformation
+							<span class="icon">✨</span> Conseillé
 						</button>
 						
 						<button 
@@ -737,7 +738,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1.8} 
 							onclick={() => setZoom(1.8)}
 						>
-							<span class="icon">🔍</span> Grand-angle
+							<span class="icon">🔍</span> De près
 						</button>
 					</div>
 					
@@ -1033,20 +1034,23 @@ function capturePhoto() {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 6px;
-  background: rgba(0, 0, 0, 0.55);
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
   padding: 4px 6px;
   border-radius: 24px;
   z-index: 10;
+  width: max-content;
+  max-width: calc(100% - 20px);
+  box-sizing: border-box;
 }
 .zoom-btn {
   background: transparent;
-  border: 2px solid grey;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
   font-weight: 500;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 18px;
   cursor: pointer;
   display: flex;
@@ -1056,8 +1060,20 @@ function capturePhoto() {
   white-space: nowrap;
 }
 
+@media (max-width: 360px) {
+  .zoom-controls {
+    gap: 2px;
+    padding: 3px 4px;
+  }
+  .zoom-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
 .zoom-btn.active {
   background: rgba(255, 255, 255, 0.25);
+  border-color: #ffffff;
   color: #ffffff;
   font-weight: 600;
 }
