@@ -150,7 +150,7 @@
 		</div>
 	</section>
 
-	<!-- Advantages / Features -->
+	<!-- Advantages / Features (Pourquoi choisir IDidem) -->
 	<section id="features" class="features-section">
 		<div class="container">
 			<h2 class="section-title text-center">Pourquoi choisir <span class="highlight">IDidem</span> ?</h2>
@@ -167,62 +167,7 @@
 		</div>
 	</section>
 
-	<!-- How It Works -->
-	<section id="how-it-works" class="how-section">
-		<div class="container">
-			<h2 class="section-title text-center">Comment ça marche ?</h2>
-			<div class="steps-grid">
-				{#each steps as step}
-					<div class="step-card">
-						<div class="step-num">{step.num}</div>
-						<h4>{step.title}</h4>
-						<p>{step.desc}</p>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- Green impact -->
-	<section class="eco-section">
-		<div class="container text-center">
-			<div class="eco-badge">🌱 Application Éco-Responsable</div>
-			<h2>Zéro trajet, zéro CO₂ pour vos photos</h2>
-			<p>En évitant les déplacements inutiles en voiture vers les cabines ou les studios de photographie, les utilisateurs d'IDidem ont déjà économisé plus de <strong>{co2Saved} kg de CO₂</strong>.</p>
-		</div>
-	</section>
-
-	<!-- Section Expertise Photographe vs IA -->
-	<section class="expertise-section">
-		<div class="container">
-			<div class="expertise-content">
-				<span class="expertise-badge">💡 UNE CONCEPTION UNIQUE</span>
-				<h2>Une application conçue par des photographes professionnels</h2>
-				<p class="lead-text">
-					Faire une photo d'identité réglementaire est un métier de précision qui ne s'invente pas. 
-					IDidem a été développée par des artisans photographes cumulant <strong>20 ans d'expérience</strong> dans l'identité biométrique.
-				</p>
-				<div class="expertise-arguments">
-					<div class="arg-item">
-						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA ?</h4>
-						<p>
-							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle. 
-							Pourtant, à l'usage, l'IA valide plus de 98% de photos non conformes (par exemple, si vous esquissez un léger sourire ou si vos yeux ne fixent pas l'objectif). Le verdict final en mairie ou préfecture est alors le rejet.
-						</p>
-					</div>
-					<div class="arg-item">
-						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS</h4>
-						<p>
-							Chez IDidem, nous ne laissons rien au hasard. Toutes les étapes de capture et de cadrage ont été minutieusement pensées à partir des cahiers des charges réels de l'ANTS, des mairies et des préfectures. 
-							C'est notre tutoriel interactif précis et nos repères qui vous responsabilisent et vous guident pas à pas, pour que vous preniez votre cliché en parfaite connaissance de cause.
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Pricing -->
+	<!-- Pricing (Tarifs) -->
 	<section id="pricing" class="pricing-section">
 		<div class="container">
 			<h2 class="section-title text-center">Des tarifs simples et transparents</h2>
@@ -233,7 +178,7 @@
 				<div class="price-card popular">
 					<div class="popular-badge">Recommandé</div>
 					<h3>e-Photo ANTS</h3>
-					<div class="price">12,99 €</div>
+					<div class="price">6,99 €</div>
 					<p class="price-desc">Permis de conduire & Titre de séjour. Inclus le code ANTS et la signature en direct.</p>
 					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
 						<li>✓ Code officiel ANTS fourni</li>
@@ -247,7 +192,7 @@
 				<!-- Officielle OACI -->
 				<div class="price-card">
 					<h3>Officielle OACI</h3>
-					<div class="price">6,99 €</div>
+					<div class="price">4,99 €</div>
 					<p class="price-desc">Carte d'identité, Passeport, Visa, Carte vitale. Format planche 35x45mm.</p>
 					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
 						<li>✓ Planche de 6 photos d'identité HD</li>
@@ -261,7 +206,7 @@
 				<!-- Portrait Pro CV -->
 				<div class="price-card">
 					<h3>Portrait Pro LinkedIn</h3>
-					<div class="price">3,99 €</div>
+					<div class="price">2,99 €</div>
 					<p class="price-desc">Pour vos CV, réseaux sociaux et profils professionnels. Rendu studio haut de gamme.</p>
 					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
 						<li>✓ Détourage de précision par IA</li>
@@ -271,6 +216,22 @@
 					</ul>
 					<a href="/photo?formula=casual" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; background: var(--gray-100); color: var(--gray-700); box-shadow: none;">Choisir cette formule</a>
 				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- How It Works (Comment ça marche) -->
+	<section id="how-it-works" class="how-section">
+		<div class="container">
+			<h2 class="section-title text-center">Comment ça marche ?</h2>
+			<div class="steps-grid">
+				{#each steps as step}
+					<div class="step-card">
+						<div class="step-num">{step.num}</div>
+						<h4>{step.title}</h4>
+						<p>{step.desc}</p>
+					</div>
+				{/each}
 			</div>
 		</div>
 	</section>
@@ -320,6 +281,47 @@
 			</div>
 		</div>
 	</section>
+
+	<!-- Section Expertise Photographe vs IA -->
+	<section class="expertise-section">
+		<div class="container">
+			<div class="expertise-content">
+				<span class="expertise-badge">💡 UNE CONCEPTION UNIQUE</span>
+				<h2>Une application conçue par des photographes professionnels</h2>
+				<p class="lead-text">
+					Faire une photo d'identité réglementaire est un métier de précision qui ne s'invente pas. 
+					IDidem a été développée par des artisans photographes cumulant <strong>20 ans d'expérience</strong> dans l'identité biométrique.
+				</p>
+				<div class="expertise-arguments">
+					<div class="arg-item">
+						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA ?</h4>
+						<p>
+							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle. 
+							Pourtant, à l'usage, l'IA valide plus de 98% de photos non conformes (par exemple, si vous esquissez un léger sourire ou si vos yeux ne fixent pas l'objectif). Le verdict final en mairie ou préfecture est alors le rejet.
+						</p>
+					</div>
+					<div class="arg-item">
+						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS</h4>
+						<p>
+							Chez IDidem, nous ne laissons rien au hasard. Toutes les étapes de capture et de cadrage ont été minutieusement pensées à partir des cahiers des charges réels de l'ANTS, des mairies et des préfectures. 
+							C'est notre tutoriel interactif précis et nos repères qui vous responsabilisent et vous guident pas à pas, pour que vous preniez votre cliché en parfaite connaissance de cause.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Green impact (Application éco-responsable) -->
+	<section class="eco-section">
+		<div class="container text-center">
+			<div class="eco-badge">🌱 Application Éco-Responsable</div>
+			<h2>Zéro trajet, zéro CO₂ pour vos photos</h2>
+			<p>En évitant les déplacements inutiles en voiture vers les cabines ou les studios de photographie, les utilisateurs d'IDidem ont déjà économisé plus de <strong>{co2Saved} kg de CO₂</strong>.</p>
+		</div>
+	</section>
+
+
 
 	<!-- FAQ -->
 	<section id="faq" class="faq-section">

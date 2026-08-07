@@ -24,15 +24,15 @@ export async function POST({ request }) {
 
 		if (formulaId === 'e-photo') {
 			productName = 'e-Photo Officielle (ANTS)';
-			unitAmount = 1299; // 12.99 €
+			unitAmount = 699; // 6.99 €
 			description = 'Planche e-Photo conforme ANTS pour permis de conduire et titre de séjour avec code unique';
 		} else if (formulaId === 'officielle') {
 			productName = 'Photo d\'identité standard';
-			unitAmount = 699; // 6.99 €
+			unitAmount = 499; // 4.99 €
 			description = 'Planche photo d\'identité officielle pour passeport, CNI et visas';
 		} else if (formulaId === 'casual') {
 			productName = 'Portrait Professionnel';
-			unitAmount = 399; // 3.99 €
+			unitAmount = 299; // 2.99 €
 			description = 'Portrait optimisé et recadré pour LinkedIn, CV et profils en ligne';
 		}
 

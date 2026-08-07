@@ -30,7 +30,7 @@ export async function POST({ request }) {
 		const paymentIntent = searchResults.data[0];
 		
 		if (paymentIntent.status === 'requires_capture') {
-			console.log(`Capture du paiement Stripe ${paymentIntent.id} de 12.99 €...`);
+			console.log(`Capture du paiement Stripe ${paymentIntent.id} de 6.99 €...`);
 			const capturedPI = await stripe.paymentIntents.capture(paymentIntent.id);
 			return json({ success: true, paymentIntentId: capturedPI.id, status: capturedPI.status });
 		} else if (paymentIntent.status === 'succeeded') {

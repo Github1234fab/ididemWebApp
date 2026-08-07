@@ -8,10 +8,10 @@
 			<span class="logo-text">IDidem</span>
 		</a>
 		<div class="nav-links">
-			<a href="#features">Avantages</a>
-			<a href="#how-it-works">Comment ça marche</a>
-			<a href="#pricing">Tarifs</a>
-			<a href="#faq">FAQ</a>
+			<a href="/#features">Avantages</a>
+			<a href="/#how-it-works">Comment ça marche</a>
+			<a href="/#pricing">Tarifs</a>
+			<a href="/#faq">FAQ</a>
 			<div class="header-store-buttons">
 				<a href="https://apps.apple.com/fr/iphone/search?term=ididem" target="_blank" rel="noopener noreferrer" class="header-store-btn" title="Télécharger dans l'App Store">
 					🍏 App Store

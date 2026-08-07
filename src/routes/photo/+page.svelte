@@ -999,9 +999,9 @@ function capturePhoto() {
 										{#if isRedirecting}
 											Redirection...
 										{:else if selectedFormula === 'e-photo'}
-											Valider mon empreinte et continuer (12,99 €)
+											Valider mon empreinte et continuer (6,99 €)
 										{:else}
-											Procéder au paiement ({selectedFormula === 'officielle' ? '6,99' : '3,99'} €)
+											Procéder au paiement ({selectedFormula === 'officielle' ? '4,99' : '2,99'} €)
 										{/if}
 									</button>
 								{:else}

@@ -144,7 +144,7 @@
 				{/if}
 				<div class="card-header">
 					<h3>e-Photo ANTS</h3>
-					<span class="price">12,99 €</span>
+					<span class="price">6,99 €</span>
 				</div>
 				<p class="formula-desc">Permis de conduire & Titre de séjour. Inclus le code ANTS et la signature en visioconférence.</p>
 				<ul class="features-list">
@@ -163,7 +163,7 @@
 				{/if}
 				<div class="card-header">
 					<h3>Officielle Norme OACI</h3>
-					<span class="price">6,99 €</span>
+					<span class="price">4,99 €</span>
 				</div>
 				<p class="formula-desc">Carte d'identité nationale, Passeport, Visa, Carte vitale. Format planche 35x45mm.</p>
 				<ul class="features-list">
@@ -182,7 +182,7 @@
 				{/if}
 				<div class="card-header">
 					<h3>Portrait Pro LinkedIn</h3>
-					<span class="price">3,99 €</span>
+					<span class="price">2,99 €</span>
 				</div>
 				<p class="formula-desc">Pour vos CV, profils professionnels et réseaux sociaux. Rendu studio haut de gamme.</p>
 				<ul class="features-list">

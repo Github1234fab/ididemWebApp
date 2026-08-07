@@ -93,7 +93,7 @@
 			const data = await response.json();
 			if (response.ok && data.success) {
 				captureSuccess = true;
-				captureMessage = 'Paiement de 12,99 € capturé avec succès !';
+				captureMessage = 'Paiement de 6,99 € capturé avec succès !';
 			} else {
 				captureSuccess = false;
 				captureMessage = `Erreur: ${data.error || 'Erreur inconnue'}`;
@@ -325,7 +325,7 @@
 
 			<div class="stripe-capture-action">
 				<button class="capture-btn" onclick={capturePayment} disabled={isCapturing || !sessionId}>
-					{isCapturing ? 'Capture...' : '💳 Débiter l\'empreinte (12,99 €)'}
+					{isCapturing ? 'Capture...' : '💳 Débiter l\'empreinte (6,99 €)'}
 				</button>
 				{#if captureMessage}
 					<span class="capture-status-msg" class:success-msg={captureSuccess} class:error-msg={!captureSuccess}>
