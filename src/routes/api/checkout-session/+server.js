@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/private';
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	try {
-		const { formulaId, email, clientSessionId } = await request.json();
+		const { formulaId, email, clientSessionId, delivery, address } = await request.json();
 		if (!formulaId) {
 			return json({ error: 'formulaId is required' }, { status: 400 });
 		}
@@ -36,39 +36,61 @@ export async function POST({ request }) {
 			description = 'Portrait optimisé et recadré pour LinkedIn, CV et profils en ligne';
 		}
 
+		// Préparer les articles d'achat pour Stripe
+		const lineItems = [
+			{
+				price_data: {
+					currency: 'eur',
+					product_data: {
+						name: productName,
+						description: description
+					},
+					unit_amount: unitAmount
+				},
+				quantity: 1
+			}
+		];
+
+		// Si l'utilisateur demande une livraison postale, on ajoute un produit d'upsell à 3.00 €
+		if (delivery && address) {
+			lineItems.push({
+				price_data: {
+					currency: 'eur',
+					product_data: {
+						name: 'Impression & Envoi postal premium',
+						description: `Planche photo imprimée de haute qualité expédiée par la poste à l'adresse de ${address.name || 'Client'}`
+					},
+					unit_amount: 300 // 3.00 €
+				},
+				quantity: 1
+			});
+		}
+
 		// Obtenir l'origine de la requête pour les redirections de Stripe
 		const origin = new URL(request.url).origin;
 
-		console.log(`Création d'une session Stripe Checkout pour la formule : ${formulaId}...`);
+		console.log(`Création d'une session Stripe Checkout pour la formule : ${formulaId} (Livraison postale: ${delivery ? 'Oui' : 'Non'})...`);
+		
+		const sessionMetadata = {
+			application: 'ididem-web',
+			formulaId: formulaId,
+			clientSessionId: clientSessionId || 'unknown',
+			delivery: delivery ? 'true' : 'false',
+			deliveryName: address?.name || '',
+			deliveryStreet: address?.street || '',
+			deliveryZip: address?.zip || '',
+			deliveryCity: address?.city || ''
+		};
+
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ['card'],
 			customer_email: email || undefined,
-			line_items: [
-				{
-					price_data: {
-						currency: 'eur',
-						product_data: {
-							name: productName,
-							description: description
-						},
-						unit_amount: unitAmount
-					},
-					quantity: 1
-				}
-			],
+			line_items: lineItems,
 			mode: 'payment',
-			metadata: {
-				application: 'ididem-web',
-				formulaId: formulaId,
-				clientSessionId: clientSessionId || 'unknown'
-			},
+			metadata: sessionMetadata,
 			payment_intent_data: {
 				capture_method: formulaId === 'e-photo' ? 'manual' : 'automatic',
-				metadata: {
-					application: 'ididem-web',
-					formulaId: formulaId,
-					clientSessionId: clientSessionId || 'unknown'
-				}
+				metadata: sessionMetadata
 			},
 			success_url: `${origin}/photo/success?session_id=${clientSessionId || '{CHECKOUT_SESSION_ID}'}`,
 			cancel_url: `${origin}/photo/cancel`

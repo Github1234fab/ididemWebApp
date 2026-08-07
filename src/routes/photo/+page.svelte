@@ -35,6 +35,13 @@
 	// Formule choisie
 	let selectedFormula = $state(''); // 'e-photo', 'officielle', 'casual'
 
+	// Options de livraison postale premium
+	let deliveryRequested = $state(false);
+	let deliveryName = $state('');
+	let deliveryStreet = $state('');
+	let deliveryZip = $state('');
+	let deliveryCity = $state('');
+
 	// Flux caméra
 	/** @type {HTMLVideoElement | null} */
 	let videoEl = $state(null);
@@ -442,13 +449,29 @@ function capturePhoto() {
 			localStorage.setItem('ididem_booking_date', bookingDate);
 			localStorage.setItem('ididem_booking_time', bookingTime);
 			localStorage.setItem('ididem_client_session_id', clientSessionId);
+			localStorage.setItem('ididem_delivery_requested', deliveryRequested ? 'true' : 'false');
+			localStorage.setItem('ididem_delivery_name', deliveryName);
+			localStorage.setItem('ididem_delivery_street', deliveryStreet);
+			localStorage.setItem('ididem_delivery_zip', deliveryZip);
+			localStorage.setItem('ididem_delivery_city', deliveryCity);
 
 			const res = await fetch('/api/checkout-session', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ formulaId: selectedFormula, email: userEmail })
+				body: JSON.stringify({ 
+					formulaId: selectedFormula, 
+					email: userEmail,
+					clientSessionId: clientSessionId,
+					delivery: deliveryRequested,
+					address: deliveryRequested ? {
+						name: deliveryName,
+						street: deliveryStreet,
+						zip: deliveryZip,
+						city: deliveryCity
+					} : null
+				})
 			});
 
 			if (!res.ok) {
@@ -522,7 +545,12 @@ function capturePhoto() {
 		localStorage.setItem('ididem_booking_date', bookingDate);
 		localStorage.setItem('ididem_booking_time', bookingTime);
 		localStorage.setItem('ididem_client_session_id', clientSessionId);
-		window.location.href = `/photo/success?session_id=${clientSessionId}`;
+		localStorage.setItem('ididem_delivery_requested', deliveryRequested ? 'true' : 'false');
+		localStorage.setItem('ididem_delivery_name', deliveryName);
+		localStorage.setItem('ididem_delivery_street', deliveryStreet);
+		localStorage.setItem('ididem_delivery_zip', deliveryZip);
+		localStorage.setItem('ididem_delivery_city', deliveryCity);
+		window.location.href = `/photo/success?session_id=${clientSessionId}&delivery=${deliveryRequested ? 'true' : 'false'}`;
 	}
 
 	function restart() {
@@ -992,16 +1020,68 @@ function capturePhoto() {
 								{/if}
 							{/if}
 
+							{#if isProcessed}
+								<!-- Option Envoi Postal Premium -->
+								<div class="booking-section-inline reassurance-card" style="margin-top: 1.5rem; text-align: left; background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: var(--radius-sm); padding: 1.25rem;">
+									<label style="display: flex; align-items: flex-start; gap: 0.85rem; font-weight: 700; color: var(--blue-900); cursor: pointer; font-size: 1.05rem;">
+										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.35rem; height: 1.35rem; margin-top: 0.15rem; accent-color: var(--blue-600); cursor: pointer;" />
+										<div>
+											<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+												<span>📮 Option Envoi Postal (+3,00 €)</span>
+												<span style="background: var(--success); color: var(--white); font-size: 0.65rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.05em;">🌱 Zéro déplacement, 100% éco</span>
+											</div>
+											<span style="display: block; font-size: 0.85rem; color: var(--gray-600); font-weight: 400; margin-top: 0.4rem; line-height: 1.4;">
+												Recevez votre planche imprimée directement chez vous. Évitez les trajets inutiles et économisez du temps et du CO₂.
+											</span>
+										</div>
+									</label>
+
+									{#if deliveryRequested}
+										<div class="delivery-address-form" style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed var(--gray-200); display: flex; flex-direction: column; gap: 1rem;">
+											<h4 style="font-size: 0.95rem; font-weight: 700; color: var(--blue-700); margin: 0;">Adresse de livraison</h4>
+											
+											<div style="display: flex; flex-direction: column; gap: 0.4rem;">
+												<label for="delivery-email" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Votre adresse e-mail (pour la confirmation) :</label>
+												<input type="email" id="delivery-email" bind:value={userEmail} placeholder="Ex: jean.dupont@email.com" required style="padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem;" />
+											</div>
+
+											<div style="display: flex; flex-direction: column; gap: 0.4rem;">
+												<label for="delivery-name" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Nom complet du destinataire :</label>
+												<input type="text" id="delivery-name" bind:value={deliveryName} placeholder="Ex: Jean Dupont" required style="padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem;" />
+											</div>
+
+											<div style="display: flex; flex-direction: column; gap: 0.4rem;">
+												<label for="delivery-street" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Adresse postale (Rue, appartement, boîte...) :</label>
+												<input type="text" id="delivery-street" bind:value={deliveryStreet} placeholder="Ex: 12 Rue de la Paix" required style="padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem;" />
+											</div>
+
+											<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem;">
+												<div style="display: flex; flex-direction: column; gap: 0.4rem;">
+													<label for="delivery-zip" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Code postal :</label>
+													<input type="text" id="delivery-zip" bind:value={deliveryZip} placeholder="Ex: 75001" required style="padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem;" />
+												</div>
+												<div style="display: flex; flex-direction: column; gap: 0.4rem;">
+													<label for="delivery-city" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Ville :</label>
+													<input type="text" id="delivery-city" bind:value={deliveryCity} placeholder="Ex: Paris" required style="padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem;" />
+												</div>
+											</div>
+										</div>
+									{/if}
+								</div>
+							{/if}
+
 							<div class="result-actions">
 								<button class="btn-retake" disabled={isRedirecting} onclick={restart}>Recommencer</button>
 								{#if isProcessed}
-									<button class="btn-confirm-photo" disabled={isRedirecting} onclick={handlePayment}>
+									<button class="btn-confirm-photo" disabled={isRedirecting || (deliveryRequested && (!userEmail || !deliveryName || !deliveryStreet || !deliveryZip || !deliveryCity))} onclick={handlePayment}>
 										{#if isRedirecting}
-											Redirection...
+											<span>Redirection...</span>
 										{:else if selectedFormula === 'e-photo'}
-											Valider mon empreinte et continuer (6,99 €)
+											<span style="display: block; font-size: 0.95rem; font-weight: 700;">Valider mon empreinte et continuer</span>
+											<span style="display: block; font-size: 0.8rem; font-weight: 400; opacity: 0.9; margin-top: 0.15rem;">Montant : {deliveryRequested ? '9,99' : '6,99'} €</span>
 										{:else}
-											Procéder au paiement ({selectedFormula === 'officielle' ? '4,99' : '2,99'} €)
+											<span style="display: block; font-size: 0.95rem; font-weight: 700;">Procéder au paiement</span>
+											<span style="display: block; font-size: 0.8rem; font-weight: 400; opacity: 0.9; margin-top: 0.15rem;">Montant : {selectedFormula === 'officielle' ? (deliveryRequested ? '7,99' : '4,99') : (deliveryRequested ? '5,99' : '2,99')} €</span>
 										{/if}
 									</button>
 								{:else}

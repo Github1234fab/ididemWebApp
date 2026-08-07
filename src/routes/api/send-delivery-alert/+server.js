@@ -4,40 +4,39 @@ import { env } from '$env/dynamic/private';
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	try {
-		const { email, phone, date, time, sessionId, delivery, address } = await request.json();
+		const { email, sessionId, delivery, address, formulaId, photoData } = await request.json();
 		
 		const webappUrl = env.GOOGLE_SHEET_WEBAPP_URL;
 		if (!webappUrl) {
 			console.warn('GOOGLE_SHEET_WEBAPP_URL is not defined in .env. Skipping Google Sheets integration.');
-			return json({ success: true, message: 'Google Sheet Webapp URL missing (local mock success)' });
+			return json({ success: true, message: 'Google Sheet Webapp URL missing' });
 		}
 
-		console.log(`Sending booking to Google Sheet: ${email} - ${phone} - ${date} à ${time} (session: ${sessionId}, livraison: ${delivery ? 'Oui' : 'Non'})...`);
+		console.log(`Sending delivery alert to Google Sheet: ${email} (session: ${sessionId}, formule: ${formulaId})...`);
 		
-		// Send request to Google Apps Script Web App
+		// Envoyer la requête au Google Apps Script Web App
 		const response = await fetch(webappUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				action: 'book-appointment',
+				action: 'send-delivery-alert',
 				email,
-				phone,
-				date,
-				time,
 				sessionId,
 				delivery,
-				address
+				address,
+				formulaId,
+				photoData
 			})
 		});
 
 		const resultText = await response.text();
-		console.log('Google Apps Script response:', resultText);
+		console.log('Google Apps Script delivery response:', resultText);
 
 		return json({ success: true });
 	} catch (err) {
-		console.error('Error booking appointment:', err);
+		console.error('Error sending delivery alert:', err);
 		return json({ error: err instanceof Error ? err.message : 'Internal Server Error' }, { status: 500 });
 	}
 }

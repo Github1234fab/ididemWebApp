@@ -1,19 +1,18 @@
-<!-- Footer.svelte -->
+<script>
+	import { villesSEO } from '$lib/data/villes.js';
+
+	// Récupérer la liste triée des villes pour le maillage
+	const sortedCities = Object.values(villesSEO).sort((a, b) => a.name.localeCompare(b.name));
+</script>
+
 <footer class="footer">
 	<div class="container footer-content">
 		<div class="footer-brand">
 			<div class="logo">
 				<div class="logo-icon">
-				<img src="/logoIdidem_1024.png" alt="Logo IDidem" class="logo-svg" />
-					<!-- <svg viewBox="0 0 100 100" class="logo-svg">
-						<circle cx="50" cy="50" r="45" fill="#1e88e5"/>
-						<circle cx="50" cy="50" r="35" fill="#ffffff"/>
-						<circle cx="35" cy="45" r="5" fill="#1e88e5"/>
-						<circle cx="65" cy="45" r="5" fill="#1e88e5"/>
-						<path d="M 35 60 A 15 15 0 0 0 65 60" fill="none" stroke="#1e88e5" stroke-width="5" stroke-linecap="round"/>
-					</svg> -->
+					<img src="/logoIdidem_1024.png" alt="Logo IDidem" class="logo-svg" />
 				</div>
-				<span class="logo-text">IDidem </span>
+				<span class="logo-text">IDidem</span>
 			</div>
 			<p class="description">
 				La solution de création de photos d'identité certifiées conformes ANTS dans votre poche. Conçue par des photographes professionnels.
@@ -37,6 +36,20 @@
 				<li><a href="https://gist.github.com/Github1234fab/f41bd73e7b57d72e196c1b576654b37e" target="_blank" rel="noopener">Politique de Confidentialité</a></li>
 				<li><a href="mailto:gralypho@gmail.com">gralypho@gmail.com</a></li>
 			</ul>
+		</div>
+	</div>
+
+	<!-- Section Maillage Interne pour le SEO des villes -->
+	<div class="container seo-cities-linking" style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--gray-800); text-align: left;">
+		<h4 style="color: var(--white); font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">
+			📍 Vos photos d'identité certifiées en ligne :
+		</h4>
+		<div class="cities-grid" style="display: flex; flex-wrap: wrap; gap: 0.5rem 0.85rem; font-size: 0.85rem; line-height: 1.6;">
+			{#each sortedCities as ville}
+				<a href="/photo-identite-en-ligne/{ville.slug}" class="city-seo-link">
+					Photo d'identité à {ville.name}
+				</a>
+			{/each}
 		</div>
 	</div>
 </footer>
@@ -105,6 +118,14 @@
 	.footer-links a:hover {
 		color: var(--blue-300);
 		padding-left: 4px;
+	}
+	.city-seo-link {
+		color: var(--gray-500);
+		text-decoration: none;
+		transition: var(--transition-fast);
+	}
+	.city-seo-link:hover {
+		color: var(--blue-300) !important;
 	}
 
 	@media (max-width: 768px) {

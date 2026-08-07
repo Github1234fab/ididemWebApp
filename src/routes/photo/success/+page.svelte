@@ -11,6 +11,13 @@
 	let userEmail = $state('');
 	let userPhone = $state('');
 	
+	// Option de livraison postale
+	let deliveryRequested = $state(false);
+	let deliveryName = $state('');
+	let deliveryStreet = $state('');
+	let deliveryZip = $state('');
+	let deliveryCity = $state('');
+	
 	/** @type {HTMLCanvasElement | null} */
 	let canvas = $state(null);
 	let generatedImageUri = $state('');
@@ -105,7 +112,14 @@
 						phone: userPhone,
 						date: bookingDate,
 						time: bookingTime,
-						sessionId: sessionId
+						sessionId: sessionId,
+						delivery: deliveryRequested,
+						address: deliveryRequested ? {
+							name: deliveryName,
+							street: deliveryStreet,
+							zip: deliveryZip,
+							city: deliveryCity
+						} : null
 					})
 				});
 				if (!response.ok) {
@@ -134,6 +148,11 @@
 		bookingDate = localStorage.getItem('ididem_booking_date') || '';
 		bookingTime = localStorage.getItem('ididem_booking_time') || '';
 		isAppointmentBooked = localStorage.getItem('ididem_is_appointment_booked') === 'true';
+		deliveryRequested = page.url.searchParams.get('delivery') === 'true' || localStorage.getItem('ididem_delivery_requested') === 'true';
+		deliveryName = localStorage.getItem('ididem_delivery_name') || '';
+		deliveryStreet = localStorage.getItem('ididem_delivery_street') || '';
+		deliveryZip = localStorage.getItem('ididem_delivery_zip') || '';
+		deliveryCity = localStorage.getItem('ididem_delivery_city') || '';
 
 		initPresenceSocket();
 
@@ -149,6 +168,35 @@
 			if (presenceSocket) presenceSocket.close();
 		};
 	});
+
+	/**
+	 * @param {string} imageUri
+	 */
+	function sendDeliveryAlertWithImage(imageUri) {
+		if (deliveryRequested && formulaId !== 'e-photo') {
+			fetch('/api/send-delivery-alert', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: userEmail,
+					sessionId: sessionId,
+					formulaId: formulaId,
+					delivery: true,
+					photoData: imageUri, // Passer l'image Base64 de la planche
+					address: {
+						name: deliveryName,
+						street: deliveryStreet,
+						zip: deliveryZip,
+						city: deliveryCity
+					}
+				})
+			}).then(res => {
+				if (!res.ok) console.error('Erreur lors de la notification de livraison.');
+			}).catch(err => console.error('Erreur réseau de notification de livraison:', err));
+		}
+	}
 
 	function generatePlanche() {
 		const localCanvas = canvas;
@@ -201,6 +249,7 @@
 
 			// Convertir le canvas en URL de téléchargement
 			generatedImageUri = localCanvas.toDataURL('image/jpeg', 0.95);
+			sendDeliveryAlertWithImage(generatedImageUri);
 		};
 		img.src = capturedImage;
 	}
@@ -239,6 +288,7 @@
 
 			// Convertir en URL de téléchargement
 			generatedImageUri = localCanvas.toDataURL('image/jpeg', 0.95);
+			sendDeliveryAlertWithImage(generatedImageUri);
 		};
 		img.src = capturedImage;
 	}
@@ -289,7 +339,13 @@
 			</div>
 			
 			<h1>Paiement validé !</h1>
-			<p class="subtitle">Votre commande a été traitée avec succès.</p>
+			<p class="subtitle">
+				{#if deliveryRequested}
+					Votre commande a été traitée avec succès. Vos photos vont vous être envoyées par courrier postal.
+				{:else}
+					Votre commande a été traitée avec succès.
+				{/if}
+			</p>
 
 			<!-- Canvas masqué pour générer l'image assemblée -->
 			<canvas bind:this={canvas} style="display: none;"></canvas>
@@ -365,6 +421,22 @@
 								<p class="small-desc">Un e-mail de confirmation contenant votre lien de connexion sécurisé vous a été envoyé à l'adresse <strong>{userEmail}</strong>. Le jour du rendez-vous, il vous suffira de vous connecter pour signer en direct avec notre photographe.</p>
 							</div>
 
+							{#if deliveryRequested}
+								<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
+									<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+										<span>📬 Option Envoi Postal Active</span>
+									</p>
+									<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
+										Votre planche photo sera imprimée sur papier photo de haute qualité et expédiée sous 24h à l'adresse suivante :
+									</p>
+									<div style="background: var(--white); padding: 0.75rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--gray-200); font-size: 0.95rem; font-weight: 600; color: var(--gray-700); line-height: 1.4;">
+										{deliveryName}<br />
+										{deliveryStreet}<br />
+										{deliveryZip} {deliveryCity}
+									</div>
+								</div>
+							{/if}
+
 							<div class="actions-group horizontal-actions">
 								<a href="/signer/{sessionId}" class="primary-btn">
 									✍️ Accéder à l'espace de signature
@@ -411,7 +483,7 @@
 			<!-- CAS 2 & 3 : Téléchargement et partage (Planche de 6 ou Portrait unique) -->
 			{:else}
 				<div class="product-success-box download-box">
-					<h2>Votre commande est prête !</h2>
+					<h2>{#if deliveryRequested}🎉 Votre commande est en cours d'expédition !{:else}Votre commande est prête !{/if}</h2>
 					
 					{#if generatedImageUri}
 						<div class="preview-output-container">
@@ -421,11 +493,35 @@
 
 					<p class="desc-text">
 						{#if formulaId === 'officielle'}
-							Votre planche de 6 photos d'identité est prête au format standard 10x15cm (300 DPI). Vous pouvez l'imprimer chez vous ou en borne photo.
+							{#if deliveryRequested}
+								Votre planche de 6 photos d'identité est générée et va vous être envoyée par courrier postal. Vous pouvez également télécharger la version numérique ci-dessous.
+							{:else}
+								Votre planche de 6 photos d'identité est prête au format standard 10x15cm (300 DPI). Vous pouvez l'imprimer chez vous ou en borne photo.
+							{/if}
 						{:else}
-							Votre portrait professionnel avec fond personnalisé est disponible en haute définition.
+							{#if deliveryRequested}
+								Votre portrait professionnel est généré et va vous être envoyé par courrier postal. Vous pouvez également télécharger la version numérique ci-dessous.
+							{:else}
+								Votre portrait professionnel avec fond personnalisé est disponible en haute définition.
+							{/if}
 						{/if}
 					</p>
+
+					{#if deliveryRequested}
+						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
+							<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+								<span>📬 Option Envoi Postal Active</span>
+							</p>
+							<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
+								Votre planche photo va être imprimée sur papier photo professionnel haute qualité et expédiée sous 24h à l'adresse suivante :
+							</p>
+							<div style="background: var(--white); padding: 0.75rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--gray-200); font-size: 0.95rem; font-weight: 600; color: var(--gray-700); line-height: 1.4;">
+								{deliveryName}<br />
+								{deliveryStreet}<br />
+								{deliveryZip} {deliveryCity}
+							</div>
+						</div>
+					{/if}
 
 					<div class="actions-group horizontal-actions">
 						<button class="primary-btn" onclick={downloadPhoto} disabled={!generatedImageUri}>
