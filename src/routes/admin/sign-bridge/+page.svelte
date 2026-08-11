@@ -64,6 +64,7 @@
 			if (socket && isConnected) {
 				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
 			}
+			initJitsiAdmin();
 		}
 	}
 
@@ -111,39 +112,8 @@
 	/** @type {CanvasRenderingContext2D | null} */
 	let ctx = null;
 
-	let messages = $state([]);
-	let newChatMessage = $state('');
-	/** @type {HTMLDivElement} */
-	let chatContainer;
-
-	function scrollToBottom() {
-		if (chatContainer) {
-			chatContainer.scrollTop = chatContainer.scrollHeight;
-		}
-	}
-
-	function handleSendChat(event) {
-		event.preventDefault();
-		if (!newChatMessage.trim()) return;
-
-		const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-		const msg = {
-			type: 'chat',
-			sessionId,
-			sender: 'admin',
-			text: newChatMessage,
-			time
-		};
-
-		messages = [...messages, { sender: 'admin', text: newChatMessage, time }];
-		
-		if (socket && isConnected) {
-			socket.send(JSON.stringify(msg));
-		}
-		
-		newChatMessage = '';
-		setTimeout(scrollToBottom, 50);
-	}
+	/** @type {any} */
+	let jitsiApi = null;
 
 	onMount(() => {
 		const urlSessionId = page.url.searchParams.get('session_id');
@@ -155,6 +125,7 @@
 
 		return () => {
 			if (socket) socket.close();
+			if (jitsiApi) jitsiApi.dispose();
 		};
 	});
 
@@ -204,6 +175,7 @@
 			if (socket) {
 				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
 			}
+			initJitsiAdmin();
 		};
 
 		socket.onmessage = (event) => {
@@ -253,16 +225,6 @@
 				case 'clear':
 					resetCanvas();
 					break;
-
-				case 'chat':
-					console.log('Chat reçu côté admin:', data);
-					messages = [...messages, {
-						sender: 'client',
-						text: data.text,
-						time: data.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-					}];
-					setTimeout(scrollToBottom, 50);
-					break;
 			}
 		};
 
@@ -275,10 +237,43 @@
 			status = 'Erreur serveur';
 		};
 	}
+
+	function initJitsiAdmin() {
+		if (jitsiApi) {
+			jitsiApi.dispose();
+			jitsiApi = null;
+		}
+
+		const checkJitsi = setInterval(() => {
+			// @ts-ignore
+			if (window.JitsiMeetExternalAPI) {
+				clearInterval(checkJitsi);
+				const domain = 'meet.jit.si';
+				const options = {
+					roomName: `ididem_ephoto_session_${sessionId}`,
+					width: '100%',
+					height: '100%',
+					parentNode: document.getElementById('jitsi-container'),
+					configOverwrite: {
+						startWithAudioMuted: false,
+						startWithVideoMuted: false,
+						prejoinPageEnabled: false,
+						disableDeepLinking: true
+					},
+					interfaceConfigOverwrite: {
+						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
+					}
+				};
+				// @ts-ignore
+				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+			}
+		}, 100);
+	}
 </script>
 
 <svelte:head>
 	<title>Pont de Signature Admin - IDidem</title>
+	<script src="https://meet.jit.si/external_api.js"></script>
 </svelte:head>
 
 <main class="admin-bridge">
@@ -369,35 +364,14 @@
 				</button>
 			</div>
 
-			<div class="chat-area">
-				<h3>💬 Discussion avec le client</h3>
-				<div class="chat-panel">
-					<div class="chat-messages" bind:this={chatContainer}>
-						{#each messages as msg}
-							<div class="message-bubble" class:mine={msg.sender === 'admin'}>
-								<span class="sender-name">{msg.sender === 'admin' ? 'Vous' : 'Client'}</span>
-								<p class="message-text">{msg.text}</p>
-								<span class="message-time">{msg.time}</span>
-							</div>
-						{/each}
-						{#if messages.length === 0}
-							<div class="chat-placeholder">
-								<p>Aucun message. Envoyez des instructions ou discutez avec le client.</p>
-							</div>
-						{/if}
-					</div>
-
-					<form class="chat-input-area" onsubmit={handleSendChat}>
-						<input 
-							type="text" 
-							placeholder="Écrivez un message..." 
-							bind:value={newChatMessage} 
-							disabled={!isConnected}
-						/>
-						<button type="submit" disabled={!isConnected || !newChatMessage.trim()}>
-							Envoyer
-						</button>
-					</form>
+			<div class="video-area">
+				<h3>Client en direct (Visioconférence)</h3>
+				<div id="jitsi-container" class="jitsi-admin-frame">
+					{#if !isConnected}
+						<div class="placeholder-jitsi">
+							<p>Veuillez activer le pont pour démarrer la visioconférence</p>
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -502,118 +476,33 @@
 		border: 1px solid var(--gray-200);
 		box-shadow: var(--shadow-sm);
 	}
-	.preview-area h3, .chat-area h3 {
+	.preview-area h3, .video-area h3 {
 		margin-bottom: 1.5rem;
 		color: var(--blue-700);
 	}
-	.chat-area {
+	.video-area {
 		display: flex;
 		flex-direction: column;
 		min-height: 420px;
 	}
-	.chat-panel {
-		display: flex;
-		flex-direction: column;
-		background: #f8fafc;
-		border-radius: var(--radius-md);
-		border: 1px solid var(--gray-200);
+	.jitsi-admin-frame {
 		flex: 1;
+		background: #0f172a;
+		border-radius: var(--radius-md);
 		overflow: hidden;
+		border: 1px solid var(--gray-200);
+		position: relative;
 	}
-	.chat-messages {
-		flex: 1;
-		padding: 1rem;
-		overflow-y: auto;
+	.placeholder-jitsi {
+		position: absolute;
+		inset: 0;
 		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		max-height: 300px;
-	}
-	.message-bubble {
-		max-width: 80%;
-		padding: 0.6rem 0.8rem;
-		border-radius: 12px;
-		font-size: 0.9rem;
-		line-height: 1.4;
-		display: flex;
-		flex-direction: column;
-		background: #e2e8f0;
-		color: #0f172a;
-		align-self: flex-start;
-		border-bottom-left-radius: 2px;
-	}
-	.message-bubble.mine {
-		background: var(--blue-600);
-		color: var(--white);
-		align-self: flex-end;
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 2px;
-	}
-	.sender-name {
-		font-size: 0.7rem;
-		font-weight: 700;
-		opacity: 0.6;
-		margin-bottom: 0.15rem;
-	}
-	.message-text {
-		margin: 0;
-		word-break: break-word;
-	}
-	.message-time {
-		font-size: 0.6rem;
-		opacity: 0.5;
-		align-self: flex-end;
-		margin-top: 0.25rem;
-	}
-	.chat-placeholder {
-		display: flex;
-		justify-content: center;
 		align-items: center;
-		height: 100%;
+		justify-content: center;
+		color: var(--gray-400);
+		font-weight: 600;
 		text-align: center;
-		opacity: 0.5;
-		font-size: 0.9rem;
 		padding: 2rem;
-		color: var(--gray-500);
-	}
-	.chat-input-area {
-		display: flex;
-		padding: 0.75rem;
-		border-top: 1px solid var(--gray-200);
-		gap: 0.5rem;
-		background: #f1f5f9;
-	}
-	.chat-input-area input {
-		flex: 1;
-		background: var(--white);
-		border: 1px solid var(--gray-300);
-		border-radius: var(--radius-md);
-		color: #0f172a;
-		padding: 0.6rem 0.8rem;
-		font-size: 0.9rem;
-		transition: var(--transition-fast);
-	}
-	.chat-input-area input:focus {
-		outline: none;
-		border-color: var(--blue-500);
-	}
-	.chat-input-area button {
-		background: var(--blue-600);
-		color: var(--white);
-		border: none;
-		padding: 0.6rem 1rem;
-		border-radius: var(--radius-md);
-		font-weight: 700;
-		font-size: 0.9rem;
-		cursor: pointer;
-		transition: var(--transition-fast);
-	}
-	.chat-input-area button:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-	.chat-input-area button:not(:disabled):hover {
-		background: var(--blue-700);
 	}
 	.instructions-section {
 		background: var(--white);
