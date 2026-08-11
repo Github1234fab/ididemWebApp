@@ -274,7 +274,7 @@
 			gap: 1.5rem;
 		}
 		.video-panel {
-			min-height: 280px;
+			height: 350px;
 		}
 	}
 	.reload-btn {
