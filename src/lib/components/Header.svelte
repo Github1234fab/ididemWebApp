@@ -71,7 +71,7 @@
 	}
 	.nav-links a {
 		font-size: 0.95rem;
-		font-weight: 500;
+		font-weight: 600;
 		color: var(--gray-600);
 		transition: var(--transition-fast);
 	}
