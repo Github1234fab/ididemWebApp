@@ -159,11 +159,12 @@ wss.on('connection', (ws) => {
 					});
 					break;
 
-				// Relais en temps réel des événements de dessin
+				// Relais en temps réel des événements de dessin et chat
 				case 'drawstart':
 				case 'draw':
 				case 'drawend':
 				case 'clear':
+				case 'chat':
 					if (currentSessionId && sessions[currentSessionId]) {
 						const targetSocket = isClient 
 							? sessions[currentSessionId].adminSocket 

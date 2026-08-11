@@ -9,11 +9,17 @@
 	let socket = null;
 	let status = $state('Connexion...');
 	let isConnected = $state(false);
-	/** @type {SignaturePad} */
 	let pad;
+	let messages = $state([]);
+	let newChatMessage = $state('');
+	/** @type {HTMLDivElement} */
+	let chatContainer;
 
-	/** @type {any} */
-	let jitsiApi = null;
+	function scrollToBottom() {
+		if (chatContainer) {
+			chatContainer.scrollTop = chatContainer.scrollHeight;
+		}
+	}
 
 	onMount(() => {
 		// Connexion WebSocket en temps réel
@@ -41,6 +47,24 @@
 			}
 		};
 
+		socket.onmessage = (event) => {
+			try {
+				const data = JSON.parse(event.data);
+				if (data.type === 'clear') {
+					if (pad) pad.clear();
+				} else if (data.type === 'chat') {
+					messages.push({
+						sender: 'admin',
+						text: data.text,
+						time: data.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+					});
+					setTimeout(scrollToBottom, 50);
+				}
+			} catch (err) {
+				console.error('Erreur réception message:', err);
+			}
+		};
+
 		socket.onclose = () => {
 			isConnected = false;
 			status = 'Déconnecté du serveur';
@@ -51,40 +75,29 @@
 			status = 'Erreur de connexion';
 		};
 
-		// Charger la visioconférence Jitsi Meet
-		// @ts-ignore
-		const checkJitsi = setInterval(() => {
-			// @ts-ignore
-			if (window.JitsiMeetExternalAPI) {
-				clearInterval(checkJitsi);
-				const domain = 'meet.jit.si';
-				const options = {
-					roomName: `ididem_ephoto_session_${sessionId}`,
-					width: '100%',
-					height: '100%',
-					parentNode: document.getElementById('jitsi-container'),
-					configOverwrite: {
-						startWithAudioMuted: false,
-						startWithVideoMuted: false,
-						prejoinPageEnabled: true, // Activé pour déclencher la pop-up de permission sur action de l'utilisateur
-						disableDeepLinking: true,
-						useHostPageLocalStorage: true // Aide Safari pour les cookies/localStorage tiers
-					},
-					interfaceConfigOverwrite: {
-						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
-					}
-				};
-				// @ts-ignore
-				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
-			}
-		}, 100);
-
 		return () => {
-			clearInterval(checkJitsi);
 			if (socket) socket.close();
-			if (jitsiApi) jitsiApi.dispose();
 		};
 	});
+
+	function handleSendChat(event) {
+		event.preventDefault();
+		if (!newChatMessage.trim()) return;
+
+		const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		const msg = {
+			type: 'chat',
+			sessionId,
+			sender: 'client',
+			text: newChatMessage,
+			time
+		};
+
+		messages.push({ sender: 'client', text: newChatMessage, time });
+		sendMsg(msg);
+		newChatMessage = '';
+		setTimeout(scrollToBottom, 50);
+	}
 
 	/**
 	 * @param {object} data
@@ -152,21 +165,46 @@
 
 <svelte:head>
 	<title>Signer votre e-Photo - IDidem</title>
-	<script src="https://meet.jit.si/external_api.js"></script>
 </svelte:head>
 
 <main class="signer-page">
 	<div class="split-signer-container">
 		
-		<!-- Panel visioconférence Jitsi -->
-		<div class="video-panel">
-			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-				<h2>Votre photographe en direct</h2>
-				<button class="reload-btn" onclick={() => window.location.reload()}>
-					🔄 Reconnecter
-				</button>
+		<!-- Panel Chat en direct -->
+		<div class="chat-panel">
+			<div class="chat-header">
+				<h2>💬 Message en direct</h2>
+				<span class="chat-status-indicator" class:online={isConnected}>
+					{isConnected ? 'Connecté' : 'Hors ligne'}
+				</span>
 			</div>
-			<div id="jitsi-container" class="jitsi-frame"></div>
+			
+			<div class="chat-messages" bind:this={chatContainer}>
+				{#each messages as msg}
+					<div class="message-bubble" class:mine={msg.sender === 'client'}>
+						<span class="sender-name">{msg.sender === 'client' ? 'Vous' : 'Photographe'}</span>
+						<p class="message-text">{msg.text}</p>
+						<span class="message-time">{msg.time}</span>
+					</div>
+				{/each}
+				{#if messages.length === 0}
+					<div class="chat-placeholder">
+						<p>Discutez ici en temps réel avec le photographe.</p>
+					</div>
+				{/if}
+			</div>
+
+			<form class="chat-input-area" onsubmit={handleSendChat}>
+				<input 
+					type="text" 
+					placeholder="Écrivez votre message..." 
+					bind:value={newChatMessage} 
+					disabled={!isConnected}
+				/>
+				<button type="submit" disabled={!isConnected || !newChatMessage.trim()}>
+					Envoyer
+				</button>
+			</form>
 		</div>
 
 		<!-- Panel Signature Pad -->
@@ -226,25 +264,135 @@
 		padding: 2.5rem;
 		box-shadow: var(--shadow-2xl);
 	}
-	.video-panel {
+	.chat-panel {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
-		min-height: 480px;
+		background: rgba(15, 23, 42, 0.4);
+		border-radius: var(--radius-md);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		min-height: 400px;
+		height: 100%;
+		overflow: hidden;
 	}
-	.video-panel h2 {
-		font-size: 1.25rem;
-		font-weight: 800;
-		color: var(--white);
+	.chat-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		background: rgba(15, 23, 42, 0.2);
+	}
+	.chat-header h2 {
+		font-size: 1.1rem;
+		font-weight: 700;
 		margin: 0;
 	}
-	.jitsi-frame {
+	.chat-status-indicator {
+		font-size: 0.75rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 9999px;
+		background: rgba(255, 255, 255, 0.15);
+	}
+	.chat-status-indicator.online {
+		background: rgba(34, 197, 94, 0.25);
+		color: var(--green-400);
+		font-weight: 600;
+	}
+	.chat-messages {
 		flex: 1;
-		background: #0f172a;
-		border-radius: var(--radius-md);
-		overflow: hidden;
+		padding: 1rem;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		min-height: 250px;
+		max-height: 340px;
+	}
+	.message-bubble {
+		max-width: 80%;
+		padding: 0.6rem 0.8rem;
+		border-radius: 12px;
+		font-size: 0.9rem;
+		line-height: 1.4;
+		display: flex;
+		flex-direction: column;
+		background: rgba(255, 255, 255, 0.1);
+		align-self: flex-start;
+		border-bottom-left-radius: 2px;
+	}
+	.message-bubble.mine {
+		background: var(--blue-600);
+		color: var(--white);
+		align-self: flex-end;
+		border-bottom-left-radius: 12px;
+		border-bottom-right-radius: 2px;
+	}
+	.sender-name {
+		font-size: 0.7rem;
+		font-weight: 700;
+		opacity: 0.6;
+		margin-bottom: 0.15rem;
+	}
+	.message-text {
+		margin: 0;
+		word-break: break-word;
+	}
+	.message-time {
+		font-size: 0.6rem;
+		opacity: 0.5;
+		align-self: flex-end;
+		margin-top: 0.25rem;
+	}
+	.chat-placeholder {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+		text-align: center;
+		opacity: 0.5;
+		font-size: 0.9rem;
+		padding: 2rem;
+		color: var(--white);
+	}
+	.chat-input-area {
+		display: flex;
+		padding: 0.75rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		gap: 0.5rem;
+		background: rgba(15, 23, 42, 0.2);
+	}
+	.chat-input-area input {
+		flex: 1;
+		background: rgba(255, 255, 255, 0.08);
 		border: 1px solid rgba(255, 255, 255, 0.15);
-		box-shadow: var(--shadow-inner);
+		border-radius: var(--radius-md);
+		color: var(--white);
+		padding: 0.6rem 0.8rem;
+		font-size: 0.9rem;
+		transition: var(--transition-fast);
+	}
+	.chat-input-area input:focus {
+		outline: none;
+		border-color: var(--blue-400);
+		background: rgba(255, 255, 255, 0.12);
+	}
+	.chat-input-area button {
+		background: var(--white);
+		color: var(--blue-900);
+		border: none;
+		padding: 0.6rem 1rem;
+		border-radius: var(--radius-md);
+		font-weight: 700;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: var(--transition-fast);
+	}
+	.chat-input-area button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.chat-input-area button:not(:disabled):hover {
+		background: var(--blue-100);
 	}
 	.signer-container {
 		width: 100%;
@@ -258,8 +406,8 @@
 			padding: 1.5rem;
 			gap: 1.5rem;
 		}
-		.video-panel {
-			min-height: 280px;
+		.chat-panel {
+			min-height: 300px;
 		}
 	}
 	.signer-header {
@@ -338,23 +486,5 @@
 	.confirm-btn:not(:disabled):hover {
 		transform: translateY(-2px);
 		box-shadow: var(--shadow-lg);
-	}
-	.reload-btn {
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		color: var(--white);
-		padding: 0.4rem 0.8rem;
-		border-radius: var(--radius-md);
-		font-weight: 600;
-		font-size: 0.8rem;
-		cursor: pointer;
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		transition: var(--transition-fast);
-	}
-	.reload-btn:hover {
-		background: rgba(255, 255, 255, 0.25);
-		border-color: rgba(255, 255, 255, 0.4);
 	}
 </style>
