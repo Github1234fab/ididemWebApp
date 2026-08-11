@@ -363,7 +363,7 @@
 					<!-- Cadre de dessin proportionnel à l'image du Easy Photo de l'ANTS -->
 					<canvas bind:this={canvas} width="600" height="300"></canvas>
 				</div>
-				<button class="clear-btn" onclick={() => socket?.send(JSON.stringify({ type: 'clear', sessionId }))}>
+				<button class="clear-btn" onclick={() => { resetCanvas(); socket?.send(JSON.stringify({ type: 'clear', sessionId })); }}>
 					Effacer tout
 				</button>
 			</div>
