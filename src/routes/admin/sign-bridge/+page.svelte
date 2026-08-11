@@ -257,7 +257,7 @@
 			// @ts-ignore
 			if (window.JitsiMeetExternalAPI) {
 				clearInterval(checkJitsi);
-				const domain = 'meet.ffmuc.net';
+				const domain = 'meet.jit.si';
 				const options = {
 					roomName: `ididem_ephoto_session_${sessionId}`,
 					width: '100%',
@@ -282,7 +282,7 @@
 
 <svelte:head>
 	<title>Pont de Signature Admin - IDidem</title>
-	<script src="https://meet.ffmuc.net/external_api.js"></script>
+	<script src="https://meet.jit.si/external_api.js"></script>
 </svelte:head>
 
 <main class="admin-bridge">
