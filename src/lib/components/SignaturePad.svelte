@@ -62,10 +62,14 @@
 		const x = clientX - rect.left;
 		const y = clientY - rect.top;
 
-		// Coordonnées normalisées
+		// Ajuster les coordonnées brutes par rapport aux dimensions internes du canvas
+		const rawX = x * (canvas.width / rect.width);
+		const rawY = y * (canvas.height / rect.height);
+
+		// Coordonnées normalisées (toujours entre 0 et 1)
 		return {
-			rawX: x,
-			rawY: y,
+			rawX,
+			rawY,
 			normX: x / rect.width,
 			normY: y / rect.height
 		};
