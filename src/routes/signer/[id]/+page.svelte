@@ -66,8 +66,9 @@
 					configOverwrite: {
 						startWithAudioMuted: false,
 						startWithVideoMuted: false,
-						prejoinPageEnabled: false,
-						disableDeepLinking: true
+						prejoinPageEnabled: true, // Activé pour déclencher la pop-up de permission sur action de l'utilisateur
+						disableDeepLinking: true,
+						useHostPageLocalStorage: true // Aide Safari pour les cookies/localStorage tiers
 					},
 					interfaceConfigOverwrite: {
 						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
