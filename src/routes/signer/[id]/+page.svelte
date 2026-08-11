@@ -60,6 +60,11 @@
 		};
 
 		// Charger la visioconférence Jitsi Meet
+		const container = document.getElementById('jitsi-container');
+		if (container) {
+			container.innerHTML = '';
+		}
+
 		// @ts-ignore
 		const checkJitsi = setInterval(() => {
 			// @ts-ignore

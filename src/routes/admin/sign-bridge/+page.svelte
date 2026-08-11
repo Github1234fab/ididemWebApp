@@ -253,6 +253,11 @@
 			jitsiApi = null;
 		}
 
+		const container = document.getElementById('jitsi-container');
+		if (container) {
+			container.innerHTML = '';
+		}
+
 		const checkJitsi = setInterval(() => {
 			// @ts-ignore
 			if (window.JitsiMeetExternalAPI) {
