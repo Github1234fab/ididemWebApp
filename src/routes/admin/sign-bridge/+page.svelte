@@ -61,6 +61,10 @@
 		if (incomingCall) {
 			sessionId = incomingCall.sessionId;
 			incomingCall = null;
+			
+			// Met à jour l'URL sans recharger la page
+			window.history.replaceState(null, '', `?session_id=${sessionId}`);
+			
 			if (socket && isConnected) {
 				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
 			}
@@ -172,6 +176,10 @@
 		socket.onopen = () => {
 			isConnected = true;
 			status = `Connecté – Session ${sessionId}`;
+			
+			// Met à jour l'URL sans recharger la page
+			window.history.replaceState(null, '', `?session_id=${sessionId}`);
+			
 			if (socket) {
 				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
 			}
