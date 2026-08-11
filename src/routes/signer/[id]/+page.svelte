@@ -74,9 +74,8 @@
 					configOverwrite: {
 						startWithAudioMuted: false,
 						startWithVideoMuted: false,
-						prejoinPageEnabled: true,
-						disableDeepLinking: true,
-						useHostPageLocalStorage: true
+						prejoinPageEnabled: false, // Désactivé pour entrer directement
+						disableDeepLinking: true
 					},
 					interfaceConfigOverwrite: {
 						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
