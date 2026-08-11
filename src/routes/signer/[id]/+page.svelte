@@ -70,16 +70,7 @@
 					roomName: `ididem_ephoto_session_${sessionId}`,
 					width: '100%',
 					height: '100%',
-					parentNode: document.getElementById('jitsi-container'),
-					configOverwrite: {
-						startWithAudioMuted: false,
-						startWithVideoMuted: false,
-						prejoinPageEnabled: false, // Désactivé pour entrer directement
-						disableDeepLinking: true
-					},
-					interfaceConfigOverwrite: {
-						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
-					}
+					parentNode: document.getElementById('jitsi-container')
 				};
 				// @ts-ignore
 				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
