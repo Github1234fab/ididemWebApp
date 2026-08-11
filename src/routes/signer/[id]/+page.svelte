@@ -70,7 +70,10 @@
 					roomName: `ididem_ephoto_session_${sessionId}`,
 					width: '100%',
 					height: '100%',
-					parentNode: document.getElementById('jitsi-container')
+					parentNode: document.getElementById('jitsi-container'),
+					configOverwrite: {
+						disableDeepLinking: true
+					}
 				};
 				// @ts-ignore
 				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
