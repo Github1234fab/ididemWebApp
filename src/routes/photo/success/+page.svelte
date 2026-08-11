@@ -352,8 +352,14 @@
 
 			<!-- CAS 1 : e-Photo avec processus de Signature et rendez-vous en ligne -->
 			{#if formulaId === 'e-photo'}
+				<div class="booking-section-inline reassurance-card" style="margin-bottom: 1.5rem; text-align: left; background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: var(--radius-sm); padding: 1rem 1.25rem;">
+					<p style="margin: 0; font-size: 0.9rem; color: var(--blue-900); line-height: 1.45; font-weight: 600;">
+						💳 <strong>Information facturation :</strong> Le paiement réalisé est une simple empreinte bancaire (autorisation temporaire). Votre compte ne sera réellement débité qu'après validation et livraison finale de votre e-photo.
+					</p>
+				</div>
+
 				<div class="product-success-box e-photo-box">
-					<h2>Signature & Validation en ligne</h2>
+					<h2>Validation en ligne</h2>
 					
 					{#if isAdminOnline}
 						<div class="success-booking-alert instant-alert">
@@ -374,7 +380,7 @@
 						{#if !isAppointmentBooked}
 							<div class="success-booking-alert offline-alert">
 								<p>⏰ <strong>Notre équipe est actuellement hors-ligne</strong></p>
-								<p class="small-desc">Veuillez choisir un créneau ci-dessous pour planifier votre visioconférence de signature (durée : 30 secondes) afin que notre agent certifie votre e-photo.</p>
+								<p class="small-desc">La loi sur les usages de faux nous oblige à vous faire signer en direct, afin de garantir l'acceptation de votre dossier par votre préfecture. Notre opérateur étant actuellement hors-ligne, vous devez planifier un rendez-vous rapidement ci-dessous (durée : 30 secondes).</p>
 							</div>
 
 							<div class="booking-section-inline">
@@ -448,36 +454,7 @@
 						{/if}
 					{/if}
 
-					<div class="benefits-grid">
-						<div class="benefit-card">
-							<div class="benefit-icon-badge">✓</div>
-							<div class="benefit-content">
-								<h4>Légalité Garantie</h4>
-								<p>Conformité 100% ANTS (Zéro rejet)</p>
-							</div>
-						</div>
-						<div class="benefit-card">
-							<div class="benefit-icon-badge">✓</div>
-							<div class="benefit-content">
-								<h4>Accompagnement Visio</h4>
-								<p>Guidé en direct par notre photographe</p>
-							</div>
-						</div>
-						<div class="benefit-card">
-							<div class="benefit-icon-badge">✓</div>
-							<div class="benefit-content">
-								<h4>Sécurisation Totale</h4>
-								<p>Zéro fraude à l'identité certifiée</p>
-							</div>
-						</div>
-						<div class="benefit-card">
-							<div class="benefit-icon-badge">✓</div>
-							<div class="benefit-content">
-								<h4>Délivrance Immédiate</h4>
-								<p>Code envoyé dès la fin de l'appel</p>
-							</div>
-						</div>
-					</div>
+
 				</div>
 
 			<!-- CAS 2 & 3 : Téléchargement et partage (Planche de 6 ou Portrait unique) -->
@@ -728,7 +705,7 @@
 	}
 
 	/* Benefits grid */
-	.benefits-grid {
+	/* .benefits-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 1rem;
@@ -783,7 +760,7 @@
 		font-weight: 600 !important;
 		line-height: 1.45 !important;
 		padding: 5px;
-	}
+	} */
 
 	.success-booking-alert {
 		background: #ecfdf5;
@@ -856,7 +833,7 @@
 	}
 	.btn-confirm-booking {
 		width: 100%;
-		background: var(--blue-600);
+		background: #ff7a00;
 		color: var(--white);
 		padding: 0.8rem;
 		border-radius: var(--radius-sm);
@@ -867,7 +844,7 @@
 		transition: background-color 0.2s;
 	}
 	.btn-confirm-booking:hover:not(:disabled) {
-		background: var(--blue-700);
+		background: #ea580c;
 	}
 
 	@media (max-width: 576px) {
@@ -890,9 +867,9 @@
 			margin: 1rem 0;
 		}
 
-		.benefit-card {
+		/* .benefit-card {
 			padding: 0.75rem;
-		}
+		} */
 
 		h1 {
 			font-size: 1.8rem;
@@ -902,10 +879,10 @@
 			flex-direction: column;
 		}
 
-		.benefits-grid {
+		/* .benefits-grid {
 			grid-template-columns: 1fr;
 			gap: 0.75rem;
-		}
+		} */
 
 		.booking-fields {
 			grid-template-columns: 1fr;

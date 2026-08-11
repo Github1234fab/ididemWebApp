@@ -723,7 +723,7 @@ function capturePhoto() {
 								<span class="label">Changer de formule</span>
 							</span>
 						</button>
-						<button class="btn-booklet-cancel" onclick={startCamera}>
+						<button class="btn-booklet-cancel primary" onclick={startCamera}>
 							<span class="desktop-text">Passer le tuto →</span>
 							<span class="mobile-text">
 								<!-- <span class="arrow">→</span> -->
@@ -739,6 +739,9 @@ function capturePhoto() {
 		<!-- ÉTAPE 3 : CAMÉRA ET GABARIT -->
 		{#if step === 3}
 			<section class="camera-section animate-fade-in">
+				<div class="zoom-explanation-text">
+					<p>💡 <strong>Conseil de Pro:</strong> Les trois boutons ci-dessous "grand-angle", "normal" et "zoom" vous permettent de zoomer et d'éviter l'effet "gros nez" (distorsion de l'objectif).</p>
+				</div>
 				<div class="camera-frame-wrapper">
 					<!-- Boutons de contrôle du Zoom (Syntaxe Svelte 5) -->
 					<div class="zoom-controls">
@@ -748,7 +751,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1} 
 							onclick={() => setZoom(1)}
 						>
-							<span class="icon">👤</span> De loin
+							<span class="icon">👤</span> Grand-angle
 						</button>
 						
 						<button 
@@ -757,7 +760,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1.4} 
 							onclick={() => setZoom(1.4)}
 						>
-							<span class="icon">✨</span> Conseillé
+							<span class="icon">✨</span> Normal
 						</button>
 						
 						<button 
@@ -766,7 +769,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1.8} 
 							onclick={() => setZoom(1.8)}
 						>
-							<span class="icon">🔍</span> De près
+							<span class="icon">🔍</span> Zoom
 						</button>
 					</div>
 					
@@ -902,138 +905,84 @@ function capturePhoto() {
 								</div>
 							{/if}
 
-							{#if selectedFormula === 'e-photo' && isProcessed}
-								<h3>Procédure : Signature & Code ANTS</h3>
-								<div class="legal-assurance-card">
-									<h5>🛡️ Protocole de Conformité ANTS (Obligatoire)</h5>
-									<p>Conformément à la réglementation française sur l'usage de faux, la e-Photo officielle nécessite le recueil de votre signature numérique <strong>en direct avec notre opérateur agréé</strong>. Cela vous garantit à 100% l'acceptation de votre e-photo par votre préfecture.</p>
-									
-									<div class="process-steps">
-										<div class="p-step">
-											<span class="badge">1</span>
-											<div class="p-step-content">
-												<strong>Créneau visio</strong>
-												<span>Choisissez votre rendez-vous de signature en direct (2 min).</span>
-											</div>
-										</div>
-										<div class="p-step">
-											<span class="badge">2</span>
-											<div class="p-step-content">
-												<strong>Empreinte CB</strong>
-												<span>Enregistrez votre paiement sécurisé <em>(Hold temporaire, aucun débit)</em>.</span>
-											</div>
-										</div>
-										<div class="p-step">
-											<span class="badge">3</span>
-											<div class="p-step-content">
-												<strong>Débit & Livraison</strong>
-												<span>Vous n'êtes débité qu'après validation et réception de votre code e-Photo.</span>
-											</div>
-										</div>
-									</div>
-								</div>
-							{:else}
-								<h3>Prochaines étapes :</h3>
-								<ul class="steps-list">
-									{#if isProcessed}
-										{#if selectedFormula === 'e-photo'}
-											<li class="animate-fade-in">
-												<span class="step-icon text-blue">
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 9-3.75 3.75L8.25 9m0 0v6M12 9v6m3.75-6v6M3 6.75A2.25 2.25 0 0 1 5.25 4.5h13.5A2.25 2.25 0 0 1 21 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 17.25V6.75Z" /></svg>
-												</span>
-												<div class="step-text">
-													<strong>Rendez-vous visio & Signature</strong>
-													<span>Signature numérique en direct avec l'opérateur.</span>
-												</div>
-											</li>
-										{/if}
+							<h3>Prochaines étapes :</h3>
+							<ul class="steps-list">
+								{#if isProcessed}
+									{#if selectedFormula === 'e-photo'}
 										<li class="animate-fade-in">
-											<span class="step-icon text-green">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
+											<span class="step-icon text-blue">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 9-3.75 3.75L8.25 9m0 0v6M12 9v6m3.75-6v6M3 6.75A2.25 2.25 0 0 1 5.25 4.5h13.5A2.25 2.25 0 0 1 21 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 17.25V6.75Z" /></svg>
 											</span>
 											<div class="step-text">
-												<strong>Paiement sécurisé</strong>
-												<span>Finalisation de la commande par CB.</span>
+												<strong>Rendez-vous visio & Signature</strong>
+												<span>Signature numérique en direct avec l'opérateur.</span>
 											</div>
 										</li>
-									{:else}
-										<li>
-											<span class="step-icon text-purple">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 21l8.904-.813a18.502 18.502 0 1 0-8.091-4.283Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M11.99 3.01H12V3h-.01v.01Z" /></svg>
-											</span>
-											<div class="step-text">
-												<strong>Détourage intelligent par IA</strong>
-												<span>Suppression de l'arrière-plan et application du fond conforme.</span>
-											</div>
-										</li>
-										<li>
-											<span class="step-icon text-yellow">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
-											</span>
-											<div class="step-text">
-												<strong>Contrôle de conformité</strong>
-												<span>Yeux ouverts, bouche fermée, visage centré, pas d'ombre sur le visage, oreilles dégagées.</span>
-											</div>
-										</li>
-										{#if selectedFormula === 'e-photo'}
-											<li>
-												<span class="step-icon text-blue">
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
-												</span>
-												<div class="step-text">
-													<strong>Signature électronique en direct</strong>
-													<span>Signature biométrique sécurisée en visioconférence.</span>
-												</div>
-											</li>
-										{/if}
-										<li>
-											<span class="step-icon text-teal">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-											</span>
-											<div class="step-text">
-												<strong>Téléchargement et partage de vos photos</strong>
-												<span>{selectedFormula === 'e-photo' ? 'Réception de votre code photo ANTS.' : 'Obtention de votre planche photo HD.'}</span>
-											</div>
-										</li>
-										{/if}
-								</ul>
-							{/if}
-
-							{#if isProcessed}
-								{#if selectedFormula === 'e-photo'}
-									<div class="booking-section-inline reassurance-card">
-										<h4>💳 Empreinte bancaire uniquement</h4>
-										<p class="reassurance-text">
-											Votre carte bancaire ne sera <strong>débitée qu'après la validation finale</strong> de votre e-photo par notre photographe professionnel.
-										</p>
-										<div class="steps-indicator-mini">
-											<div class="step-indicator-item">
-												<span class="step-dot">1</span>
-												<span>Validation de l'empreinte bancaire</span>
-											</div>
-											<div class="step-indicator-item">
-												<span class="step-dot">2</span>
-												<span>Signature en direct (30s) si dispo, ou choix d'un rendez-vous en ligne</span>
-											</div>
+									{/if}
+									<li class="animate-fade-in">
+										<span class="step-icon text-green">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
+										</span>
+										<div class="step-text">
+											<strong>Paiement sécurisé</strong>
+											<span>Finalisation de la commande par CB.</span>
 										</div>
-									</div>
+									</li>
+								{:else}
+									<li>
+										<span class="step-icon text-purple">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 21l8.904-.813a18.502 18.502 0 1 0-8.091-4.283Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M11.99 3.01H12V3h-.01v.01Z" /></svg>
+										</span>
+										<div class="step-text">
+											<strong>Finalisation par IA</strong>
+											<span>Suppression de l'arrière-plan et application du fond conforme.</span>
+										</div>
+									</li>
+									<li>
+										<span class="step-icon text-yellow">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
+										</span>
+										<div class="step-text">
+											<strong>Impératif d'auto-contrôle</strong>
+											<span>Vous devez contrôler les points suivants impérativement : yeux ouverts, bouche fermée, visage centré, pas d'ombre sur le visage, oreilles dégagées.</span>
+										</div>
+									</li>
+									{#if selectedFormula === 'e-photo'}
+										<li>
+											<span class="step-icon text-blue">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
+											</span>
+											<div class="step-text">
+												<strong>Signature électronique en direct</strong>
+												<span>Signature biométrique sécurisée en visioconférence.</span>
+											</div>
+										</li>
+									{/if}
+									<li>
+										<span class="step-icon text-teal">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+										</span>
+										<div class="step-text">
+											<strong>Téléchargement et partage de vos photos</strong>
+											<span>{selectedFormula === 'e-photo' ? 'Réception de votre code photo ANTS.' : 'Obtention de votre planche photo HD.'}</span>
+										</div>
+									</li>
 								{/if}
-							{/if}
+							</ul>
+
+
 
 							{#if isProcessed}
 								<!-- Option Envoi Postal Premium -->
 								<div class="booking-section-inline reassurance-card" style="margin-top: 1.5rem; text-align: left; background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: var(--radius-sm); padding: 1.25rem;">
-									<label style="display: flex; align-items: flex-start; gap: 0.85rem; font-weight: 700; color: var(--blue-900); cursor: pointer; font-size: 1.05rem;">
-										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.35rem; height: 1.35rem; margin-top: 0.15rem; accent-color: var(--blue-600); cursor: pointer;" />
-										<div>
-											<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-												<span>📮 Option Envoi Postal (+3,00 €)</span>
-												<span style="background: var(--success); color: var(--white); font-size: 0.65rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.05em;">🌱 Zéro déplacement, 100% éco</span>
-											</div>
-											<span style="display: block; font-size: 0.85rem; color: var(--gray-600); font-weight: 400; margin-top: 0.4rem; line-height: 1.4;">
-												Recevez votre planche imprimée directement chez vous. Évitez les trajets inutiles et économisez du temps et du CO₂.
-											</span>
-										</div>
+									<div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; gap: 0.35rem; margin-bottom: 0.75rem;">
+										<span style="font-weight: 800; font-size: 1.15rem; color: var(--blue-900);">Option Envoi Postal</span>
+										<span style="background: var(--success); color: var(--white); font-size: 0.65rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); text-transform: none; width: fit-content;">🌱 zéro déplacement, 100% éco</span>
+									</div>
+
+									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 700; color: var(--blue-900); cursor: pointer; font-size: 0.9rem; border-top: 1px dashed var(--blue-200); padding-top: 0.75rem; margin-top: 0.5rem; justify-content: center; text-align: left;">
+										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.25rem; height: 1.25rem; accent-color: var(--blue-600); cursor: pointer; flex-shrink: 0; margin-top: 0.1rem;" />
+										<span>Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+3,00 €)</span>
 									</label>
 
 									{#if deliveryRequested}
@@ -1076,17 +1025,14 @@ function capturePhoto() {
 									<button class="btn-confirm-photo" disabled={isRedirecting || (deliveryRequested && (!userEmail || !deliveryName || !deliveryStreet || !deliveryZip || !deliveryCity))} onclick={handlePayment}>
 										{#if isRedirecting}
 											<span>Redirection...</span>
-										{:else if selectedFormula === 'e-photo'}
-											<span style="display: block; font-size: 0.95rem; font-weight: 700;">Valider mon empreinte et continuer</span>
-											<span style="display: block; font-size: 0.8rem; font-weight: 400; opacity: 0.9; margin-top: 0.15rem;">Montant : {deliveryRequested ? '9,99' : '6,99'} €</span>
 										{:else}
-											<span style="display: block; font-size: 0.95rem; font-weight: 700;">Procéder au paiement</span>
-											<span style="display: block; font-size: 0.8rem; font-weight: 400; opacity: 0.9; margin-top: 0.15rem;">Montant : {selectedFormula === 'officielle' ? (deliveryRequested ? '7,99' : '4,99') : (deliveryRequested ? '5,99' : '2,99')} €</span>
+											<span style="display: block; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Payer</span>
+											<span style="display: block; font-size: 0.85rem; font-weight: 500; opacity: 0.9; margin-top: 0.15rem;">Montant : {selectedFormula === 'e-photo' ? (deliveryRequested ? '9,99' : '6,99') : selectedFormula === 'officielle' ? (deliveryRequested ? '7,99' : '4,99') : (deliveryRequested ? '5,99' : '2,99')} €</span>
 										{/if}
 									</button>
 								{:else}
 									<button class="btn-confirm-photo" onclick={processBackground}>
-										Détourer ma photo
+										Finaliser ma photo
 									</button>
 								{/if}
 							</div>
@@ -1623,15 +1569,23 @@ function capturePhoto() {
 
 	.action-arrow {
 		margin-top: 1.5rem;
-		font-size: 0.9rem;
+		font-size: 0.95rem;
 		font-weight: 700;
-		color: var(--blue-700);
-		transition: var(--transition-fast);
+		color: var(--white);
+		background: #ff7a00;
+		padding: 0.75rem 1.5rem;
+		border-radius: var(--radius-md);
+		box-shadow: 0 4px 10px rgba(255, 122, 0, 0.2);
+		transition: all 0.2s ease;
+		width: 100%;
+		box-sizing: border-box;
+		text-align: center;
 	}
 
 	.formula-card:hover .action-arrow {
-		color: var(--blue-900);
-		transform: translateX(4px);
+		background: #ea580c;
+		box-shadow: 0 6px 15px rgba(234, 88, 12, 0.35);
+		transform: scale(1.02);
 	}
 
 	.booklet-card {
@@ -1852,9 +1806,22 @@ function capturePhoto() {
 		color: var(--blue-600);
 	}
 
+	.btn-booklet-cancel.primary {
+		background: #ff7a00;
+		color: var(--white);
+		border-color: #ff7a00;
+	}
+
+	.btn-booklet-cancel.primary:hover {
+		background: #ea580c;
+		color: var(--white);
+		border-color: #ea580c;
+	}
+
 	.booklet-footer-links {
 		display: flex;
-		justify-content: space-between;
+		justify-content: center;
+		gap: 2rem;
 		align-items: center;
 		width: 100%;
 		border-top: 1px dashed var(--gray-200); /* Séparateur discret */
@@ -2033,7 +2000,24 @@ function capturePhoto() {
 	/* --- Étape 3 : Caméra --- */
 	.camera-section {
 		display: flex;
+		flex-direction: column;
+		align-items: center;
 		justify-content: center;
+	}
+
+	.zoom-explanation-text {
+		background: #eff6ff;
+		border: 1px solid #bfdbfe;
+		border-radius: var(--radius-md);
+		padding: 0.75rem 1rem;
+		margin-bottom: 1rem;
+		text-align: center;
+		color: #1e3a8a;
+		font-size: 0.85rem;
+		line-height: 1.4;
+		max-width: 580px;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.camera-frame-wrapper {
@@ -2414,25 +2398,29 @@ function capturePhoto() {
 	.btn-confirm-photo {
 		flex: 2;
 		min-width: 0;
-		background: var(--blue-700);
+		background: #ff7a00;
 		color: var(--white);
 		padding: 0.9rem 1rem;
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		transition: var(--transition-fast);
-		box-shadow: var(--shadow-sm);
+		box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25);
 		text-align: center;
 	}
 
 	.btn-confirm-photo:hover {
-		background: var(--blue-900);
+		background: #ea580c;
 		transform: translateY(-2px);
-		box-shadow: var(--shadow-md);
+		box-shadow: 0 6px 15px rgba(234, 88, 12, 0.35);
 	}
 
 
 	/* --- Responsive --- */
 	@media (max-width: 768px) {
+		.photo-capture-page {
+			min-height: auto !important;
+			padding: 1.5rem 0 !important;
+		}
 		.page-dots {
 		
 		display: none;
@@ -2489,17 +2477,12 @@ function capturePhoto() {
 			display: none;
 		}
 		.mobile-text {
-			display: inline-flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 0.15rem;
-			padding: 0.7rem 0.9rem;
-			background: var(--gray-100);
-			border-radius: var(--radius-md);
-			border: 1px solid var(--gray-200);
-			color: rgb(34, 34, 34);
-			min-width: 200px;
-			font-weight: 900;
+			display: inline;
+			background: none;
+			border: none;
+			padding: 0;
+			min-width: 0;
+			color: inherit;
 		}
 		
 		.mobile-text .label {
@@ -2523,29 +2506,43 @@ function capturePhoto() {
 			align-items: center;
 		}
 		.booklet-footer-links {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-items: center;
-		width: 100%;
-		border-top: 1px dashed var(--gray-200); /* Séparateur discret */
-		/* padding-top: 1rem; */
-		margin-top: 0.25rem;
-		gap: 0px;
-	}
+			display: flex;
+			flex-direction: column !important;
+			align-items: center !important;
+			width: 100% !important;
+			border-top: 1px dashed var(--gray-200) !important;
+			margin-top: 0.5rem !important;
+			gap: 0.5rem !important;
+			padding-top: 0.75rem !important;
+		}
 		.btn-booklet-cancel {
-		background:none;
-		border: none;
-		color: var(--gray-400); /* Plus discret */
-		font-size: 0.8rem; /* Plus petit pour marquer la hiérarchie */
-		font-weight: 600;
-		cursor: pointer;
-		transition: var(--transition-fast);
-		
-	}
+			background: none;
+			border: 1px solid rgb(198, 198, 198);
+			color: var(--gray-500);
+			font-size: 0.8rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: var(--transition-fast);
+			padding: 0.75rem 1rem !important;
+			border-radius: 10px;
+			width: 100% !important;
+			max-width: 280px !important;
+			box-sizing: border-box !important;
+			margin: 0 !important;
+			text-align: center !important;
+		}
 
 	.btn-booklet-cancel:hover {
 		color: var(--blue-600);
+	}
+
+	.btn-booklet-cancel.primary {
+		background: #ff7a00 !important;
+		color: var(--white) !important;
+		border-color: #ff7a00 !important;
+	}
+	.btn-booklet-cancel.primary * {
+		color: var(--white) !important;
 	}
 
 		.btn-booklet-prev, .btn-booklet-next, .btn-booklet-start {
@@ -2681,7 +2678,7 @@ function capturePhoto() {
 		text-align: left;
 	}
 
-	.legal-assurance-card h5 {
+	/* .legal-assurance-card h5 {
 		margin: 0 0 0.5rem 0;
 		color: var(--blue-700);
 		font-size: 0.95rem;
@@ -2693,7 +2690,7 @@ function capturePhoto() {
 		color: var(--gray-600);
 		line-height: 1.45;
 		margin: 0 0 1rem 0;
-	}
+	} */
 
 	.process-steps {
 		display: flex;
@@ -2712,7 +2709,7 @@ function capturePhoto() {
 		line-height: 1.35;
 	}
 
-	.p-step .badge {
+	/* .p-step .badge {
 		background: var(--blue-600);
 		color: var(--white);
 		width: 18px;
@@ -2725,7 +2722,7 @@ function capturePhoto() {
 		font-weight: 700;
 		flex-shrink: 0;
 		margin-top: 2px;
-	}
+	} */
 
 	.p-step-content {
 		display: flex;
@@ -2733,10 +2730,10 @@ function capturePhoto() {
 		gap: 0.15rem;
 	}
 
-	.p-step-content strong {
+	/* .p-step-content strong {
 		font-size: 0.85rem;
 		color: var(--gray-800);
-	}
+	} */
 
 	.p-step-content span {
 		font-size: 0.78rem;

@@ -93,7 +93,7 @@
 				
 				<div class="cta-group">
 					<a href={storeLink} class="primary-btn">{storeText}</a>
-					<a href="/photo" class="secondary-btn">Prendre une photo</a>
+					<a href="/photo" class="secondary-btn" style="font-size: 1.25rem; padding: 1.1rem 2.5rem; display: inline-block; text-decoration: none; background: #ff7a00; color: var(--white); border: none; box-shadow: 0 4px 15px rgba(255, 122, 0, 0.35);">Prendre une photo</a>
 				</div>
 
 				<div class="trust-indicators">
@@ -186,7 +186,7 @@
 						<li>✓ Garantie conformité 100%</li>
 						<li>✓ Assistance guidée pas à pas</li>
 					</ul>
-					<a href="/photo?formula=e-photo" class="secondary-btn" style="display: block; text-align: center; text-decoration: none;">Choisir cette formule</a>
+					<a href="/photo?formula=e-photo" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; background: #ff7a00; color: var(--white); box-shadow: 0 4px 15px rgba(255,122,0,0.25);">Choisir cette formule</a>
 				</div>
 
 				<!-- Officielle OACI -->
@@ -200,7 +200,7 @@
 						<li>✓ Option Fond Blanc (Maghreb)</li>
 						<li>✓ Téléchargement numérique immédiat</li>
 					</ul>
-					<a href="/photo?formula=officielle" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; background: var(--gray-100); color: var(--gray-700); box-shadow: none;">Choisir cette formule</a>
+					<a href="/photo?formula=officielle" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; border: 2px solid #ea580c; color: #ea580c; background: transparent; box-shadow: none; padding: 0.8rem 2rem;">Choisir cette formule</a>
 				</div>
 
 				<!-- Portrait Pro CV -->
@@ -214,7 +214,7 @@
 						<li>✓ Pipette de couleur sur mesure</li>
 						<li>✓ Fichier HD haute résolution</li>
 					</ul>
-					<a href="/photo?formula=casual" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; background: var(--gray-100); color: var(--gray-700); box-shadow: none;">Choisir cette formule</a>
+					<a href="/photo?formula=casual" class="secondary-btn" style="display: block; text-align: center; text-decoration: none; border: 2px solid #ea580c; color: #ea580c; background: transparent; box-shadow: none; padding: 0.8rem 2rem;">Choisir cette formule</a>
 				</div>
 			</div>
 		</div>
@@ -378,8 +378,9 @@
 		
 	}
 	.highlight2 {
-		color: #87b7eb;
-		
+		color: #ffde59;
+		font-weight: 800;
+		text-shadow: 0 0 10px rgba(255, 222, 89, 0.35);
 	}
 	.subtitle {
 		font-size: 1.2rem;
