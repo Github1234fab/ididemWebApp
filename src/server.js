@@ -42,7 +42,8 @@ console.log(`Serveur Pont de Signature IDidem actif sur le port ${PORT}...`);
 wss.on('connection', (ws) => {
 	/** @type {string | null} */
 	let currentSessionId = null;
-	let isClient = false;
+	/** @type {'client' | 'admin' | 'bridge' | null} */
+	let connectionType = null;
 
 	ws.on('message', (/** @type {any} */ message) => {
 		try {
@@ -52,7 +53,7 @@ wss.on('connection', (ws) => {
 				case 'register-client':
 					currentSessionId = data.sessionId;
 					if (!currentSessionId) break;
-					isClient = true;
+					connectionType = 'client';
 					
 					if (!sessions[currentSessionId]) {
 						sessions[currentSessionId] = {};
@@ -61,45 +62,68 @@ wss.on('connection', (ws) => {
 					sessions[currentSessionId].clientSocket = ws;
 					console.log(`[Session ${currentSessionId}] Client connecté`);
 					
-					// Notifier l'admin si présent
+					// Notifier l'admin et le pont s'ils sont présents
 					if (sessions[currentSessionId].adminSocket) {
 						sessions[currentSessionId].adminSocket.send(JSON.stringify({
 							type: 'client-status',
 							connected: true
 						}));
-						// Signaler aussi au client que l'admin est là
-						ws.send(JSON.stringify({ type: 'admin-status', connected: true }));
 					}
+					if (sessions[currentSessionId].bridgeSocket) {
+						sessions[currentSessionId].bridgeSocket.send(JSON.stringify({
+							type: 'client-status',
+							connected: true
+						}));
+					}
+					// Signaler aussi au client que l'admin est là
+					ws.send(JSON.stringify({ type: 'admin-status', connected: !!sessions[currentSessionId].adminSocket }));
 					break;
 
 				case 'register-admin':
 					currentSessionId = data.sessionId;
 					if (!currentSessionId) break;
-					isClient = false;
+					connectionType = 'admin';
 					
 					if (!sessions[currentSessionId]) {
 						sessions[currentSessionId] = {};
 					}
 					
-					// Si l'admin n'était pas déjà connecté sur cette session spécifique
 					if (!sessions[currentSessionId].adminSocket) {
 						activeAdminsCount++;
 						console.log(`Admin connecté. Total admins en ligne: ${activeAdminsCount}`);
 					}
 
 					sessions[currentSessionId].adminSocket = ws;
-					console.log(`[Session ${currentSessionId}] Admin connecté`);
+					console.log(`[Session ${currentSessionId}] Admin web connecté`);
 					
 					// Signaler le statut du client à l'admin et renvoyer le statut de présence manuelle
-					const clientExists = !!sessions[currentSessionId].clientSocket;
 					ws.send(JSON.stringify({
 						type: 'client-status',
-						connected: clientExists
+						connected: !!sessions[currentSessionId].clientSocket
 					}));
 					ws.send(JSON.stringify({
 						type: 'manual-presence-status',
 						online: Date.now() < manualPresenceUntil,
 						until: manualPresenceUntil
+					}));
+					break;
+
+				case 'register-bridge':
+					currentSessionId = data.sessionId;
+					if (!currentSessionId) break;
+					connectionType = 'bridge';
+					
+					if (!sessions[currentSessionId]) {
+						sessions[currentSessionId] = {};
+					}
+
+					sessions[currentSessionId].bridgeSocket = ws;
+					console.log(`[Session ${currentSessionId}] Pont Bureau (simulate.js) connecté`);
+					
+					// Signaler le statut du client au pont Bureau
+					ws.send(JSON.stringify({
+						type: 'client-status',
+						connected: !!sessions[currentSessionId].clientSocket
 					}));
 					break;
 
@@ -159,19 +183,54 @@ wss.on('connection', (ws) => {
 					});
 					break;
 
-				// Relais en temps réel des événements de dessin et chat
+				// Relais en temps réel des événements de dessin
 				case 'drawstart':
 				case 'draw':
 				case 'drawend':
+					if (currentSessionId && sessions[currentSessionId]) {
+						if (connectionType === 'client') {
+							// Envoyer le dessin au site admin ET au pont bureau
+							const admin = sessions[currentSessionId].adminSocket;
+							if (admin && admin.readyState === ws.OPEN) {
+								admin.send(JSON.stringify(data));
+							}
+							const bridge = sessions[currentSessionId].bridgeSocket;
+							if (bridge && bridge.readyState === ws.OPEN) {
+								bridge.send(JSON.stringify(data));
+							}
+						}
+					}
+					break;
+
 				case 'clear':
+					if (currentSessionId && sessions[currentSessionId]) {
+						const session = sessions[currentSessionId];
+						if (connectionType !== 'client' && session.clientSocket && session.clientSocket.readyState === ws.OPEN) {
+							session.clientSocket.send(JSON.stringify(data));
+						}
+						if (connectionType !== 'admin' && session.adminSocket && session.adminSocket.readyState === ws.OPEN) {
+							session.adminSocket.send(JSON.stringify(data));
+						}
+						if (connectionType !== 'bridge' && session.bridgeSocket && session.bridgeSocket.readyState === ws.OPEN) {
+							session.bridgeSocket.send(JSON.stringify(data));
+						}
+					}
+					break;
+
 				case 'chat':
 					if (currentSessionId && sessions[currentSessionId]) {
-						const targetSocket = isClient 
-							? sessions[currentSessionId].adminSocket 
-							: sessions[currentSessionId].clientSocket;
-							
-						if (targetSocket && targetSocket.readyState === ws.OPEN) {
-							targetSocket.send(JSON.stringify(data));
+						const session = sessions[currentSessionId];
+						// Le chat se fait strictement entre le téléphone (client) et le tableau de bord (admin)
+						if (connectionType === 'client') {
+							const admin = session.adminSocket;
+							if (admin && admin.readyState === ws.OPEN) {
+								admin.send(JSON.stringify(data));
+							}
+						} else if (connectionType === 'admin') {
+							const client = session.clientSocket;
+							if (client && client.readyState === ws.OPEN) {
+								client.send(JSON.stringify(data));
+							}
 						}
 					}
 					break;
@@ -183,26 +242,36 @@ wss.on('connection', (ws) => {
 
 	ws.on('close', () => {
 		if (currentSessionId && sessions[currentSessionId]) {
-			if (isClient) {
+			const session = sessions[currentSessionId];
+			if (connectionType === 'client') {
 				console.log(`[Session ${currentSessionId}] Client déconnecté`);
-				sessions[currentSessionId].clientSocket = null;
-				if (sessions[currentSessionId].adminSocket) {
-					sessions[currentSessionId].adminSocket.send(JSON.stringify({
+				session.clientSocket = null;
+				if (session.adminSocket) {
+					session.adminSocket.send(JSON.stringify({
 						type: 'client-status',
 						connected: false
 					}));
 				}
-			} else {
-				console.log(`[Session ${currentSessionId}] Admin déconnecté`);
-				if (sessions[currentSessionId].adminSocket) {
+				if (session.bridgeSocket) {
+					session.bridgeSocket.send(JSON.stringify({
+						type: 'client-status',
+						connected: false
+					}));
+				}
+			} else if (connectionType === 'admin') {
+				console.log(`[Session ${currentSessionId}] Admin web déconnecté`);
+				if (session.adminSocket) {
 					activeAdminsCount = Math.max(0, activeAdminsCount - 1);
 					console.log(`Admin déconnecté. Total admins en ligne: ${activeAdminsCount}`);
 				}
-				sessions[currentSessionId].adminSocket = null;
+				session.adminSocket = null;
+			} else if (connectionType === 'bridge') {
+				console.log(`[Session ${currentSessionId}] Pont Bureau (simulate.js) déconnecté`);
+				session.bridgeSocket = null;
 			}
 
 			// Nettoyer la session si vide
-			if (!sessions[currentSessionId].clientSocket && !sessions[currentSessionId].adminSocket) {
+			if (!session.clientSocket && !session.adminSocket && !session.bridgeSocket) {
 				delete sessions[currentSessionId];
 			}
 		}

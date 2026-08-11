@@ -74,7 +74,7 @@ function startBridgeConnection() {
 
 	socket.on('open', () => {
 		console.log(`Pont actif ! Écoute de la session client [${sessionId}]...`);
-		socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
+		socket.send(JSON.stringify({ type: 'register-bridge', sessionId }));
 	});
 
 	socket.on('message', (message) => {
