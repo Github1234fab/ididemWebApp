@@ -248,13 +248,19 @@
 	}
 
 	function initJitsiAdmin() {
+		console.log("[Jitsi Admin] Initialisation de la visio");
+		console.log("[Jitsi Admin] sessionId actuel:", sessionId);
+		console.log("[Jitsi Admin] URL du navigateur:", window.location.href);
+
 		if (jitsiApi) {
+			console.log("[Jitsi Admin] Fermeture de la visio précédente");
 			jitsiApi.dispose();
 			jitsiApi = null;
 		}
 
 		const container = document.getElementById('jitsi-container');
 		if (container) {
+			console.log("[Jitsi Admin] Nettoyage du conteneur HTML");
 			container.innerHTML = '';
 		}
 
@@ -263,11 +269,13 @@
 			if (window.JitsiMeetExternalAPI) {
 				clearInterval(checkJitsi);
 				const domain = 'meet.jit.si';
+				const room = `ididem_ephoto_session_${sessionId}`;
+				console.log("[Jitsi Admin] Lancement de la visio dans la room:", room);
 				const options = {
-					roomName: `ididem_ephoto_session_${sessionId}`,
+					roomName: room,
 					width: '100%',
 					height: '100%',
-					parentNode: document.getElementById('jitsi-container'),
+					parentNode: container,
 					configOverwrite: {
 						startWithAudioMuted: false,
 						startWithVideoMuted: false,
