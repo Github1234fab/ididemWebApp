@@ -80,7 +80,7 @@
 	}
 	.header-store-buttons {
 		display: flex;
-		gap: 0.6rem;
+		gap: 0.7rem;
 		align-items: center;
 	}
 
