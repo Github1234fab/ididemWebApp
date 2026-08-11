@@ -159,7 +159,12 @@
 		
 		<!-- Panel visioconférence Jitsi -->
 		<div class="video-panel">
-			<h2>Votre photographe en direct</h2>
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+				<h2>Votre photographe en direct</h2>
+				<button class="reload-btn" onclick={() => window.location.reload()}>
+					🔄 Reconnecter
+				</button>
+			</div>
 			<div id="jitsi-container" class="jitsi-frame"></div>
 		</div>
 
@@ -332,5 +337,23 @@
 	.confirm-btn:not(:disabled):hover {
 		transform: translateY(-2px);
 		box-shadow: var(--shadow-lg);
+	}
+	.reload-btn {
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: var(--white);
+		padding: 0.4rem 0.8rem;
+		border-radius: var(--radius-md);
+		font-weight: 600;
+		font-size: 0.8rem;
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		transition: var(--transition-fast);
+	}
+	.reload-btn:hover {
+		background: rgba(255, 255, 255, 0.25);
+		border-color: rgba(255, 255, 255, 0.4);
 	}
 </style>
