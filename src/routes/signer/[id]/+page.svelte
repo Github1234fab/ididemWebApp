@@ -53,11 +53,12 @@
 				if (data.type === 'clear') {
 					if (pad) pad.clear();
 				} else if (data.type === 'chat') {
-					messages.push({
+					console.log('Chat reçu côté client:', data);
+					messages = [...messages, {
 						sender: 'admin',
 						text: data.text,
 						time: data.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-					});
+					}];
 					setTimeout(scrollToBottom, 50);
 				}
 			} catch (err) {
@@ -93,7 +94,7 @@
 			time
 		};
 
-		messages.push({ sender: 'client', text: newChatMessage, time });
+		messages = [...messages, { sender: 'client', text: newChatMessage, time }];
 		sendMsg(msg);
 		newChatMessage = '';
 		setTimeout(scrollToBottom, 50);

@@ -64,7 +64,6 @@
 			if (socket && isConnected) {
 				socket.send(JSON.stringify({ type: 'register-admin', sessionId }));
 			}
-			initJitsiAdmin();
 		}
 	}
 
@@ -136,7 +135,7 @@
 			time
 		};
 
-		messages.push({ sender: 'admin', text: newChatMessage, time });
+		messages = [...messages, { sender: 'admin', text: newChatMessage, time }];
 		
 		if (socket && isConnected) {
 			socket.send(JSON.stringify(msg));
@@ -256,11 +255,12 @@
 					break;
 
 				case 'chat':
-					messages.push({
+					console.log('Chat reçu côté admin:', data);
+					messages = [...messages, {
 						sender: 'client',
 						text: data.text,
 						time: data.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-					});
+					}];
 					setTimeout(scrollToBottom, 50);
 					break;
 			}
