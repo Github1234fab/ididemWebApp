@@ -72,6 +72,8 @@
 					height: '100%',
 					parentNode: document.getElementById('jitsi-container'),
 					configOverwrite: {
+						startWithAudioMuted: false,
+						startWithVideoMuted: false,
 						disableDeepLinking: true
 					}
 				};
