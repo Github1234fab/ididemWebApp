@@ -125,7 +125,7 @@
 	let ctx = null;
 
 	/** @type {any} */
-	let jitsiApi = null;
+	let dailyCall = null;
 
 	onMount(() => {
 		const urlSessionId = page.url.searchParams.get('session_id');
@@ -137,7 +137,8 @@
 
 		return () => {
 			if (socket) socket.close();
-			if (jitsiApi) jitsiApi.dispose();
+			if (checkDailyInterval) clearInterval(checkDailyInterval);
+			if (dailyCall) dailyCall.destroy();
 		};
 	});
 
@@ -254,58 +255,77 @@
 		};
 	}
 
-	function initJitsiAdmin() {
-		console.log("[Jitsi Admin] Initialisation de la visio");
-		console.log("[Jitsi Admin] sessionId actuel:", sessionId);
-		console.log("[Jitsi Admin] URL du navigateur:", window.location.href);
+	let checkDailyInterval = null;
 
-		if (jitsiApi) {
-			console.log("[Jitsi Admin] Fermeture de la visio précédente");
-			jitsiApi.dispose();
-			jitsiApi = null;
+	async function initJitsiAdmin() {
+		console.log("[Daily Admin] Initialisation de la visio");
+		console.log("[Daily Admin] sessionId actuel:", sessionId);
+
+		if (dailyCall) {
+			console.log("[Daily Admin] Fermeture de la visio précédente");
+			dailyCall.destroy();
+			dailyCall = null;
 		}
 
 		const container = document.getElementById('jitsi-container');
 		if (container) {
-			console.log("[Jitsi Admin] Nettoyage du conteneur HTML");
+			console.log("[Daily Admin] Nettoyage du conteneur HTML");
 			container.innerHTML = '';
 		}
 
-		const checkJitsi = setInterval(() => {
-			// @ts-ignore
-			if (window.JitsiMeetExternalAPI) {
-				clearInterval(checkJitsi);
-				const domain = 'meet.jit.si';
-				const room = `ididem_ephoto_session_${sessionId}`;
-				console.log("[Jitsi Admin] Lancement de la visio dans la room:", room);
-				const options = {
-					roomName: room,
-					width: '100%',
-					height: '100%',
-					parentNode: container,
-					configOverwrite: {
-						startWithAudioMuted: false,
-						startWithVideoMuted: false,
-						prejoinPageEnabled: false,
-						disableDeepLinking: true,
-						p2p: {
-							enabled: false
-						}
-					},
-					interfaceConfigOverwrite: {
-						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
-					}
-				};
-				// @ts-ignore
-				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+		try {
+			// 1. Appeler l'API serveur pour récupérer la room de cette session
+			const res = await fetch('/api/create-daily-room', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ sessionId })
+			});
+
+			if (!res.ok) {
+				throw new Error('Impossible de charger la salle de visioconférence.');
 			}
-		}, 100);
+
+			const { url: roomUrl } = await res.json();
+			console.log("[Daily Admin] URL de la room obtenue:", roomUrl);
+
+			// 2. Attendre le chargement du script Daily.co
+			// @ts-ignore
+			checkDailyInterval = setInterval(() => {
+				// @ts-ignore
+				if (window.DailyIframe) {
+					clearInterval(checkDailyInterval);
+					console.log("[Daily Admin] Script Daily chargé, création de la frame...");
+					// @ts-ignore
+					dailyCall = window.DailyIframe.createFrame(container, {
+						iframeStyle: {
+							width: '100%',
+							height: '100%',
+							border: 'none',
+							borderRadius: '8px'
+						},
+						showLeaveButton: false,
+						showFullscreenButton: false
+					});
+
+					// Rejoindre la salle en tant que "Photographe"
+					dailyCall.join({
+						url: roomUrl,
+						userName: 'Photographe'
+					});
+				}
+			}, 100);
+
+		} catch (err) {
+			console.error('[Daily Admin] Erreur visio:', err);
+		}
 	}
 </script>
 
 <svelte:head>
 	<title>Pont de Signature Admin - IDidem</title>
-	<script src="https://meet.jit.si/external_api.js"></script>
+	<script src="https://unpkg.com/@daily-co/daily-js"></script>
 </svelte:head>
 
 <main class="admin-bridge">

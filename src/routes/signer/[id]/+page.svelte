@@ -12,7 +12,7 @@
 	/** @type {any} */
 	let pad = $state();
 	/** @type {any} */
-	let jitsiApi = null;
+	let dailyCall = null;
 
 	onMount(() => {
 		// Connexion WebSocket en temps réel
@@ -64,50 +64,74 @@
 			status = 'Erreur de connexion';
 		};
 
-		// Charger la visioconférence Jitsi Meet
-		console.log("[Jitsi Client] Initialisation de la visio");
-		console.log("[Jitsi Client] sessionId actuel:", sessionId);
-		console.log("[Jitsi Client] URL du navigateur:", window.location.href);
+		// Charger la visioconférence Daily.co
+		console.log("[Daily Client] Initialisation de la visio");
+		console.log("[Daily Client] sessionId actuel:", sessionId);
 
 		const container = document.getElementById('jitsi-container');
 		if (container) {
-			console.log("[Jitsi Client] Nettoyage du conteneur HTML");
+			console.log("[Daily Client] Nettoyage du conteneur HTML");
 			container.innerHTML = '';
 		}
 
+		let checkDailyInterval = null;
 
+		const initDailyCall = async () => {
+			try {
+				// 1. Appeler notre API serveur pour créer/récupérer la room Daily
+				const res = await fetch('/api/create-daily-room', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ sessionId })
+				});
 
-		// @ts-ignore
-		const checkJitsi = setInterval(() => {
-			// @ts-ignore
-			if (window.JitsiMeetExternalAPI) {
-				clearInterval(checkJitsi);
-				const domain = 'meet.jit.si';
-				const room = `ididem_ephoto_session_${sessionId}`;
-				console.log("[Jitsi Client] Lancement de la visio dans la room:", room);
-				const options = {
-					roomName: room,
-					width: '100%',
-					height: '100%',
-					parentNode: container,
-					configOverwrite: {
-						startWithAudioMuted: false,
-						startWithVideoMuted: false,
-						disableDeepLinking: true,
-						p2p: {
-							enabled: false
-						}
-					}
-				};
+				if (!res.ok) {
+					throw new Error('Impossible de créer la salle de visioconférence.');
+				}
+
+				const { url: roomUrl } = await res.json();
+				console.log("[Daily Client] URL de la room obtenue:", roomUrl);
+
+				// 2. Attendre que le script Daily.co soit chargé
 				// @ts-ignore
-				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+				checkDailyInterval = setInterval(() => {
+					// @ts-ignore
+					if (window.DailyIframe) {
+						clearInterval(checkDailyInterval);
+						console.log("[Daily Client] Script Daily chargé, création de la frame...");
+						// @ts-ignore
+						dailyCall = window.DailyIframe.createFrame(container, {
+							iframeStyle: {
+								width: '100%',
+								height: '100%',
+								border: 'none',
+								borderRadius: '8px'
+							},
+							showLeaveButton: false,
+							showFullscreenButton: false
+						});
+
+						// Rejoindre la salle avec le nom pré-rempli "Client"
+						dailyCall.join({
+							url: roomUrl,
+							userName: 'Client'
+						});
+					}
+				}, 100);
+
+			} catch (err) {
+				console.error('[Daily Client] Erreur visio:', err);
 			}
-		}, 100);
+		};
+
+		initDailyCall();
 
 		return () => {
-			clearInterval(checkJitsi);
+			if (checkDailyInterval) clearInterval(checkDailyInterval);
 			if (socket) socket.close();
-			if (jitsiApi) jitsiApi.dispose();
+			if (dailyCall) dailyCall.destroy();
 		};
 	});
 
@@ -177,7 +201,7 @@
 
 <svelte:head>
 	<title>Signer votre e-Photo - IDidem</title>
-	<script src="https://meet.jit.si/external_api.js"></script>
+	<script src="https://unpkg.com/@daily-co/daily-js"></script>
 </svelte:head>
 
 <main class="signer-page">
