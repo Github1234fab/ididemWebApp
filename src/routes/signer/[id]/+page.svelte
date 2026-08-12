@@ -74,6 +74,7 @@
 			container.innerHTML = '';
 		}
 
+		/** @type {any} */
 		let checkDailyInterval = null;
 
 		const initDailyCall = async () => {
@@ -88,7 +89,9 @@
 				});
 
 				if (!res.ok) {
-					throw new Error('Impossible de créer la salle de visioconférence.');
+					const errorJson = await res.json().catch(() => ({}));
+					console.error("[Daily Client] Erreur serveur détaillée:", errorJson);
+					throw new Error(errorJson.error || 'Impossible de créer la salle de visioconférence.');
 				}
 
 				const { url: roomUrl } = await res.json();

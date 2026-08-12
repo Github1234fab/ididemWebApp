@@ -255,6 +255,7 @@
 		};
 	}
 
+	/** @type {any} */
 	let checkDailyInterval = null;
 
 	async function initJitsiAdmin() {
@@ -284,7 +285,9 @@
 			});
 
 			if (!res.ok) {
-				throw new Error('Impossible de charger la salle de visioconférence.');
+				const errorJson = await res.json().catch(() => ({}));
+				console.error("[Daily Admin] Erreur serveur détaillée:", errorJson);
+				throw new Error(errorJson.error || 'Impossible de charger la salle de visioconférence.');
 			}
 
 			const { url: roomUrl } = await res.json();
@@ -526,7 +529,7 @@
 		grid-template-columns: 1.2fr 0.8fr;
 		gap: 2.5rem;
 	}
-	.preview-area, .chat-area {
+	.preview-area {
 		background: var(--white);
 		padding: 2rem;
 		border-radius: var(--radius-lg);
