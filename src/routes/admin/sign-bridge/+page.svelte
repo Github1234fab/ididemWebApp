@@ -22,6 +22,13 @@
 		}
 	}
 
+	function triggerClientJitsiReload() {
+		if (socket && isConnected) {
+			console.log("[Admin] Envoi du signal de reconnexion visio au client...");
+			socket.send(JSON.stringify({ type: 'reload-jitsi', sessionId }));
+		}
+	}
+
 	function playRingtone() {
 		try {
 			// @ts-ignore
@@ -387,7 +394,12 @@
 			</div>
 
 			<div class="video-area">
-				<h3>Client en direct (Visioconférence)</h3>
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+					<h3 style="margin: 0;">Client en direct (Visioconférence)</h3>
+					<button class="reload-client-btn" onclick={triggerClientJitsiReload} title="Relancer la connexion visio du client si celle-ci ne s'affiche pas" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--blue-200); background: var(--blue-50); color: var(--blue-700); cursor: pointer; transition: all 0.2s;">
+						🔄 Relancer visio client
+					</button>
+				</div>
 				<div id="jitsi-container" class="jitsi-admin-frame">
 					{#if !isConnected}
 						<div class="placeholder-jitsi">

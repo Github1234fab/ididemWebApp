@@ -45,6 +45,9 @@
 				const data = JSON.parse(event.data);
 				if (data.type === 'clear') {
 					if (pad) pad.clear();
+				} else if (data.type === 'reload-jitsi') {
+					console.log("[WebSocket] Reconnexion visio demandée par le photographe");
+					window.location.reload();
 				}
 			} catch (err) {
 				console.error('Erreur réception message:', err);
@@ -72,47 +75,34 @@
 			container.innerHTML = '';
 		}
 
-		/** @type {any} */
-		let checkJitsiTimer = null;
 
-		const initJitsi = () => {
+
+		// @ts-ignore
+		const checkJitsi = setInterval(() => {
 			// @ts-ignore
-			const timer = setInterval(() => {
-				// @ts-ignore
-				if (window.JitsiMeetExternalAPI) {
-					clearInterval(timer);
-					const domain = 'meet.jit.si';
-					const room = `ididem_ephoto_session_${sessionId}`;
-					console.log("[Jitsi Client] Lancement de la visio dans la room:", room);
-					const options = {
-						roomName: room,
-						width: '100%',
-						height: '100%',
-						parentNode: container,
-						configOverwrite: {
-							startWithAudioMuted: false,
-							startWithVideoMuted: false,
-							disableDeepLinking: true
-						}
-					};
-					// @ts-ignore
-					jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
-
-					// Assurer explicitement les permissions sur l'iframe Jitsi
-					const iframe = jitsiApi.getIFrame();
-					if (iframe) {
-						iframe.setAttribute('allow', 'camera; microphone; display-capture; autoplay; clipboard-write');
+			if (window.JitsiMeetExternalAPI) {
+				clearInterval(checkJitsi);
+				const domain = 'meet.jit.si';
+				const room = `ididem_ephoto_session_${sessionId}`;
+				console.log("[Jitsi Client] Lancement de la visio dans la room:", room);
+				const options = {
+					roomName: room,
+					width: '100%',
+					height: '100%',
+					parentNode: container,
+					configOverwrite: {
+						startWithAudioMuted: false,
+						startWithVideoMuted: false,
+						disableDeepLinking: true
 					}
-				}
-			}, 100);
-			checkJitsiTimer = timer;
-		};
-
-		// Lancement de Jitsi en direct (sans pré-appel getUserMedia qui verrouille le matériel)
-		initJitsi();
+				};
+				// @ts-ignore
+				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+			}
+		}, 100);
 
 		return () => {
-			if (checkJitsiTimer) clearInterval(checkJitsiTimer);
+			clearInterval(checkJitsi);
 			if (socket) socket.close();
 			if (jitsiApi) jitsiApi.dispose();
 		};

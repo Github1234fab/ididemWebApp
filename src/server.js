@@ -217,6 +217,15 @@ wss.on('connection', (ws) => {
 					}
 					break;
 
+				case 'reload-jitsi':
+					if (currentSessionId && sessions[currentSessionId]) {
+						const session = sessions[currentSessionId];
+						if (session.clientSocket && session.clientSocket.readyState === ws.OPEN) {
+							session.clientSocket.send(JSON.stringify({ type: 'reload-jitsi' }));
+						}
+					}
+					break;
+
 				case 'chat':
 					if (currentSessionId && sessions[currentSessionId]) {
 						const session = sessions[currentSessionId];
