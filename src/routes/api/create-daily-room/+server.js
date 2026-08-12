@@ -43,8 +43,8 @@ export async function POST({ request, fetch }) {
 				name: roomName,
 				properties: {
 					exp: expTime,
-					start_audio_muted: false,
-					start_video_muted: false,
+					start_audio_off: false,
+					start_video_off: false,
 					enable_chat: false,
 					enable_people_ui: false,
 					enable_pip_ui: true
