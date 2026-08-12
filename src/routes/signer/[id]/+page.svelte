@@ -101,12 +101,6 @@
 				};
 				// @ts-ignore
 				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
-
-				// Fix permissions sur mobile (iOS / Safari) en forçant l'attribut allow avec jokers
-				const iframe = jitsiApi.getIFrame();
-				if (iframe) {
-					iframe.setAttribute('allow', 'camera *; microphone *; display-capture *; autoplay; clipboard-write');
-				}
 			}
 		}, 100);
 
