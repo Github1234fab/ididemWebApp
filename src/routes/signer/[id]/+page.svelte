@@ -9,7 +9,9 @@
 	let socket = null;
 	let status = $state('Connexion...');
 	let isConnected = $state(false);
-	let pad;
+	/** @type {any} */
+	let pad = $state();
+	/** @type {any} */
 	let jitsiApi = null;
 
 	onMount(() => {
@@ -70,32 +72,55 @@
 			container.innerHTML = '';
 		}
 
-		// @ts-ignore
-		const checkJitsi = setInterval(() => {
+		/** @type {any} */
+		let checkJitsiTimer = null;
+
+		const initJitsi = () => {
 			// @ts-ignore
-			if (window.JitsiMeetExternalAPI) {
-				clearInterval(checkJitsi);
-				const domain = 'meet.jit.si';
-				const room = `ididem_ephoto_session_${sessionId}`;
-				console.log("[Jitsi Client] Lancement de la visio dans la room:", room);
-				const options = {
-					roomName: room,
-					width: '100%',
-					height: '100%',
-					parentNode: container,
-					configOverwrite: {
-						startWithAudioMuted: false,
-						startWithVideoMuted: false,
-						disableDeepLinking: true
-					}
-				};
+			return setInterval(() => {
 				// @ts-ignore
-				jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
-			}
-		}, 100);
+				if (window.JitsiMeetExternalAPI) {
+					clearInterval(checkJitsiTimer);
+					const domain = 'meet.jit.si';
+					const room = `ididem_ephoto_session_${sessionId}`;
+					console.log("[Jitsi Client] Lancement de la visio dans la room:", room);
+					const options = {
+						roomName: room,
+						width: '100%',
+						height: '100%',
+						parentNode: container,
+						configOverwrite: {
+							startWithAudioMuted: false,
+							startWithVideoMuted: false,
+							disableDeepLinking: true
+						}
+					};
+					// @ts-ignore
+					jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+				}
+			}, 100);
+		};
+
+		// Tenter de pré-demander les permissions micro & caméra nativement
+		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+			navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+				.then((stream) => {
+					console.log("[Jitsi Client] Permissions micro/caméra accordées par le client");
+					// Couper le flux de test immédiatement pour libérer le matériel pour Jitsi
+					stream.getTracks().forEach(track => track.stop());
+					checkJitsiTimer = initJitsi();
+				})
+				.catch((err) => {
+					console.warn("[Jitsi Client] Permissions refusées ou indisponibles sur la page parente:", err);
+					// On lance quand même Jitsi en fallback
+					checkJitsiTimer = initJitsi();
+				});
+		} else {
+			checkJitsiTimer = initJitsi();
+		}
 
 		return () => {
-			clearInterval(checkJitsi);
+			if (checkJitsiTimer) clearInterval(checkJitsiTimer);
 			if (socket) socket.close();
 			if (jitsiApi) jitsiApi.dispose();
 		};
@@ -175,11 +200,14 @@
 		
 		<!-- Panel visioconférence Jitsi -->
 		<div class="video-panel">
-			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-				<h2>Votre photographe en direct</h2>
-				<button class="reload-btn" onclick={() => window.location.reload()}>
-					🔄 Reconnecter
-				</button>
+			<div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; width: 100%;">
+				<h2 style="margin: 0; width: 100%;">Votre photographe en direct</h2>
+				<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; width: 100%;">
+					<span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); font-weight: 500;">Veuillez saisir votre prénom dans la fenêtre ci-dessous :</span>
+					<button class="reload-btn" onclick={() => window.location.reload()} title="Reconnecter la visio" style="padding: 0.4rem 0.6rem; font-size: 0.75rem; border-radius: var(--radius-sm); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;">
+						🔄 Reconnecter
+					</button>
+				</div>
 			</div>
 			<div id="jitsi-container" class="jitsi-frame"></div>
 		</div>
@@ -187,7 +215,6 @@
 		<!-- Panel Signature Pad -->
 		<div class="signer-container">
 			<header class="signer-header">
-				<h1>IDidem</h1>
 				<p class="status" class:connected={isConnected}>{status}</p>
 			</header>
 
@@ -298,11 +325,7 @@
 	.signer-header {
 		text-align: center;
 	}
-	.signer-header h1 {
-		color: var(--white);
-		font-size: 2rem;
-		font-weight: 800;
-	}
+
 	.status {
 		font-size: 0.85rem;
 		opacity: 0.8;
