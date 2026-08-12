@@ -426,9 +426,10 @@
 						🔄 Relancer visio client
 					</button>
 				</div>
-				<div id="jitsi-container" class="jitsi-admin-frame">
+				<div class="jitsi-admin-frame" style="position: relative; min-height: 420px; overflow: hidden;">
+					<div id="jitsi-container" style="width: 100%; height: 100%;"></div>
 					{#if !isConnected}
-						<div class="placeholder-jitsi">
+						<div class="placeholder-jitsi" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #0f172a; z-index: 10; color: white;">
 							<p>Veuillez activer le pont pour démarrer la visioconférence</p>
 						</div>
 					{/if}
