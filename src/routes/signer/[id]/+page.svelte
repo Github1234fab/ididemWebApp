@@ -97,28 +97,19 @@
 					};
 					// @ts-ignore
 					jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+
+					// Assurer explicitement les permissions sur l'iframe Jitsi
+					const iframe = jitsiApi.getIFrame();
+					if (iframe) {
+						iframe.setAttribute('allow', 'camera; microphone; display-capture; autoplay; clipboard-write');
+					}
 				}
 			}, 100);
 			checkJitsiTimer = timer;
 		};
 
-		// Tenter de pré-demander les permissions micro & caméra nativement
-		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-				.then((stream) => {
-					console.log("[Jitsi Client] Permissions micro/caméra accordées par le client");
-					// Couper le flux de test immédiatement pour libérer le matériel pour Jitsi
-					stream.getTracks().forEach(track => track.stop());
-					initJitsi();
-				})
-				.catch((err) => {
-					console.warn("[Jitsi Client] Permissions refusées ou indisponibles sur la page parente:", err);
-					// On lance quand même Jitsi en fallback
-					initJitsi();
-				});
-		} else {
-			initJitsi();
-		}
+		// Lancement de Jitsi en direct (sans pré-appel getUserMedia qui verrouille le matériel)
+		initJitsi();
 
 		return () => {
 			if (checkJitsiTimer) clearInterval(checkJitsiTimer);
