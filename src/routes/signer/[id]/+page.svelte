@@ -77,10 +77,10 @@
 
 		const initJitsi = () => {
 			// @ts-ignore
-			return setInterval(() => {
+			const timer = setInterval(() => {
 				// @ts-ignore
 				if (window.JitsiMeetExternalAPI) {
-					clearInterval(checkJitsiTimer);
+					clearInterval(timer);
 					const domain = 'meet.jit.si';
 					const room = `ididem_ephoto_session_${sessionId}`;
 					console.log("[Jitsi Client] Lancement de la visio dans la room:", room);
@@ -99,6 +99,7 @@
 					jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
 				}
 			}, 100);
+			checkJitsiTimer = timer;
 		};
 
 		// Tenter de pré-demander les permissions micro & caméra nativement
@@ -108,15 +109,15 @@
 					console.log("[Jitsi Client] Permissions micro/caméra accordées par le client");
 					// Couper le flux de test immédiatement pour libérer le matériel pour Jitsi
 					stream.getTracks().forEach(track => track.stop());
-					checkJitsiTimer = initJitsi();
+					initJitsi();
 				})
 				.catch((err) => {
 					console.warn("[Jitsi Client] Permissions refusées ou indisponibles sur la page parente:", err);
 					// On lance quand même Jitsi en fallback
-					checkJitsiTimer = initJitsi();
+					initJitsi();
 				});
 		} else {
-			checkJitsiTimer = initJitsi();
+			initJitsi();
 		}
 
 		return () => {
