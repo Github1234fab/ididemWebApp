@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/private';
 const DAILY_API_KEY = env.DAILY_API_KEY || 'b49fdc130d26f44391842205b903e4e045abb9b8c11775df436fd0b8f49f2819';
 
 /** @type {import('./$types').RequestHandler} */
-export async function POST({ request }) {
+export async function POST({ request, fetch }) {
 	try {
 		const { sessionId } = await request.json();
 		if (!sessionId) {
