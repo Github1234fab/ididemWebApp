@@ -287,7 +287,10 @@
 						startWithAudioMuted: false,
 						startWithVideoMuted: false,
 						prejoinPageEnabled: false,
-						disableDeepLinking: true
+						disableDeepLinking: true,
+						p2p: {
+							enabled: false
+						}
 					},
 					interfaceConfigOverwrite: {
 						TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup']
