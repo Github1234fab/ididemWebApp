@@ -850,22 +850,26 @@ function capturePhoto() {
 							<p>Veuillez patienter pendant la suppression automatique de l'arrière-plan.</p>
 						</div>
 					{:else}
-						<div class="photo-preview-card"
-							style={isProcessed ? getBgStyleForFormula(selectedFormula, selectedBgColor) : ''}
-						>
-							<img src={capturedImage} alt="Cliché capturé" />
-						</div>
+						<div class="preview-column" style="display: flex; flex-direction: column; gap: 0.85rem; align-items: center; width: 100%; max-width: 380px; margin: 0 auto;">
+							<div class="photo-preview-card"
+								style={isProcessed ? getBgStyleForFormula(selectedFormula, selectedBgColor) : ''}
+								style:margin="0"
+							>
+								<img src={capturedImage} alt="Cliché capturé" />
+							</div>
 
-						<div class="result-info">
 							{#if processingError}
-								<div class="status-error-badge">
+								<div class="status-error-badge" style="width: 100%; margin: 0;">
 									<span>⚠️</span> {processingError}
 								</div>
 							{:else if isProcessed}
-								<div class="status-success-badge animate-pulse">
-									<span>✓</span> Fond supprimé & conforme
+								<div class="status-success-badge" style="width: 100%; margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.35rem; background: #e6fcf5; border: 1px solid #c3fae8; color: #0ca678; font-weight: 700; padding: 0.5rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem;">
+									<span style="font-size: 1.05rem;">✓</span> Fond supprimé & conforme
 								</div>
 							{/if}
+						</div>
+
+						<div class="result-info">
 
 							{#if selectedFormula === 'casual' && isProcessed}
 								<div class="background-selector">
@@ -905,13 +909,13 @@ function capturePhoto() {
 								</div>
 							{/if}
 
-							<h3>Prochaines étapes :</h3>
-							<ul class="steps-list">
-								{#if isProcessed}
+							{#if isProcessed}
+								<h3>Prochaines étapes :</h3>
+								<ul class="steps-list">
 									{#if selectedFormula === 'e-photo'}
 										<li class="animate-fade-in">
 											<span class="step-icon text-blue">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 9-3.75 3.75L8.25 9m0 0v6M12 9v6m3.75-6v6M3 6.75A2.25 2.25 0 0 1 5.25 4.5h13.5A2.25 2.25 0 0 1 21 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 17.25V6.75Z" /></svg>
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
 											</span>
 											<div class="step-text">
 												<strong>Signature & Certification</strong>
@@ -921,68 +925,52 @@ function capturePhoto() {
 									{/if}
 									<li class="animate-fade-in">
 										<span class="step-icon text-green">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
 										</span>
 										<div class="step-text">
 											<strong>Paiement sécurisé</strong>
 											<span>Finalisation de la commande par CB.</span>
 										</div>
 									</li>
-								{:else}
-									<li>
-										<span class="step-icon text-purple">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 21l8.904-.813a18.502 18.502 0 1 0-8.091-4.283Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M11.99 3.01H12V3h-.01v.01Z" /></svg>
-										</span>
-										<div class="step-text">
-											<strong>Finalisation par IA</strong>
-											<span>Suppression de l'arrière-plan et application du fond conforme.</span>
-										</div>
-									</li>
-									<li>
-										<span class="step-icon text-yellow">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
-										</span>
-										<div class="step-text">
-											<strong>Impératif d'auto-contrôle</strong>
-											<span>Vous devez contrôler les points suivants impérativement : yeux ouverts, bouche fermée, visage centré, pas d'ombre sur le visage, oreilles dégagées.</span>
-										</div>
-									</li>
-									{#if selectedFormula === 'e-photo'}
-										<li>
-											<span class="step-icon text-blue">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
-											</span>
-											<div class="step-text">
-												<strong>Signature & Certification</strong>
-												<span>Signature sur l'honneur en ligne sécurisée.</span>
-											</div>
+								</ul>
+							{:else}
+								<div class="compliance-checklist" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: left; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);">
+									<h3 style="font-size: 1rem; font-weight: 800; color: var(--blue-900); margin: 0 0 0.75rem 0; display: flex; align-items: center; gap: 0.5rem;">
+										<span style="color: #3b82f6; font-size: 1.1rem; line-height: 1;">✓</span> Auto-contrôle obligatoire
+									</h3>
+									<p style="font-size: 0.85rem; color: var(--gray-600); margin: 0 0 1.25rem 0; line-height: 1.5;">
+										Avant de valider votre cliché, veuillez vérifier les points de conformité officiels suivants :
+									</p>
+									<ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+										<li style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--gray-700); line-height: 1.45; align-items: flex-start;">
+											<span style="color: #10b981; font-weight: 700; margin-top: 0.1rem;">✓</span>
+											<span><strong>Yeux & Regard :</strong> Yeux ouverts, regard de face.</span>
 										</li>
-									{/if}
-									<li>
-										<span class="step-icon text-teal">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-										</span>
-										<div class="step-text">
-											<strong>Téléchargement et partage de vos photos</strong>
-											<span>{selectedFormula === 'e-photo' ? 'Réception de votre code photo ANTS.' : 'Obtention de votre planche photo HD.'}</span>
-										</div>
-									</li>
-								{/if}
-							</ul>
+										<li style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--gray-700); line-height: 1.45; align-items: flex-start;">
+											<span style="color: #10b981; font-weight: 700; margin-top: 0.1rem;">✓</span>
+											<span><strong>Visage & Coiffure :</strong> Bouche fermée, oreilles bien dégagées et cheveux attachés.</span>
+										</li>
+										<li style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--gray-700); line-height: 1.45; align-items: flex-start;">
+											<span style="color: #10b981; font-weight: 700; margin-top: 0.1rem;">✓</span>
+											<span><strong>Absence d'ombres :</strong> Aucun ombrage sur le nez (dessous et côtés), ni sous le menton ou sur le cou.</span>
+										</li>
+									</ul>
+								</div>
+							{/if}
 
 
 
 							{#if isProcessed}
 								<!-- Option Envoi Postal Premium -->
-								<div class="booking-section-inline reassurance-card" style="margin-top: 1.5rem; text-align: left; background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: var(--radius-sm); padding: 1.25rem;">
-									<div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; gap: 0.35rem; margin-bottom: 0.75rem;">
-										<span style="font-weight: 800; font-size: 1.15rem; color: var(--blue-900);">Option Envoi Postal</span>
-										<span style="background: var(--success); color: var(--white); font-size: 0.65rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); text-transform: none; width: fit-content;">🌱 zéro déplacement, 100% éco</span>
+								<div class="reassurance-card" style="margin-top: 1.5rem; text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 1rem;">
+									<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 0.5rem; flex-wrap: wrap;">
+										<span style="font-weight: 800; font-size: 1.15rem; color: #1d1d1f;">Option Envoi Postal</span>
+										<span style="background: #e6fcf5; color: #0ca678; border: 1px solid #c3fae8; font-size: 0.65rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: var(--radius-full);">🌱 zéro déplacement, 100% éco</span>
 									</div>
 
-									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 700; color: var(--blue-900); cursor: pointer; font-size: 0.9rem; border-top: 1px dashed var(--blue-200); padding-top: 0.75rem; margin-top: 0.5rem; justify-content: center; text-align: left;">
+									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 700; color: #27272a; cursor: pointer; font-size: 0.9rem; margin: 0; text-align: left;">
 										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.25rem; height: 1.25rem; accent-color: var(--blue-600); cursor: pointer; flex-shrink: 0; margin-top: 0.1rem;" />
-										<span>Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+3,00 €)</span>
+										<span style="line-height: 1.45;">Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+3,00 €)</span>
 									</label>
 
 									{#if deliveryRequested}
@@ -1206,17 +1194,21 @@ function capturePhoto() {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 38px;
-		height: 38px;
-		border-radius: var(--radius-sm);
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
 		flex-shrink: 0;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+		color: var(--blue-605, #2563eb);
+		background: #f0f7ff;
+		border: 1px solid #e0f0ff;
 	}
 
-	.step-icon.text-blue { color: var(--blue-600); background: #eff6ff; }
-	.step-icon.text-green { color: #16a34a; background: #f0fdf4; }
-	.step-icon.text-purple { color: #9333ea; background: #faf5ff; }
-	.step-icon.text-yellow { color: #d97706; background: #fef3c7; }
-	.step-icon.text-teal { color: #0d9488; background: #f0fdfa; }
+	.step-icon svg {
+		width: 18px;
+		height: 18px;
+		stroke-width: 1.75 !important;
+	}
 
 	.step-text {
 		display: flex;
@@ -1228,7 +1220,7 @@ function capturePhoto() {
 	.step-text strong {
 		font-size: 0.95rem;
 		font-weight: 700;
-		color: var(--gray-800);
+		color: var(--blue-900);
 	}
 
 	.step-text span {
@@ -2382,17 +2374,19 @@ function capturePhoto() {
 	.btn-retake {
 		flex: 1;
 		min-width: 0;
-		background: var(--gray-100);
-		color: var(--gray-700);
-		padding: 0.9rem 1rem;
-		border-radius: var(--radius-sm);
+		background: #f1f5f9;
+		color: #475569;
+		padding: 0.95rem 1rem;
+		border-radius: var(--radius-md);
 		font-weight: 700;
-		transition: var(--transition-fast);
+		transition: all 0.2s;
 		text-align: center;
+		border: 1px solid #cbd5e1;
+		cursor: pointer;
 	}
 
 	.btn-retake:hover {
-		background: var(--gray-200);
+		background: #e2e8f0;
 	}
 
 	.btn-confirm-photo {
@@ -2400,18 +2394,20 @@ function capturePhoto() {
 		min-width: 0;
 		background: #ff7a00;
 		color: var(--white);
-		padding: 0.9rem 1rem;
-		border-radius: var(--radius-sm);
+		padding: 0.95rem 1rem;
+		border-radius: var(--radius-md);
 		font-weight: 700;
-		transition: var(--transition-fast);
-		box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25);
+		transition: all 0.2s;
+		box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);
 		text-align: center;
+		border: none;
+		cursor: pointer;
 	}
 
-	.btn-confirm-photo:hover {
+	.btn-confirm-photo:hover:not(:disabled) {
 		background: #ea580c;
-		transform: translateY(-2px);
-		box-shadow: 0 6px 15px rgba(234, 88, 12, 0.35);
+		transform: translateY(-1px);
+		box-shadow: 0 6px 18px rgba(255, 122, 0, 0.4);
 	}
 
 

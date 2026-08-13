@@ -48,7 +48,8 @@ export async function POST({ request, fetch }) {
 				birthdate: birthdate || '',
 				sessionId,
 				signatureData,
-				photoData: photoData || '' // Image Base64 de la photo
+				photoData: photoData || '', // Image Base64 de la photo
+				coords: coords ? JSON.stringify(coords) : '' // Tracé des coordonnées de signature
 			})
 		});
 

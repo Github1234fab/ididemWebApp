@@ -352,31 +352,35 @@
 
 			<!-- CAS 1 : e-Photo avec processus de Signature et rendez-vous en ligne -->
 			{#if formulaId === 'e-photo'}
-				<div class="booking-section-inline reassurance-card" style="margin-bottom: 1.5rem; text-align: left; background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: var(--radius-sm); padding: 1rem 1.25rem;">
-					<p style="margin: 0; font-size: 0.9rem; color: var(--blue-900); line-height: 1.45; font-weight: 600;">
-						💳 <strong>Information facturation :</strong> Le paiement réalisé est une simple empreinte bancaire (autorisation temporaire). Votre compte ne sera réellement débité qu'après validation et livraison finale de votre e-photo.
-					</p>
-				</div>
-
-				<div class="product-success-box e-photo-box">
-					<h2>Signature & Certification en ligne</h2>
+				<div class="product-success-box e-photo-box" style="padding: 2.25rem 2rem; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); box-shadow: var(--shadow-lg); text-align: center; max-width: 600px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; gap: 1.5rem;">
+					<h2 style="font-size: 1.5rem; font-weight: 800; color: var(--blue-900); margin: 0;">Dernière étape indispensable</h2>
 					
-					<div class="success-booking-alert" style="background: rgba(255, 122, 0, 0.08); border-color: rgba(255, 122, 0, 0.3); padding: 1.25rem; border-radius: var(--radius-md); border-width: 1px; border-style: solid; margin-bottom: 1.5rem;">
-						<p style="color: #ff7a00; font-weight: 700; margin: 0 0 0.5rem 0;">✍️ Dernière étape : Signer votre e-photo</p>
-						<p class="small-desc" style="margin: 0; font-size: 0.85rem; line-height: 1.45; color: var(--gray-600);">Pour finaliser votre planche et générer votre code ANTS officiel, vous devez certifier votre identité sur l'honneur et apposer votre signature.</p>
+					<!-- Grid de 2 colonnes simples avec icônes -->
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; text-align: left;">
+						<div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+							<span style="font-size: 1.75rem; line-height: 1;">✍️</span>
+							<div>
+								<strong style="display: block; font-size: 0.95rem; color: var(--gray-800); margin-bottom: 0.25rem;">Signature en ligne</strong>
+								<span style="font-size: 0.85rem; color: var(--gray-600); line-height: 1.4; display: block;">Signez sur votre smartphone en 30 secondes pour valider votre planche.</span>
+							</div>
+						</div>
+						<div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+							<span style="font-size: 1.75rem; line-height: 1;">💳</span>
+							<div>
+								<strong style="display: block; font-size: 0.95rem; color: var(--gray-800); margin-bottom: 0.25rem;">Aucun débit immédiat</strong>
+								<span style="font-size: 0.85rem; color: var(--gray-600); line-height: 1.4; display: block;">Simple empreinte bancaire. Débité uniquement à l'envoi de votre e-photo.</span>
+							</div>
+						</div>
 					</div>
 
-					<div class="actions-group horizontal-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-						<a href="/signer/{sessionId}" class="primary-btn pulse" style="background: #ff7a00; border-color: #ff7a00; font-weight: 700; color: white;">
-							✍️ Signer et certifier ma e-Photo
+					<div class="actions-group" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 0.5rem; width: 100%;">
+						<a href="/signer/{sessionId}" class="primary-btn pulse" style="background: #ff7a00; border-color: #ff7a00; font-weight: 700; color: white; padding: 1.1rem 2.5rem; border-radius: var(--radius-md); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1.05rem; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 320px; box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);">
+							✍️ Signer ma e-Photo
 						</a>
-						<button class="secondary-btn" onclick={copySignatureLink}>
-							{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
-						</button>
 					</div>
 
 					{#if deliveryRequested}
-						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
+						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin-top: 1rem; text-align: left;">
 							<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
 								<span>📬 Option Envoi Postal Active</span>
 							</p>
@@ -697,41 +701,6 @@
 		padding: 5px;
 	} */
 
-	.success-booking-alert {
-		background: #ecfdf5;
-		border: 1px solid #a7f3d0;
-		color: #065f46;
-		padding: 1.5rem;
-		border-radius: var(--radius-sm);
-		text-align: center;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.success-booking-alert p {
-		font-size: 1.1rem;
-		margin: 0;
-	}
-
-	.success-booking-alert .small-desc {
-		font-size: 0.9rem;
-		color: #047857;
-		line-height: 1.5;
-		margin-top: 0.5rem;
-	}
-
-
-	.booking-section-inline {
-		background: #f8fafc;
-		border: 1px solid var(--gray-200);
-		border-radius: var(--radius-md);
-		padding: 1.5rem;
-		margin: 1.5rem 0;
-		text-align: left;
-	}
-
-
 	@media (max-width: 576px) {
 		.success-page {
 			padding: 1rem 0.25rem;
@@ -745,11 +714,6 @@
 		.product-success-box {
 			padding: 1.25rem 1rem;
 			gap: 1rem;
-		}
-
-		.booking-section-inline {
-			padding: 1rem 0.5rem;
-			margin: 1rem 0;
 		}
 
 		/* .benefit-card {

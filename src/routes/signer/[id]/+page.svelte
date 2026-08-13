@@ -120,6 +120,25 @@
 			submitMessage = errorMsg;
 			return;
 		}
+
+		// Vérification de l'âge (minimum 18 ans)
+		if (clientBirthdate) {
+			const birthDateObj = new Date(clientBirthdate);
+			const today = new Date();
+			let age = today.getFullYear() - birthDateObj.getFullYear();
+			const monthDiff = today.getMonth() - birthDateObj.getMonth();
+			if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+				age--;
+			}
+			if (age < 18) {
+				const errorMsg = "La signature d'une e-Photo officielle est réservée aux personnes majeures (18 ans et plus).";
+				console.warn("[Client Signature] Validation échouée: mineur.", age);
+				alert(errorMsg);
+				submitMessage = errorMsg;
+				return;
+			}
+		}
+
 		if (!certCheck) {
 			const errorMsg = "Vous devez certifier l'exactitude des informations sur l'honneur.";
 			console.warn("[Client Signature] Validation échouée: case non cochée.");
@@ -199,10 +218,31 @@
 				<p class="success-desc">{submitMessage}</p>
 				<div class="success-steps">
 					<h3>Quelle est la suite ?</h3>
-					<ul>
-						<li>🌱 Notre opérateur vérifie et finalise votre planche conforme ANTS.</li>
-						<li>📧 Votre code e-Photo et votre planche conforme vous seront envoyés par mail à <strong>{clientEmail}</strong>.</li>
-						<li>📬 Si vous avez choisi l'envoi postal, la planche partira au courrier sous 24h.</li>
+					<ul style="display: flex; flex-direction: column; gap: 1.25rem; list-style: none; padding: 0; margin: 0;">
+						<li style="display: flex; gap: 0.85rem; align-items: center;">
+							<span style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; background: #30d158; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #ffffff; width: 16px; height: 16px; stroke-width: 2.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
+							</span>
+							<span style="font-size: 0.95rem; color: #ffffff;">Notre opérateur vérifie et finalise votre planche conforme ANTS.</span>
+						</li>
+						<li style="display: flex; gap: 0.85rem; align-items: center;">
+							<span style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; background: #0a84ff; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #ffffff; width: 16px; height: 16px; stroke-width: 2.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" /></svg>
+							</span>
+							<span style="font-size: 0.95rem; color: #ffffff;">Votre code e-Photo vous sera envoyé par mail à <strong>{clientEmail}</strong>.</span>
+						</li>
+						<li style="display: flex; gap: 0.85rem; align-items: center;">
+							<span style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; background: #ff9f0a; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #ffffff; width: 16px; height: 16px; stroke-width: 2.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.008 1.24l.885 1.77a2.25 2.25 0 0 0 2.007 1.24h1.98a2.25 2.25 0 0 0 2.007-1.24l.885-1.77a2.25 2.25 0 0 1 2.007-1.24h3.86" /></svg>
+							</span>
+							<span style="font-size: 0.95rem; color: #ffffff;">Si vous avez choisi l'envoi postal, la planche partira sous 24h maximum.</span>
+						</li>
+						<li style="display: flex; gap: 0.85rem; align-items: center;">
+							<span style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; background: #ff2d55; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #ffffff; width: 16px; height: 16px; stroke-width: 2.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
+							</span>
+							<span style="font-size: 0.95rem; color: #ffffff;">Le paiement de votre commande sera débité à l'envoi de votre e-photo.</span>
+						</li>
 					</ul>
 				</div>
 				<a href="/" class="home-link-btn">Retour à l'accueil</a>
@@ -239,7 +279,7 @@
 					<div class="cert-box">
 						<input type="checkbox" id="cert-check" bind:checked={certCheck} />
 						<label for="cert-check">
-							<strong>Je certifie sur l'honneur</strong> mon identité ainsi que l'exactitude des informations saisies. Je m'engage à fournir une signature conforme.
+							<strong>Je certifie sur l'honneur</strong> mon identité ainsi que l'exactitude des informations saisies. J'autorise expressément le photographe habilité d'IDidem à reproduire fidèlement ma signature ci-dessous sur ma planche photo officielle ANTS pour mon dossier.
 						</label>
 					</div>
 
@@ -251,9 +291,8 @@
 
 			<!-- Panel Signature Pad -->
 			<div class="signer-container">
-				<header class="signer-header">
+				<header class="signer-header" style="margin-bottom: 0.5rem;">
 					<h2>Votre Signature</h2>
-					<p class="status" class:connected={isConnected}>{status}</p>
 				</header>
 
 				<div class="instructions">
@@ -338,21 +377,27 @@
 	}
 	.input-group label {
 		font-size: 0.85rem;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.9);
+		font-weight: 700;
+		color: #ffffff !important;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 	}
 	.input-group input {
-		padding: 0.65rem 0.75rem;
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: var(--radius-sm);
-		background: rgba(255, 255, 255, 0.1);
-		color: var(--white);
-		font-size: 0.9rem;
+		padding: 0.75rem 0.85rem;
+		border: 1px solid rgba(255, 255, 255, 0.3) !important;
+		border-radius: var(--radius-md);
+		background: rgba(255, 255, 255, 0.12) !important;
+		color: #ffffff !important;
+		font-size: 0.95rem;
 		outline: none;
-		transition: border-color 0.2s;
+		transition: all 0.2s;
+	}
+	.input-group input::placeholder {
+		color: rgba(255, 255, 255, 0.55) !important;
 	}
 	.input-group input:focus {
-		border-color: var(--orange-500);
+		border-color: #ff7a00 !important;
+		background: rgba(255, 255, 255, 0.18) !important;
+		box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.2);
 	}
 	.cert-box {
 		display: flex;
@@ -377,8 +422,8 @@
 	}
 	.warning-text {
 		font-size: 0.75rem;
-		color: rgba(255, 255, 255, 0.5);
-		line-height: 1.3;
+		color: rgba(255, 255, 255, 0.75) !important;
+		line-height: 1.49;
 	}
 	.signer-container {
 		width: 100%;
@@ -389,15 +434,8 @@
 	.signer-header h2 {
 		font-size: 1.5rem;
 		font-weight: 800;
+		color: #ffffff !important;
 		margin: 0;
-	}
-	.status {
-		font-size: 0.8rem;
-		color: rgba(255, 255, 255, 0.6);
-		margin-top: 0.25rem;
-	}
-	.status.connected {
-		color: var(--green-400);
 	}
 	.instructions {
 		background: rgba(255, 255, 255, 0.05);
@@ -489,18 +527,19 @@
 	.success-screen h2 {
 		font-size: 2rem;
 		font-weight: 800;
+		color: #ffffff !important;
 		margin-bottom: 1rem;
 	}
 	.success-desc {
 		font-size: 1.05rem;
-		color: rgba(255, 255, 255, 0.8);
+		color: #ffffff;
 		max-width: 600px;
 		margin-bottom: 2rem;
 		line-height: 1.5;
 	}
 	.success-steps {
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: rgba(255, 255, 255, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.25);
 		padding: 1.5rem 2rem;
 		border-radius: var(--radius-lg);
 		max-width: 600px;
@@ -510,6 +549,7 @@
 	.success-steps h3 {
 		font-size: 1.1rem;
 		font-weight: 700;
+		color: #ffffff;
 		margin-bottom: 0.75rem;
 	}
 	.success-steps ul {
@@ -522,7 +562,7 @@
 	}
 	.success-steps li {
 		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.85);
+		color: #ffffff;
 		line-height: 1.4;
 	}
 	.home-link-btn {
