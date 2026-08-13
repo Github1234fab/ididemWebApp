@@ -392,9 +392,6 @@
 					{/if}
 				</div>
 
-
-				</div>
-
 			<!-- CAS 2 & 3 : Téléchargement et partage (Planche de 6 ou Portrait unique) -->
 			{:else}
 				<div class="product-success-box download-box">
