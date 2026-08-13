@@ -359,100 +359,38 @@
 				</div>
 
 				<div class="product-success-box e-photo-box">
-					<h2>Validation en ligne</h2>
+					<h2>Signature & Certification en ligne</h2>
 					
-					{#if isAdminOnline}
-						<div class="success-booking-alert instant-alert">
-							<p>⚡ <strong>Un photographe est disponible en direct !</strong></p>
-							<p>Vous pouvez signer votre e-photo immédiatement sans attendre.</p>
-							<p class="small-desc">Cliquez sur le bouton ci-dessous pour lancer la visioconférence instantanée (durée : 30 secondes) et valider votre dossier e-photo.</p>
+					<div class="success-booking-alert" style="background: rgba(255, 122, 0, 0.08); border-color: rgba(255, 122, 0, 0.3); padding: 1.25rem; border-radius: var(--radius-md); border-width: 1px; border-style: solid; margin-bottom: 1.5rem;">
+						<p style="color: #ff7a00; font-weight: 700; margin: 0 0 0.5rem 0;">✍️ Dernière étape : Signer votre e-photo</p>
+						<p class="small-desc" style="margin: 0; font-size: 0.85rem; line-height: 1.45; color: var(--gray-600);">Pour finaliser votre planche et générer votre code ANTS officiel, vous devez certifier votre identité sur l'honneur et apposer votre signature.</p>
+					</div>
+
+					<div class="actions-group horizontal-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+						<a href="/signer/{sessionId}" class="primary-btn pulse" style="background: #ff7a00; border-color: #ff7a00; font-weight: 700; color: white;">
+							✍️ Signer et certifier ma e-Photo
+						</a>
+						<button class="secondary-btn" onclick={copySignatureLink}>
+							{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
+						</button>
+					</div>
+
+					{#if deliveryRequested}
+						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
+							<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+								<span>📬 Option Envoi Postal Active</span>
+							</p>
+							<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
+								Votre planche photo sera imprimée sur papier photo de haute qualité et expédiée sous 24h à l'adresse suivante :
+							</p>
+							<div style="background: var(--white); padding: 0.75rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--gray-200); font-size: 0.95rem; font-weight: 600; color: var(--gray-700); line-height: 1.4;">
+								{deliveryName}<br />
+								{deliveryStreet}<br />
+								{deliveryZip} {deliveryCity}
+							</div>
 						</div>
-
-						<div class="actions-group horizontal-actions">
-							<a href="/signer/{sessionId}?instant=true" class="primary-btn pulse instant-btn">
-								📞 Lancer la signature en direct (30s)
-							</a>
-							<button class="secondary-btn" onclick={copySignatureLink}>
-								{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
-							</button>
-						</div>
-					{:else}
-						{#if !isAppointmentBooked}
-							<div class="success-booking-alert offline-alert">
-								<p>⏰ <strong>Notre équipe est actuellement hors-ligne</strong></p>
-								<p class="small-desc">La loi sur les usages de faux nous oblige à vous faire signer en direct, afin de garantir l'acceptation de votre dossier par votre préfecture. Notre opérateur étant actuellement hors-ligne, vous devez planifier un rendez-vous rapidement ci-dessous (durée : 30 secondes).</p>
-							</div>
-
-							<div class="booking-section-inline">
-								<div class="booking-fields">
-									<div class="form-group">
-										<label for="date-select">Choisir un jour :</label>
-										<select id="date-select" bind:value={bookingDate}>
-											<option value="">-- Sélectionnez un jour --</option>
-											{#each nextDays as day}
-												<option value={day.value}>{day.label}</option>
-											{/each}
-										</select>
-									</div>
-
-									<div class="form-group">
-										<label for="time-select">Choisir un créneau :</label>
-										<select id="time-select" bind:value={bookingTime} disabled={!bookingDate}>
-											<option value="">-- Sélectionnez une heure --</option>
-											{#each timeSlots as slot}
-												<option value={slot}>{slot}</option>
-											{/each}
-										</select>
-									</div>
-
-									<div class="form-group">
-										<label for="booking-email">Votre adresse e-mail :</label>
-										<input type="email" id="booking-email" bind:value={userEmail} placeholder="Ex: jean.dupont@email.com" required />
-									</div>
-
-									<div class="form-group">
-										<label for="booking-phone">Votre numéro de téléphone :</label>
-										<input type="tel" id="booking-phone" bind:value={userPhone} placeholder="Ex: 06 12 34 56 78" required />
-									</div>
-								</div>
-
-								<button class="btn-confirm-booking" onclick={confirmBooking} disabled={!bookingDate || !bookingTime || !userEmail || !userPhone}>
-									📅 Confirmer le rendez-vous
-								</button>
-							</div>
-						{:else}
-							<div class="success-booking-alert">
-								<p>🎉 <strong>Rendez-vous réservé et commande validée !</strong></p>
-								<p>Nous nous retrouverons en ligne le <strong>{bookingDate}</strong> à <strong>{bookingTime}</strong>.</p>
-								<p class="small-desc">Un e-mail de confirmation contenant votre lien de connexion sécurisé vous a été envoyé à l'adresse <strong>{userEmail}</strong>. Le jour du rendez-vous, il vous suffira de vous connecter pour signer en direct avec notre photographe.</p>
-							</div>
-
-							{#if deliveryRequested}
-								<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
-									<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
-										<span>📬 Option Envoi Postal Active</span>
-									</p>
-									<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
-										Votre planche photo sera imprimée sur papier photo de haute qualité et expédiée sous 24h à l'adresse suivante :
-									</p>
-									<div style="background: var(--white); padding: 0.75rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--gray-200); font-size: 0.95rem; font-weight: 600; color: var(--gray-700); line-height: 1.4;">
-										{deliveryName}<br />
-										{deliveryStreet}<br />
-										{deliveryZip} {deliveryCity}
-									</div>
-								</div>
-							{/if}
-
-							<div class="actions-group horizontal-actions">
-								<a href="/signer/{sessionId}" class="primary-btn">
-									✍️ Accéder à l'espace de signature
-								</a>
-								<button class="secondary-btn" onclick={copySignatureLink}>
-									{copied ? '✅ Lien copié !' : '🔗 Copier le lien de signature'}
-								</button>
-							</div>
-						{/if}
 					{/if}
+				</div>
 
 
 				</div>

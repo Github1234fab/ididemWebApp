@@ -914,8 +914,8 @@ function capturePhoto() {
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 9-3.75 3.75L8.25 9m0 0v6M12 9v6m3.75-6v6M3 6.75A2.25 2.25 0 0 1 5.25 4.5h13.5A2.25 2.25 0 0 1 21 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 17.25V6.75Z" /></svg>
 											</span>
 											<div class="step-text">
-												<strong>Rendez-vous visio & Signature</strong>
-												<span>Signature numérique en direct avec l'opérateur.</span>
+												<strong>Signature & Certification</strong>
+												<span>Signature en ligne sécurisée et immédiate.</span>
 											</div>
 										</li>
 									{/if}
@@ -953,8 +953,8 @@ function capturePhoto() {
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
 											</span>
 											<div class="step-text">
-												<strong>Signature électronique en direct</strong>
-												<span>Signature biométrique sécurisée en visioconférence.</span>
+												<strong>Signature & Certification</strong>
+												<span>Signature sur l'honneur en ligne sécurisée.</span>
 											</div>
 										</li>
 									{/if}
