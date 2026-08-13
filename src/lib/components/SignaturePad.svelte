@@ -7,7 +7,8 @@
 		ondrawstart = () => {}, 
 		ondraw = () => {}, 
 		ondrawend = () => {}, 
-		onclear = () => {} 
+		onclear = () => {},
+		methods = $bindable({})
 	} = $props();
 	
 	/** @type {HTMLCanvasElement} */
@@ -16,11 +17,31 @@
 	let ctx = null;
 	let drawing = false;
 
+	let isCanvasEmpty = true;
+
+	$effect(() => {
+		methods.clear = clear;
+		methods.isEmpty = isEmpty;
+		methods.toDataURL = toDataURL;
+	});
+
 	export function clear() {
 		if (ctx && canvas) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			isCanvasEmpty = true;
 			onclear();
 		}
+	}
+
+	export function isEmpty() {
+		return isCanvasEmpty;
+	}
+
+	export function toDataURL() {
+		if (canvas) {
+			return canvas.toDataURL("image/png");
+		}
+		return '';
 	}
 
 	onMount(() => {
@@ -84,6 +105,7 @@
 	function handleStart(event) {
 		event.preventDefault();
 		drawing = true;
+		isCanvasEmpty = false;
 		const coords = getCoords(event);
 		
 		// Forcer le contexte et le style de dessin
@@ -133,6 +155,7 @@
 		drawing = false;
 		ondrawend();
 	}
+	// Cache refresh comment
 </script>
 
 <div class="pad-container">

@@ -1,13 +1,29 @@
 import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request, fetch }) {
 	try {
-		const { name, email, phone, birthdate, sessionId, signatureData, photoData } = await request.json();
+		const { name, email, phone, birthdate, sessionId, signatureData, photoData, coords } = await request.json();
 
 		if (!name || !email || !sessionId || !signatureData) {
 			return json({ error: 'Missing required fields' }, { status: 400 });
+		}
+
+		// Sauvegarder les coordonnées du tracé localement sur le serveur
+		if (coords && Array.isArray(coords)) {
+			try {
+				const safeSessionId = sessionId.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+				const dirPath = join(process.cwd(), 'src', 'lib', 'server', 'data');
+				mkdirSync(dirPath, { recursive: true });
+				const filePath = join(dirPath, `${safeSessionId}.json`);
+				writeFileSync(filePath, JSON.stringify(coords));
+				console.log(`[Submit Signature] Coordonnées sauvegardées dans: ${filePath}`);
+			} catch (fsErr) {
+				console.error('[Submit Signature] Erreur lors de la sauvegarde des coordonnées:', fsErr);
+			}
 		}
 
 		const webappUrl = env.GOOGLE_SHEET_WEBAPP_URL;

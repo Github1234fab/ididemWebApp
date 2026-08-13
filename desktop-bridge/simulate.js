@@ -6,8 +6,9 @@ import WebSocket from 'ws';
 const args = process.argv.slice(2);
 let sessionId = args[0] || '1234';
 
-// Config : utilise Render par défaut pour la prod, et localhost si le flag --local est présent
+// Config : local ou production
 const isLocal = args.includes('--local');
+const apiDomain = isLocal ? 'http://localhost:5173' : 'https://ididem.com';
 const wsUrl = isLocal ? 'ws://localhost:5001' : 'wss://ididemwebapp.onrender.com';
 
 // Coordonnées de calibration
@@ -17,6 +18,11 @@ let bounds = {
 	width: 0,
 	height: 0
 };
+
+// Historique des coordonnées chargées depuis le serveur
+let savedCoords = [];
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Lance un compte à rebours visuel dans la console
@@ -30,7 +36,7 @@ function countdown(seconds, message) {
 		
 		const interval = setInterval(() => {
 			if (current > 0) {
-				process.stdout.write(`⏱️ Enregistrement dans ${current}... \r`);
+				process.stdout.write(`⏱️ Action dans ${current}... \r`);
 				current--;
 			} else {
 				clearInterval(interval);
@@ -41,20 +47,53 @@ function countdown(seconds, message) {
 	});
 }
 
+// 1. Récupérer les coordonnées de signature depuis le serveur
+async function fetchSignatureCoords() {
+	const apiUrl = `${apiDomain}/api/get-signature-coords?sessionId=${sessionId}`;
+	console.log(`\n[Replay] Téléchargement du tracé depuis : ${apiUrl}...`);
+
+	try {
+		const res = await fetch(apiUrl);
+		if (!res.ok) {
+			if (res.status === 404) {
+				throw new Error("Aucun tracé de signature trouvé pour cette session.");
+			}
+			throw new Error(`Erreur API (${res.status} ${res.statusText})`);
+		}
+
+		const data = await res.json();
+		savedCoords = data.coords || [];
+		console.log(`[Replay] Tracé récupéré avec succès : ${savedCoords.length} points de dessin trouvés.`);
+		
+		if (savedCoords.length === 0) {
+			console.log("⚠️ Le tracé est vide. Rien à rejouer.");
+			process.exit(0);
+		}
+
+		// Lancer la calibration puis le replay
+		await calibrate();
+	} catch (err) {
+		console.error("\n❌ Impossible de récupérer la signature :", err.message);
+		console.log("Assurez-vous que le client a bien validé sa signature sur son écran.");
+		process.exit(1);
+	}
+}
+
+// 2. Calibrer la zone écran de dessin Easy Photo
 async function calibrate() {
-	console.log('\n=== CALIBRATION DU PONT DE SIGNATURE IDIDEM ===');
+	console.log('\n=== CALIBRATION DU PONT DE REPLAY IDIDEM ===');
 	console.log(`Session client ciblée : [${sessionId}]`);
-	console.log('La calibration se fera automatiquement par compte à rebours. Ne cliquez pas sur le terminal.');
+	console.log('La calibration se fera par compte à rebours. Placez votre curseur aux bons endroits.');
 	
 	// Étape 1 : Coin Haut-Gauche
 	console.log('\n--- ÉTAPE 1 : COIN HAUT-GAUCHE ---');
-	await countdown(10, 'Placez votre souris sur le coin HAUT-GAUCHE du cadre de dessin Easy Photo et laissez-la immobile...');
+	await countdown(6, 'Placez votre souris sur le coin HAUT-GAUCHE du cadre de dessin Easy Photo et laissez-la immobile...');
 	bounds.topLeft = robot.getMousePos();
 	console.log(`-> Position enregistrée : X = ${bounds.topLeft.x}, Y = ${bounds.topLeft.y}`);
 
 	// Étape 2 : Coin Bas-Droit
 	console.log('\n--- ÉTAPE 2 : COIN BAS-DROIT ---');
-	await countdown(10, 'Déplacez maintenant votre souris sur le coin BAS-DROIT du cadre Easy Photo et laissez-la immobile...');
+	await countdown(6, 'Déplacez maintenant votre souris sur le coin BAS-DROIT du cadre Easy Photo et laissez-la immobile...');
 	bounds.bottomRight = robot.getMousePos();
 	console.log(`-> Position enregistrée : X = ${bounds.bottomRight.x}, Y = ${bounds.bottomRight.y}`);
 
@@ -62,71 +101,47 @@ async function calibrate() {
 	bounds.width = bounds.bottomRight.x - bounds.topLeft.x;
 	bounds.height = bounds.bottomRight.y - bounds.topLeft.y;
 
-	console.log(`\n✅ Calibration terminée avec succès !`);
-	console.log(`Zone cible : ${bounds.width}px x ${bounds.height}px.`);
+	console.log(`\n✅ Calibration terminée ! Zone cible : ${bounds.width}px x ${bounds.height}px.`);
 	
-	startBridgeConnection();
+	// Attendre un peu puis exécuter le replay automatique
+	await startReplay();
 }
 
-function startBridgeConnection() {
-	console.log(`\nConnexion au pont de signature IDidem (${wsUrl})...`);
-	const socket = new WebSocket(wsUrl);
+// 3. Rejouer les coordonnées physiques sur l'écran
+async function startReplay() {
+	console.log("\n=== DÉMARRAGE DU REPLAY AUTOMATIQUE DE LA SIGNATURE ===");
+	console.log("⚠️ Ne touchez pas à votre souris pendant l'exécution (durée estimée : 3-5 secondes)...");
+	await countdown(3, "Début du tracé de la signature...");
 
-	socket.on('open', () => {
-		console.log(`Pont actif ! Écoute de la session client [${sessionId}]...`);
-		socket.send(JSON.stringify({ type: 'register-bridge', sessionId }));
-	});
+	for (let i = 0; i < savedCoords.length; i++) {
+		const step = savedCoords[i];
 
-	socket.on('message', (message) => {
 		try {
-			const data = JSON.parse(message);
-
-			switch (data.type) {
-				case 'client-status':
-					console.log(data.connected ? '-> Client connecté en direct' : '-> Client déconnecté');
-					break;
-
-				case 'drawstart':
-					// Calcul des coordonnées cibles sur ton écran Mac à partir des pourcentages (0->1) reçus du mobile
-					const startX = Math.round(bounds.topLeft.x + (data.x * bounds.width));
-					const startY = Math.round(bounds.topLeft.y + (data.y * bounds.height));
-					console.log(`[DRAW_START] Reçu: x=${data.x.toFixed(3)}, y=${data.y.toFixed(3)} -> Cible Mac: X=${startX}, Y=${startY}`);
-					
-					robot.moveMouse(startX, startY);
-					robot.mouseToggle('down', 'left'); // On enfonce le clic gauche
-					break;
-
-				case 'draw':
-					const drawX = Math.round(bounds.topLeft.x + (data.x * bounds.width));
-					const drawY = Math.round(bounds.topLeft.y + (data.y * bounds.height));
-					console.log(`[DRAW_MOVE]  Reçu: x=${data.x.toFixed(3)}, y=${data.y.toFixed(3)} -> Cible Mac: X=${drawX}, Y=${drawY}`);
-					
-					robot.dragMouse(drawX, drawY); // On glisse la souris avec le clic enfoncé
-					break;
-
-				case 'drawend':
-					robot.mouseToggle('up', 'left'); // On relâche le clic
-					break;
-
-				case 'clear':
-					console.log('Nettoyage du cadre...');
-					robot.mouseToggle('up', 'left');
-					break;
+			if (step.type === 'drawstart') {
+				const startX = Math.round(bounds.topLeft.x + (step.x * bounds.width));
+				const startY = Math.round(bounds.topLeft.y + (step.y * bounds.height));
+				robot.moveMouse(startX, startY);
+				robot.mouseToggle('down', 'left'); // Enfoncer le clic
+			} else if (step.type === 'draw') {
+				const drawX = Math.round(bounds.topLeft.x + (step.x * bounds.width));
+				const drawY = Math.round(bounds.topLeft.y + (step.y * bounds.height));
+				robot.dragMouse(drawX, drawY); // Dessiner
+			} else if (step.type === 'drawend') {
+				robot.mouseToggle('up', 'left'); // Relâcher le clic
 			}
-		} catch (err) {
-			console.error('Erreur traitement message:', err);
+		} catch (e) {
+			console.error("Erreur de simulation souris:", e);
 		}
-	});
 
-	socket.on('close', () => {
-		console.log('Connexion au pont perdue. Reconnexion...');
-		setTimeout(startBridgeConnection, 3000);
-	});
+		// Délai de 8ms entre chaque point pour donner un rendu de tracé fluide et naturel
+		await sleep(8);
+	}
 
-	socket.on('error', (err) => {
-		console.error('Erreur pont de signature:', err.message);
-	});
+	// S'assurer que le clic est bien relâché à la fin
+	robot.mouseToggle('up', 'left');
+	console.log("\n🎉 Replay de la signature terminé avec succès !");
+	process.exit(0);
 }
 
-// Lancement du processus
-calibrate();
+// Lancement du processus en allant chercher les coordonnées d'abord
+fetchSignatureCoords();

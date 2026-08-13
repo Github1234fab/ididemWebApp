@@ -10,7 +10,7 @@
 	let status = $state('Connexion...');
 	let isConnected = $state(false);
 	/** @type {any} */
-	let pad = $state();
+	let padMethods = $state({});
 
 	// Données du formulaire
 	let clientName = $state('');
@@ -22,6 +22,10 @@
 	let isSubmitting = $state(false);
 	let submitMessage = $state('');
 	let isSubmitted = $state(false);
+
+	// Enregistrement des coordonnées pour le replay asynchrone
+	/** @type {any[]} */
+	let drawCoords = [];
 
 	onMount(() => {
 		// Pré-remplir les données issues du stockage local si dispo
@@ -47,7 +51,7 @@
 			try {
 				const data = JSON.parse(event.data);
 				if (data.type === 'clear') {
-					if (pad) pad.clear();
+					if (padMethods.clear) padMethods.clear();
 				}
 			} catch (err) {
 				console.error('Erreur réception message:', err);
@@ -78,10 +82,11 @@
 	}
 
 	/**
-	 * @param {{x: number, y: number}} detail
+	 * @param {any} detail
 	 */
 	function handleDrawStart(detail) {
 		sendMsg({ type: 'drawstart', sessionId, x: detail.x, y: detail.y });
+		drawCoords.push({ type: 'drawstart', x: detail.x, y: detail.y });
 	}
 
 	/**
@@ -89,38 +94,59 @@
 	 */
 	function handleDraw(detail) {
 		sendMsg({ type: 'draw', sessionId, x: detail.x, y: detail.y });
+		drawCoords.push({ type: 'draw', x: detail.x, y: detail.y });
 	}
 
 	function handleDrawEnd() {
 		sendMsg({ type: 'drawend', sessionId });
+		drawCoords.push({ type: 'drawend' });
 	}
 
 	function handleClear() {
-		if (pad) pad.clear();
+		if (padMethods.clear) padMethods.clear();
 		sendMsg({ type: 'clear', sessionId });
+		drawCoords = [];
 	}
 
 	async function handleSubmit() {
+		console.log("[Client Signature] Clic sur 'Valider et envoyer'. Vérification des données...");
+		console.log("[Client Signature] Instance de pad liée:", padMethods);
+		console.log("[Client Signature] Clés de pad:", padMethods ? Object.keys(padMethods) : "null");
+		
 		if (!clientName || !clientEmail || !clientBirthdate || !clientPhone) {
-			submitMessage = "Veuillez remplir tous les champs obligatoires.";
+			const errorMsg = "Veuillez remplir tous les champs obligatoires.";
+			console.warn("[Client Signature] Validation échouée: champs manquants.");
+			alert(errorMsg);
+			submitMessage = errorMsg;
 			return;
 		}
 		if (!certCheck) {
-			submitMessage = "Vous devez certifier l'exactitude des informations sur l'honneur.";
+			const errorMsg = "Vous devez certifier l'exactitude des informations sur l'honneur.";
+			console.warn("[Client Signature] Validation échouée: case non cochée.");
+			alert(errorMsg);
+			submitMessage = errorMsg;
 			return;
 		}
-		if (!pad || pad.isEmpty()) {
-			submitMessage = "Veuillez apposer votre signature dans le cadre blanc.";
+		if (!padMethods.isEmpty || padMethods.isEmpty()) {
+			const errorMsg = "Veuillez apposer votre signature dans le cadre blanc.";
+			console.warn("[Client Signature] Validation échouée: signature vide.");
+			alert(errorMsg);
+			submitMessage = errorMsg;
 			return;
 		}
 
+		console.log("[Client Signature] Validation OK. Préparation des images Base64...");
 		isSubmitting = true;
 		submitMessage = "Envoi de votre signature et certification en cours...";
 
 		try {
-			const signatureData = pad.toDataURL();
+			const signatureData = padMethods.toDataURL ? padMethods.toDataURL() : '';
 			const photoData = localStorage.getItem('ididem_captured_image') || '';
+			
+			console.log("[Client Signature] Taille signature:", signatureData.length);
+			console.log("[Client Signature] Taille photo originale:", photoData ? photoData.length : "0 (non trouvée)");
 
+			console.log("[Client Signature] Envoi de la requête POST vers /api/submit-signature...");
 			const res = await fetch('/api/submit-signature', {
 				method: 'POST',
 				headers: {
@@ -133,20 +159,27 @@
 					birthdate: clientBirthdate,
 					sessionId,
 					signatureData,
-					photoData
+					photoData,
+					coords: drawCoords // Joindre l'historique des tracés
 				})
 			});
 
+			console.log("[Client Signature] Réponse reçue. Statut HTTP:", res.status);
+
 			if (!res.ok) {
 				const errData = await res.json().catch(() => ({}));
+				console.error("[Client Signature] Erreur serveur renvoyée:", errData);
 				throw new Error(errData.error || "Une erreur est survenue lors de la transmission.");
 			}
 
+			console.log("[Client Signature] Soumission réussie !");
 			isSubmitted = true;
 			submitMessage = "Votre signature et certification ont été transmises avec succès ! Notre photographe finalise votre planche photo.";
 		} catch (err) {
-			console.error("Erreur d'envoi:", err);
-			submitMessage = err instanceof Error ? err.message : "Une erreur réseau est survenue.";
+			console.error("[Client Signature] Erreur attrapée dans handleSubmit:", err);
+			const errText = err instanceof Error ? err.message : "Une erreur réseau est survenue.";
+			alert("Erreur lors de l'envoi : " + errText);
+			submitMessage = errText;
 		} finally {
 			isSubmitting = false;
 		}
@@ -229,7 +262,7 @@
 
 				<div class="pad-wrapper">
 					<SignaturePad
-						bind:this={pad}
+						bind:methods={padMethods}
 						ondrawstart={handleDrawStart}
 						ondraw={handleDraw}
 						ondrawend={handleDrawEnd}

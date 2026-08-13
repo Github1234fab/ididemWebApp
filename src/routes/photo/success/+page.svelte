@@ -721,15 +721,7 @@
 		margin-top: 0.5rem;
 	}
 
-	/* Offline booking card styles */
-	.offline-alert {
-		background: #fef2f2;
-		border-color: #fca5a5;
-		color: #991b1b;
-	}
-	.offline-alert .small-desc {
-		color: #b91c1c;
-	}
+
 	.booking-section-inline {
 		background: #f8fafc;
 		border: 1px solid var(--gray-200);
@@ -738,49 +730,7 @@
 		margin: 1.5rem 0;
 		text-align: left;
 	}
-	.booking-fields {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-		margin-bottom: 1.25rem;
-	}
-	.booking-fields .form-group {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-	.booking-fields label {
-		font-size: 0.8rem;
-		font-weight: 700;
-		color: var(--gray-700);
-	}
-	.booking-fields select, .booking-fields input {
-		width: 100%;
-		max-width: 100%;
-		box-sizing: border-box;
-		padding: 0.65rem;
-		border: 1px solid var(--gray-300);
-		border-radius: var(--radius-sm);
-		font-size: 0.9rem;
-		background: var(--white);
-		color: var(--gray-800);
-		outline: none;
-	}
-	.btn-confirm-booking {
-		width: 100%;
-		background: #ff7a00;
-		color: var(--white);
-		padding: 0.8rem;
-		border-radius: var(--radius-sm);
-		font-weight: 700;
-		font-size: 0.95rem;
-		border: none;
-		cursor: pointer;
-		transition: background-color 0.2s;
-	}
-	.btn-confirm-booking:hover:not(:disabled) {
-		background: #ea580c;
-	}
+
 
 	@media (max-width: 576px) {
 		.success-page {
@@ -819,8 +769,6 @@
 			gap: 0.75rem;
 		} */
 
-		.booking-fields {
-			grid-template-columns: 1fr;
-		}
+
 	}
 </style>
