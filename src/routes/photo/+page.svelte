@@ -408,6 +408,12 @@ function capturePhoto() {
 
 	async function processBackground() {
 		if (!capturedImage) return;
+		
+		// Remonter immédiatement en haut pour afficher l'animation de chargement proprement
+		if (typeof window !== 'undefined') {
+			window.scrollTo({ top: 0, behavior: 'instant' });
+		}
+		
 		isProcessing = true;
 		processingError = '';
 		
@@ -427,12 +433,26 @@ function capturePhoto() {
 
 			const data = await res.json();
 			capturedImage = data.image;
-			isProcessed = true; // Le $effect scrollera automatiquement en haut
+			isProcessed = true;
+			
+			// Attendre la mise à jour du DOM
+			await tick();
+			setTimeout(() => {
+				if (typeof window !== 'undefined') {
+					window.scrollTo({ top: 0, behavior: 'instant' });
+				}
+			}, 150);
 		} catch (err) {
 			console.error('Erreur détourage:', err);
 			processingError = err instanceof Error ? err.message : 'Le détourage automatique a échoué. Veuillez réessayer.';
 		} finally {
 			isProcessing = false;
+			// Forcer un scroll de sécurité après la fin du chargement
+			setTimeout(() => {
+				if (typeof window !== 'undefined') {
+					window.scrollTo({ top: 0, behavior: 'instant' });
+				}
+			}, 50);
 		}
 	}
 
@@ -965,7 +985,7 @@ function capturePhoto() {
 								<div class="reassurance-card" style="margin-top: 1.5rem; text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 1rem;">
 									<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 0.5rem; flex-wrap: wrap;">
 										<span style="font-weight: 800; font-size: 1.15rem; color: #1d1d1f;">Option Envoi Postal</span>
-										<span style="background: #e6fcf5; color: #0ca678; border: 1px solid #c3fae8; font-size: 0.65rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: var(--radius-full);">🌱 zéro déplacement, 100% éco</span>
+										<span style="background: #e6fcf5; color: #0ca678; border: 1px solid #c3fae8; font-size: 0.65rem; font-weight: 800; padding: 0.35rem 0.8rem; border-radius: 12px; display: inline-block; text-align: center; line-height: 1.3;">🌱 zéro déplacement<br />100% éco</span>
 									</div>
 
 									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 700; color: #27272a; cursor: pointer; font-size: 0.9rem; margin: 0; text-align: left;">
@@ -1687,15 +1707,15 @@ function capturePhoto() {
 	}
 
 	.booklet-content h2 {
-		font-size: 1.35rem;
+		font-size: 1.6rem;
 		font-weight: 800;
 		color: var(--gray-800);
 	}
 
 	.booklet-content p {
-		font-size: 0.95rem;
+		font-size: 1rem;
 		color: var(--gray-600);
-		line-height: 1.5;
+		line-height: 1.55;
 	}
 
 	.booklet-footer {
@@ -1707,54 +1727,66 @@ function capturePhoto() {
 	}
 
 	.btn-booklet-prev {
-			background: var(--blue-600);
-		color: var(--white);
-		padding: 0.6rem 1.5rem;
-		border-radius: var(--radius-sm);
+		background: #f1f5f9;
+		color: #475569;
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
 		font-weight: 700;
-		font-size: 0.9rem;
+		font-size: 1.3rem;
 		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #cbd5e1;
 		transition: var(--transition-fast);
 	}
 
 	.btn-booklet-prev:disabled {
 		opacity: 0.4;
 		cursor: not-allowed;
-		border-color: var(--gray-200);
-		color: var(--gray-400);
+		background: #f8fafc;
+		border-color: #e2e8f0;
+		color: #94a3b8;
 	}
 
 	.btn-booklet-prev:hover:not(:disabled) {
-		background: var(--gray-50);
-		border-color: var(--gray-400);
-		color: var(--gray-900);
+		background: #e2e8f0;
+		transform: scale(1.05);
 	}
 
 	.btn-booklet-next {
 		background: var(--blue-600);
 		color: var(--white);
-		padding: 0.6rem 1.5rem;
-		border-radius: var(--radius-sm);
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
 		font-weight: 700;
-		font-size: 0.9rem;
+		font-size: 1.3rem;
 		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
 		transition: var(--transition-fast);
 	}
 
 	.btn-booklet-next:hover {
-		transform: scale(1.1);
+		background: var(--blue-700);
+		transform: scale(1.05);
 	}
 
 	.btn-booklet-start {
 		background: var(--gradient-cta);
 		color: var(--white);
-		padding: 1rem 1rem;
-		border-radius: var(--radius-sm);
-		font-weight: 700;
-		font-size: 0.9rem;
+		padding: 0.9rem 2rem;
+		border-radius: var(--radius-md);
+		font-weight: 600;
+		font-size: 0.95rem;
 		cursor: pointer;
 		transition: var(--transition-fast);
 		box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
+		border: none;
 	}
 
 	.btn-booklet-start:hover {
@@ -1785,13 +1817,13 @@ function capturePhoto() {
 		background: none;
 		border: none;
 		color: var(--gray-400); /* Plus discret */
-		font-size: 0.8rem; /* Plus petit pour marquer la hiérarchie */
+		font-size: 0.95rem;
 		font-weight: 600;
 		cursor: pointer;
 		transition: var(--transition-fast);
 		border: 1px solid rgb(198, 198, 198);
-		border-radius: 10px;
-		padding: 1rem 1rem;
+		border-radius: var(--radius-md);
+		padding: 0.9rem 2rem;
 	}
 
 	.btn-booklet-cancel:hover {
@@ -1957,9 +1989,9 @@ function capturePhoto() {
 	.btn-back {
 		background: var(--gray-100);
 		color: var(--gray-700);
-		padding: 0.85rem 1.5rem;
-		border-radius: var(--radius-sm);
-		font-weight: 700;
+		padding: 0.9rem 2rem;
+		border-radius: var(--radius-md);
+		font-weight: 600;
 		font-size: 0.95rem;
 		transition: var(--transition-fast);
 	}
@@ -1971,9 +2003,9 @@ function capturePhoto() {
 	.btn-start {
 		background: var(--blue-700);
 		color: var(--white);
-		padding: 0.85rem 2rem;
-		border-radius: var(--radius-sm);
-		font-weight: 700;
+		padding: 0.9rem 2rem;
+		border-radius: var(--radius-md);
+		font-weight: 600;
 		font-size: 0.95rem;
 		transition: var(--transition-fast);
 	}
@@ -2376,9 +2408,10 @@ function capturePhoto() {
 		min-width: 0;
 		background: #f1f5f9;
 		color: #475569;
-		padding: 0.95rem 1rem;
+		padding: 0.9rem 1.5rem;
 		border-radius: var(--radius-md);
-		font-weight: 700;
+		font-weight: 600;
+		font-size: 0.95rem;
 		transition: all 0.2s;
 		text-align: center;
 		border: 1px solid #cbd5e1;
@@ -2394,14 +2427,15 @@ function capturePhoto() {
 		min-width: 0;
 		background: #ff7a00;
 		color: var(--white);
-		padding: 0.95rem 1rem;
+		padding: 0.9rem 2rem;
 		border-radius: var(--radius-md);
-		font-weight: 700;
+		font-weight: 600;
 		transition: all 0.2s;
 		box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);
 		text-align: center;
 		border: none;
 		cursor: pointer;
+		font-size: 0.95rem;
 	}
 
 	.btn-confirm-photo:hover:not(:disabled) {
@@ -2482,9 +2516,9 @@ function capturePhoto() {
 		}
 		
 		.mobile-text .label {
-			font-size: 12px;
-			font-weight: 700;
-			color: rgb(47, 47, 47);
+			font-size: inherit;
+			font-weight: inherit;
+			color: inherit;
 		}
 		.indicator-step-text {
 			display: none;
@@ -2515,14 +2549,14 @@ function capturePhoto() {
 			background: none;
 			border: 1px solid rgb(198, 198, 198);
 			color: var(--gray-500);
-			font-size: 0.8rem;
+			font-size: 0.95rem;
 			font-weight: 600;
 			cursor: pointer;
 			transition: var(--transition-fast);
-			padding: 0.75rem 1rem !important;
-			border-radius: 10px;
+			padding: 0.9rem 2rem !important;
+			border-radius: var(--radius-md) !important;
 			width: 100% !important;
-			max-width: 280px !important;
+			max-width: 300px !important;
 			box-sizing: border-box !important;
 			margin: 0 !important;
 			text-align: center !important;
@@ -2541,11 +2575,17 @@ function capturePhoto() {
 		color: var(--white) !important;
 	}
 
-		.btn-booklet-prev, .btn-booklet-next, .btn-booklet-start {
+		.btn-booklet-prev, .btn-booklet-next {
 			max-width: 50%;
 			text-align: center;
 			box-sizing: border-box;
-			
+		}
+		.btn-booklet-start {
+			max-width: none;
+			flex-grow: 1;
+			text-align: center;
+			white-space: nowrap;
+			box-sizing: border-box;
 		}
 		.page-dots {
 			order: -1;

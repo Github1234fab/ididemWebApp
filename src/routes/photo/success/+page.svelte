@@ -356,7 +356,7 @@
 					<h2 style="font-size: 1.5rem; font-weight: 800; color: var(--blue-900); margin: 0;">Dernière étape indispensable</h2>
 					
 					<!-- Grid de 2 colonnes simples avec icônes -->
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; text-align: left;">
+					<div class="success-features-grid">
 						<div style="display: flex; gap: 0.75rem; align-items: flex-start;">
 							<span style="font-size: 1.75rem; line-height: 1;">✍️</span>
 							<div>
@@ -732,7 +732,20 @@
 			grid-template-columns: 1fr;
 			gap: 0.75rem;
 		} */
+	}
 
+	.success-features-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem;
+		margin-top: 0.5rem;
+		text-align: left;
+	}
 
+	@media (max-width: 576px) {
+		.success-features-grid {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+		}
 	}
 </style>

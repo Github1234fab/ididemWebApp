@@ -270,8 +270,20 @@
 </main>
 
 <style>
+	:global(html, body) {
+		margin: 0 !important;
+		padding: 0 !important;
+		overflow-x: hidden;
+		width: 100%;
+		background-color: var(--blue-900);
+	}
+	.signer-page, .signer-page * {
+		box-sizing: border-box;
+	}
 	.signer-page {
 		min-height: 100vh;
+		width: 100%;
+		margin: 0;
 		background: var(--blue-900);
 		background: var(--gradient-hero);
 		display: flex;
@@ -455,6 +467,8 @@
 		align-items: center;
 		text-align: center;
 		padding: 2rem 0;
+		width: 100%;
+		box-sizing: border-box;
 	}
 	.success-icon {
 		width: 70px;
@@ -488,8 +502,12 @@
 		padding: 1.5rem 2rem;
 		border-radius: var(--radius-lg);
 		max-width: 600px;
+		width: 100%;
+		box-sizing: border-box;
 		text-align: left;
 		margin-bottom: 2.5rem;
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 	.success-steps h3 {
 		font-size: 1.1rem;
@@ -532,6 +550,18 @@
 		}
 		.success-screen {
 			grid-column: span 1;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.signer-page {
+			padding: 1.25rem 0.75rem;
+		}
+		.split-signer-container {
+			padding: 1.25rem 1rem;
+		}
+		.success-steps {
+			padding: 1.25rem 1rem;
 		}
 	}
 </style>
