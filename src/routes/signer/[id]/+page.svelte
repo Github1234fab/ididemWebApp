@@ -5,10 +5,6 @@
 	import SignaturePad from '$lib/components/SignaturePad.svelte';
 
 	const sessionId = page.params.id;
-	/** @type {WebSocket | null} */
-	let socket = null;
-	let status = $state('Connexion...');
-	let isConnected = $state(false);
 	/** @type {any} */
 	let padMethods = $state({});
 
@@ -32,60 +28,12 @@
 		clientEmail = localStorage.getItem('ididem_user_email') || '';
 		clientPhone = localStorage.getItem('ididem_user_phone') || '';
 		clientName = localStorage.getItem('ididem_delivery_name') || '';
-
-		// Connexion WebSocket en temps réel pour l'admin (aperçu de la signature)
-		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-		const wsUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-			? `${protocol}//${window.location.hostname}:5001`
-			: 'wss://ididemwebapp.onrender.com';
-		
-		status = 'Prêt à signer';
-		socket = new WebSocket(wsUrl);
-
-		socket.onopen = () => {
-			isConnected = true;
-			sendMsg({ type: 'register-client', sessionId });
-		};
-
-		socket.onmessage = (event) => {
-			try {
-				const data = JSON.parse(event.data);
-				if (data.type === 'clear') {
-					if (padMethods.clear) padMethods.clear();
-				}
-			} catch (err) {
-				console.error('Erreur réception message:', err);
-			}
-		};
-
-		socket.onclose = () => {
-			isConnected = false;
-			status = 'Session déconnectée';
-		};
-
-		socket.onerror = () => {
-			isConnected = false;
-		};
-
-		return () => {
-			if (socket) socket.close();
-		};
 	});
-
-	/**
-	 * @param {object} data
-	 */
-	function sendMsg(data) {
-		if (socket && isConnected) {
-			socket.send(JSON.stringify(data));
-		}
-	}
 
 	/**
 	 * @param {any} detail
 	 */
 	function handleDrawStart(detail) {
-		sendMsg({ type: 'drawstart', sessionId, x: detail.x, y: detail.y });
 		drawCoords.push({ type: 'drawstart', x: detail.x, y: detail.y });
 	}
 
@@ -93,18 +41,15 @@
 	 * @param {{x: number, y: number}} detail
 	 */
 	function handleDraw(detail) {
-		sendMsg({ type: 'draw', sessionId, x: detail.x, y: detail.y });
 		drawCoords.push({ type: 'draw', x: detail.x, y: detail.y });
 	}
 
 	function handleDrawEnd() {
-		sendMsg({ type: 'drawend', sessionId });
 		drawCoords.push({ type: 'drawend' });
 	}
 
 	function handleClear() {
 		if (padMethods.clear) padMethods.clear();
-		sendMsg({ type: 'clear', sessionId });
 		drawCoords = [];
 	}
 
