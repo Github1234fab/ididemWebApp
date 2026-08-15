@@ -70,7 +70,8 @@
 				'Expression neutre (pas de sourire, bouche fermée)',
 				'Lunettes autorisées uniquement sans reflets et monture fine'
 			],
-			gabaritClass: 'official-gabarit'
+			gabaritClass: 'official-gabarit',
+			delay: 'Délai : 12h max'
 		},
 		{
 			id: 'officielle',
@@ -87,7 +88,8 @@
 				'Pas d\'ombre sur le visage ni en arrière-plan',
 				'Tête nue (pas de bonnet, casquette, foulard ou chapeau)'
 			],
-			gabaritClass: 'official-gabarit'
+			gabaritClass: 'official-gabarit',
+			delay: 'Délai : Instantané'
 		},
 		{
 			id: 'casual',
@@ -104,7 +106,8 @@
 				'Orientation légèrement de trois-quarts ou de face selon votre préférence',
 				'Tenue professionnelle ou décontractée soignée'
 			],
-			gabaritClass: 'casual-gabarit'
+			gabaritClass: 'casual-gabarit',
+			delay: 'Délai : Instantané'
 		}
 	];
 
@@ -465,6 +468,7 @@ function capturePhoto() {
 			localStorage.setItem('ididem_captured_image', capturedImage);
 			localStorage.setItem('ididem_selected_formula', selectedFormula);
 			localStorage.setItem('ididem_selected_bg', selectedBgColor);
+			localStorage.setItem('ididem_custom_bg_color', customBgColor);
 			localStorage.setItem('ididem_user_email', userEmail);
 			localStorage.setItem('ididem_booking_date', bookingDate);
 			localStorage.setItem('ididem_booking_time', bookingTime);
@@ -561,6 +565,7 @@ function capturePhoto() {
 		localStorage.setItem('ididem_captured_image', capturedImage);
 		localStorage.setItem('ididem_selected_formula', selectedFormula);
 		localStorage.setItem('ididem_selected_bg', selectedBgColor);
+		localStorage.setItem('ididem_custom_bg_color', customBgColor);
 		localStorage.setItem('ididem_user_email', userEmail);
 		localStorage.setItem('ididem_booking_date', bookingDate);
 		localStorage.setItem('ididem_booking_time', bookingTime);
@@ -672,6 +677,9 @@ function capturePhoto() {
 							</div>
 							<h3>{formula.title}</h3>
 							<p class="formula-subtitle">{formula.subtitle}</p>
+							<div class="formula-delay-badge" class:orange-delay={formula.id === 'e-photo'}>
+								⏱️ {formula.delay}
+							</div>
 							<p class="formula-desc">{formula.desc}</p>
 							<span class="action-arrow">Choisir cette formule →</span>
 						</button>
@@ -930,29 +938,82 @@ function capturePhoto() {
 							{/if}
 
 							{#if isProcessed}
-								<h3>Prochaines étapes :</h3>
-								<ul class="steps-list">
-									{#if selectedFormula === 'e-photo'}
-										<li class="animate-fade-in">
-											<span class="step-icon text-blue">
-												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
-											</span>
-											<div class="step-text">
-												<strong>Signature & Certification</strong>
-												<span>Signature en ligne sécurisée et immédiate.</span>
-											</div>
-										</li>
-									{/if}
-									<li class="animate-fade-in">
-										<span class="step-icon text-green">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
-										</span>
-										<div class="step-text">
-											<strong>Paiement sécurisé</strong>
-											<span>Finalisation de la commande par CB.</span>
-										</div>
-									</li>
-								</ul>
+								<div class="steps-container" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; text-align: left; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);">
+									<h3 style="font-size: 1.05rem; font-weight: 800; color: var(--blue-900); margin: 0 0 1rem 0;">Prochaines étapes :</h3>
+									<ul class="steps-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
+										{#if selectedFormula === 'e-photo'}
+											<!-- Étapes e-Photo -->
+											<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+												<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">1</span>
+												<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+													<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Contact & Signature</strong>
+													<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Saisie de vos coordonnées et signature en ligne pour valider votre planche.</span>
+												</div>
+											</li>
+											<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+												<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">2</span>
+												<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+													<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Empreinte bancaire sécurisée</strong>
+													<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Aucun débit immédiat. Facturé uniquement après validation de votre photo.</span>
+												</div>
+											</li>
+											<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+												<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">3</span>
+												<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+													<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Envoi & Livraison</strong>
+													<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Envoi par e-mail sous 12h max après validation. Livraison postale sous 24h (si option choisie).</span>
+												</div>
+											</li>
+										{:else}
+											<!-- Étapes Photo standard / Portrait pro -->
+											{#if deliveryRequested}
+												<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+													<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">1</span>
+													<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+														<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Contact & Adresse</strong>
+														<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Saisie de votre e-mail et de votre adresse de livraison.</span>
+													</div>
+												</li>
+												<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+													<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">2</span>
+													<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+														<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Paiement sécurisé</strong>
+														<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Règlement sécurisé par carte bancaire.</span>
+													</div>
+												</li>
+												<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+													<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">3</span>
+													<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+														<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Téléchargement & Expédition</strong>
+														<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Téléchargement numérique immédiat et expédition postale sous 24h.</span>
+													</div>
+												</li>
+											{:else}
+												<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+													<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">1</span>
+													<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+														<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Paiement sécurisé</strong>
+														<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Règlement sécurisé par carte bancaire.</span>
+													</div>
+												</li>
+												<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+													<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">2</span>
+													<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+														<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Téléchargement & Partage</strong>
+														<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Accédez immédiatement à vos photos numériques HD et partagez-les après le paiement.</span>
+													</div>
+												</li>
+												<li class="animate-fade-in" style="display: flex; gap: 0.85rem; align-items: flex-start; text-align: left;">
+													<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">3</span>
+													<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
+														<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Obtention instantanée</strong>
+														<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Aucun délai d'attente, vos fichiers HD sont exploitables immédiatement.</span>
+													</div>
+												</li>
+											{/if}
+										{/if}
+									</ul>
+								</div>
 							{:else}
 								<div class="compliance-checklist" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: left; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);">
 									<h3 style="font-size: 1rem; font-weight: 800; color: var(--blue-900); margin: 0 0 0.75rem 0; display: flex; align-items: center; gap: 0.5rem;">
@@ -963,15 +1024,28 @@ function capturePhoto() {
 									</p>
 									<ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.85rem;">
 										<li style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--gray-700); line-height: 1.45; align-items: flex-start;">
-											<span style="color: #10b981; font-weight: 700; margin-top: 0.1rem;">✓</span>
+											<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e6fcf5; border: 1px solid #c3fae8; color: #0ca678; flex-shrink: 0; margin-top: 0.1rem;">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 13px; height: 13px;">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+													<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+												</svg>
+											</span>
 											<span><strong>Yeux & Regard :</strong> Yeux ouverts, regard de face.</span>
 										</li>
 										<li style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--gray-700); line-height: 1.45; align-items: flex-start;">
-											<span style="color: #10b981; font-weight: 700; margin-top: 0.1rem;">✓</span>
+											<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e6fcf5; border: 1px solid #c3fae8; color: #0ca678; flex-shrink: 0; margin-top: 0.1rem;">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 13px; height: 13px;">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+												</svg>
+											</span>
 											<span><strong>Visage & Coiffure :</strong> Bouche fermée, oreilles bien dégagées et cheveux attachés.</span>
 										</li>
 										<li style="display: flex; gap: 0.75rem; font-size: 0.85rem; color: var(--gray-700); line-height: 1.45; align-items: flex-start;">
-											<span style="color: #10b981; font-weight: 700; margin-top: 0.1rem;">✓</span>
+											<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e6fcf5; border: 1px solid #c3fae8; color: #0ca678; flex-shrink: 0; margin-top: 0.1rem;">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 13px; height: 13px;">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5m0 15V21m-9-9h1.5m15 0H21m-3.9-3.9 1.06-1.06M6.34 17.66l-1.06 1.06m12.38 0 1.06-1.06M6.34 6.34l-1.06-1.06M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" />
+												</svg>
+											</span>
 											<span><strong>Absence d'ombres :</strong> Aucun ombrage sur le nez (dessous et côtés), ni sous le menton ou sur le cou.</span>
 										</li>
 									</ul>
@@ -982,7 +1056,7 @@ function capturePhoto() {
 
 							{#if isProcessed}
 								<!-- Option Envoi Postal Premium -->
-								<div class="reassurance-card" style="margin-top: 1.5rem; text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 1rem;">
+								<div class="reassurance-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 1rem;">
 									<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 0.5rem; flex-wrap: wrap;">
 										<span style="font-weight: 800; font-size: 1.15rem; color: #1d1d1f;">Option Envoi Postal</span>
 										<span style="background: #e6fcf5; color: #0ca678; border: 1px solid #c3fae8; font-size: 0.65rem; font-weight: 800; padding: 0.35rem 0.8rem; border-radius: 12px; display: inline-block; text-align: center; line-height: 1.3;">🌱 zéro déplacement<br />100% éco</span>
@@ -1044,6 +1118,7 @@ function capturePhoto() {
 									</button>
 								{/if}
 							</div>
+
 
 							{#if isProcessed}
 								<div class="dev-actions">
@@ -1210,25 +1285,6 @@ function capturePhoto() {
 		display: none !important;
 	}
 
-	.step-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		flex-shrink: 0;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-		color: var(--blue-605, #2563eb);
-		background: #f0f7ff;
-		border: 1px solid #e0f0ff;
-	}
-
-	.step-icon svg {
-		width: 18px;
-		height: 18px;
-		stroke-width: 1.75 !important;
-	}
 
 	.step-text {
 		display: flex;
@@ -1569,6 +1625,27 @@ function capturePhoto() {
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
+	}
+
+	.formula-delay-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-size: 0.8rem;
+		font-weight: 750;
+		color: #0ca678;
+		background: #e6fcf5;
+		padding: 0.3rem 0.6rem;
+		border-radius: 6px;
+		margin: 0.5rem 0;
+		align-self: center;
+		border: 1px solid #c3fae8;
+	}
+
+	.formula-delay-badge.orange-delay {
+		color: #e67700;
+		background: #fff4e6;
+		border-color: #ffd8a8;
 	}
 
 	.formula-desc {
@@ -2382,12 +2459,12 @@ function capturePhoto() {
 		font-size: 0.95rem;
 	}
 
-	.result-info li {
+	.result-info li:not(.compliance-checklist li) {
 		position: relative;
 		padding-left: 1.5rem;
 	}
 
-	.result-info li::before {
+	.result-info li:not(.compliance-checklist li)::before {
 		content: '•';
 		position: absolute;
 		left: 0;
@@ -2406,9 +2483,12 @@ function capturePhoto() {
 	.btn-retake {
 		flex: 1;
 		min-width: 0;
+		height: 58px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		background: #f1f5f9;
 		color: #475569;
-		padding: 0.9rem 1.5rem;
 		border-radius: var(--radius-md);
 		font-weight: 600;
 		font-size: 0.95rem;
@@ -2416,6 +2496,8 @@ function capturePhoto() {
 		text-align: center;
 		border: 1px solid #cbd5e1;
 		cursor: pointer;
+		padding: 0 1rem;
+		box-sizing: border-box;
 	}
 
 	.btn-retake:hover {
@@ -2425,9 +2507,13 @@ function capturePhoto() {
 	.btn-confirm-photo {
 		flex: 2;
 		min-width: 0;
+		height: 58px;
+		display: inline-flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 		background: #ff7a00;
 		color: var(--white);
-		padding: 0.9rem 2rem;
 		border-radius: var(--radius-md);
 		font-weight: 600;
 		transition: all 0.2s;
@@ -2436,6 +2522,8 @@ function capturePhoto() {
 		border: none;
 		cursor: pointer;
 		font-size: 0.95rem;
+		padding: 0 1rem;
+		box-sizing: border-box;
 	}
 
 	.btn-confirm-photo:hover:not(:disabled) {

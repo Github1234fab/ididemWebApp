@@ -266,20 +266,26 @@
 			localCanvas.height = 800;
 
 			// Appliquer la couleur de fond choisie par l'utilisateur
-			if (selectedBg === 'white') {
-				ctx.fillStyle = '#ffffff';
-				ctx.fillRect(0, 0, localCanvas.width, localCanvas.height);
-			} else if (selectedBg === 'light-gray') {
-				ctx.fillStyle = '#f1f5f9';
-				ctx.fillRect(0, 0, localCanvas.width, localCanvas.height);
-			} else if (selectedBg === 'dark-gray') {
-				ctx.fillStyle = '#334155';
-				ctx.fillRect(0, 0, localCanvas.width, localCanvas.height);
-			} else if (selectedBg === 'blue-grad') {
+			let fillStyle = '#ffffff';
+			if (selectedBg === 'white') fillStyle = '#ffffff';
+			else if (selectedBg === 'light-gray') fillStyle = '#f1f5f9';
+			else if (selectedBg === 'dark-gray') fillStyle = '#334155';
+			else if (selectedBg === 'navy-blue') fillStyle = '#1e3a8a';
+			else if (selectedBg === 'emerald') fillStyle = '#064e3b';
+			else if (selectedBg === 'terracotta') fillStyle = '#9a3412';
+			else if (selectedBg === 'purple') fillStyle = '#581c87';
+			else if (selectedBg === 'custom') {
+				fillStyle = localStorage.getItem('ididem_custom_bg_color') || '#3b82f6';
+			}
+
+			if (selectedBg === 'blue-grad') {
 				const grad = ctx.createLinearGradient(0, 0, 0, localCanvas.height);
 				grad.addColorStop(0, '#e0f2fe');
 				grad.addColorStop(1, '#bae6fd');
 				ctx.fillStyle = grad;
+				ctx.fillRect(0, 0, localCanvas.width, localCanvas.height);
+			} else {
+				ctx.fillStyle = fillStyle;
 				ctx.fillRect(0, 0, localCanvas.width, localCanvas.height);
 			}
 
@@ -355,22 +361,11 @@
 				<div class="product-success-box e-photo-box" style="padding: 2.25rem 2rem; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); box-shadow: var(--shadow-lg); text-align: center; max-width: 600px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; gap: 1.5rem;">
 					<h2 style="font-size: 1.5rem; font-weight: 800; color: var(--blue-900); margin: 0;">Dernière étape indispensable</h2>
 					
-					<!-- Grid de 2 colonnes simples avec icônes -->
-					<div class="success-features-grid">
-						<div style="display: flex; gap: 0.75rem; align-items: flex-start;">
-							<span style="font-size: 1.75rem; line-height: 1;">✍️</span>
-							<div>
-								<strong style="display: block; font-size: 0.95rem; color: var(--gray-800); margin-bottom: 0.25rem;">Signature en ligne</strong>
-								<span style="font-size: 0.85rem; color: var(--gray-600); line-height: 1.4; display: block;">Signez sur votre smartphone en 30 secondes pour valider votre planche.</span>
-							</div>
-						</div>
-						<div style="display: flex; gap: 0.75rem; align-items: flex-start;">
-							<span style="font-size: 1.75rem; line-height: 1;">💳</span>
-							<div>
-								<strong style="display: block; font-size: 0.95rem; color: var(--gray-800); margin-bottom: 0.25rem;">Aucun débit immédiat</strong>
-								<span style="font-size: 0.85rem; color: var(--gray-600); line-height: 1.4; display: block;">Simple empreinte bancaire. Débité uniquement à l'envoi de votre e-photo.</span>
-							</div>
-						</div>
+					<!-- Description simple et centrée -->
+					<div style="text-align: center; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+						<span style="font-size: 2.5rem; line-height: 1;">✍️</span>
+						<strong style="display: block; font-size: 1.15rem; color: var(--gray-800);">Signature en ligne obligatoire</strong>
+						<span style="font-size: 0.95rem; color: var(--gray-600); line-height: 1.5;">Veuillez signer électroniquement en 30 secondes pour valider et finaliser votre planche officielle.</span>
 					</div>
 
 					<div class="actions-group" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 0.5rem; width: 100%;">
@@ -732,20 +727,5 @@
 			grid-template-columns: 1fr;
 			gap: 0.75rem;
 		} */
-	}
-
-	.success-features-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1.5rem;
-		margin-top: 0.5rem;
-		text-align: left;
-	}
-
-	@media (max-width: 576px) {
-		.success-features-grid {
-			grid-template-columns: 1fr;
-			gap: 1rem;
-		}
 	}
 </style>

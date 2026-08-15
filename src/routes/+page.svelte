@@ -182,7 +182,6 @@
 					<p class="price-desc">Permis de conduire & Titre de séjour. Inclus le code ANTS et la signature en direct.</p>
 					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
 						<li>✓ Code officiel ANTS fourni</li>
-						<li>✓ Visioconférence instantanée de signature</li>
 						<li>✓ Garantie conformité 100%</li>
 						<li>✓ Assistance guidée pas à pas</li>
 					</ul>
@@ -196,7 +195,6 @@
 					<p class="price-desc">Carte d'identité, Passeport, Visa, Carte vitale. Format planche 35x45mm.</p>
 					<ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
 						<li>✓ Planche de 6 photos d'identité HD</li>
-						<li>✓ Fond bleu/gris conforme France</li>
 						<li>✓ Option Fond Blanc (Maghreb)</li>
 						<li>✓ Téléchargement numérique immédiat</li>
 					</ul>
