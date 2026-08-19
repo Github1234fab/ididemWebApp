@@ -10,9 +10,10 @@
 
 	// Données du formulaire
 	let clientName = $state('');
-	let clientBirthdate = $state('');
+	let clientBirthdate = 'Majeur (18 ans+)';
 	let clientEmail = $state('');
 	let clientPhone = $state('');
+	let majorCheck = $state(false);
 	let certCheck = $state(false);
 
 	let isSubmitting = $state(false);
@@ -58,7 +59,7 @@
 		console.log("[Client Signature] Instance de pad liée:", padMethods);
 		console.log("[Client Signature] Clés de pad:", padMethods ? Object.keys(padMethods) : "null");
 		
-		if (!clientName || !clientEmail || !clientBirthdate || !clientPhone) {
+		if (!clientName || !clientEmail || !clientPhone) {
 			const errorMsg = "Veuillez remplir tous les champs obligatoires.";
 			console.warn("[Client Signature] Validation échouée: champs manquants.");
 			alert(errorMsg);
@@ -66,22 +67,12 @@
 			return;
 		}
 
-		// Vérification de l'âge (minimum 18 ans)
-		if (clientBirthdate) {
-			const birthDateObj = new Date(clientBirthdate);
-			const today = new Date();
-			let age = today.getFullYear() - birthDateObj.getFullYear();
-			const monthDiff = today.getMonth() - birthDateObj.getMonth();
-			if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-				age--;
-			}
-			if (age < 18) {
-				const errorMsg = "La signature d'une e-Photo officielle est réservée aux personnes majeures (18 ans et plus).";
-				console.warn("[Client Signature] Validation échouée: mineur.", age);
-				alert(errorMsg);
-				submitMessage = errorMsg;
-				return;
-			}
+		if (!majorCheck) {
+			const errorMsg = "Veuillez certifier sur l'honneur être majeur (18 ans ou plus).";
+			console.warn("[Client Signature] Validation échouée: case majeur non cochée.");
+			alert(errorMsg);
+			submitMessage = errorMsg;
+			return;
 		}
 
 		if (!certCheck) {
@@ -207,11 +198,6 @@
 					</div>
 
 					<div class="input-group">
-						<label for="client-birthdate">Date de naissance :</label>
-						<input type="date" id="client-birthdate" bind:value={clientBirthdate} required />
-					</div>
-
-					<div class="input-group">
 						<label for="client-email">Adresse e-mail :</label>
 						<input type="email" id="client-email" bind:value={clientEmail} placeholder="Ex: jean.dupont@email.com" required />
 					</div>
@@ -219,6 +205,13 @@
 					<div class="input-group">
 						<label for="client-phone">Numéro de téléphone :</label>
 						<input type="tel" id="client-phone" bind:value={clientPhone} placeholder="Ex: 06 12 34 56 78" required />
+					</div>
+
+					<div class="cert-box" style="margin-bottom: 0.75rem;">
+						<input type="checkbox" id="major-check" bind:checked={majorCheck} />
+						<label for="major-check">
+							<strong>Je certifie sur l'honneur être majeur (18 ans ou plus) *</strong>
+						</label>
 					</div>
 
 					<div class="cert-box">
