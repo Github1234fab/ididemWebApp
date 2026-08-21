@@ -1,6 +1,18 @@
 // desktop-bridge/simulate.js
 import robot from 'robotjs';
 import WebSocket from 'ws';
+import readline from 'readline';
+
+function askQuestion(query) {
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+	return new Promise((resolve) => rl.question(query, (ans) => {
+		rl.close();
+		resolve(ans.trim().toLowerCase());
+	}));
+}
 
 // Récupération de l'ID de session depuis l'argument de commande (ex: node simulate.js ID-XXXXXX)
 const args = process.argv.slice(2);
@@ -140,6 +152,35 @@ async function startReplay() {
 	// S'assurer que le clic est bien relâché à la fin
 	robot.mouseToggle('up', 'left');
 	console.log("\n🎉 Replay de la signature terminé avec succès !");
+
+	if (sessionId.startsWith('urface_')) {
+		console.log("\nℹ️ Session URFace détectée. Pas de paiement Stripe à capturer (débité via Apple/Google In-App Purchases).");
+		process.exit(0);
+	}
+
+	const answer = await askQuestion("\n❓ La signature a-t-elle été dessinée correctement ? Capturer le paiement Stripe ? (y/n) : ");
+	if (answer === 'y' || answer === 'yes') {
+		console.log(`\n[Payment] Tentative de capture du paiement pour la session ${sessionId}...`);
+		try {
+			const captureUrl = `${apiDomain}/api/capture-payment`;
+			const res = await fetch(captureUrl, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ sessionId })
+			});
+			const result = await res.json();
+			if (res.ok && result.success) {
+				console.log(`✅ Paiement Stripe capturé avec succès ! (Statut: ${result.status})`);
+			} else {
+				console.error(`❌ Échec de capture du paiement : ${result.error || 'Erreur inconnue'}`);
+			}
+		} catch (err) {
+			console.error(`❌ Erreur réseau lors de la capture du paiement : ${err.message}`);
+		}
+	} else {
+		console.log("\n⚠️ Capture de paiement ignorée. Le client n'a PAS été débité.");
+	}
+
 	process.exit(0);
 }
 
