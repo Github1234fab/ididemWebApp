@@ -51,7 +51,7 @@
 
 	function handleClear() {
 		if (padMethods.clear) padMethods.clear();
-		drawCoords = [];
+		drawCoords.length = 0;
 	}
 
 	async function handleSubmit() {
@@ -243,7 +243,6 @@
 						ondrawstart={handleDrawStart}
 						ondraw={handleDraw}
 						ondrawend={handleDrawEnd}
-						onclear={handleClear}
 					/>
 				</div>
 
