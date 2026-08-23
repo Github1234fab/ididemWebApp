@@ -18,16 +18,29 @@ export async function POST({ request }) {
 
 		console.log(`Recherche du PaymentIntent Stripe pour la session client: ${sessionId}...`);
 		
-		// Rechercher le PaymentIntent via les métadonnées
-		const searchResults = await stripe.paymentIntents.search({
-			query: `metadata['clientSessionId']:'${sessionId}'`
-		});
+		// Bypasser la latence d'indexation de Stripe Search en listant les derniers PaymentIntents
+		const listResults = await stripe.paymentIntents.list({ limit: 50 });
+		let paymentIntent = listResults.data.find(
+			pi => pi.metadata && pi.metadata.clientSessionId === sessionId
+		);
 
-		if (searchResults.data.length === 0) {
-			return json({ error: 'Aucun paiement Stripe trouvé pour cette session client' }, { status: 404 });
+		// Si non trouvé, on cherche en secours dans les dernières Checkout Sessions
+		if (!paymentIntent) {
+			console.log(`[Capture Payment] PaymentIntent non trouvé en liste directe. Recherche dans les Checkout Sessions...`);
+			const sessionList = await stripe.checkout.sessions.list({ limit: 50 });
+			const session = sessionList.data.find(
+				s => s.metadata && s.metadata.clientSessionId === sessionId
+			);
+			if (session && session.payment_intent) {
+				paymentIntent = await stripe.paymentIntents.retrieve(
+					typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent.id
+				);
+			}
 		}
 
-		const paymentIntent = searchResults.data[0];
+		if (!paymentIntent) {
+			return json({ error: 'Aucun paiement Stripe trouvé pour cette session client' }, { status: 404 });
+		}
 		
 		if (paymentIntent.status === 'requires_capture') {
 			console.log(`Capture du paiement Stripe ${paymentIntent.id} de 6.99 €...`);
