@@ -384,13 +384,13 @@ function capturePhoto() {
 	 */
 	function getBgStyleForFormula(formula, color) {
 		if (formula === 'e-photo') {
-			return 'background: #e2e8f0;'; // Gris clair réglementaire ANTS
+			return 'background: #D8D8D8;'; // Gris clair réglementaire ANTS
 		}
 		if (formula === 'officielle') {
 			if (color === 'white') {
 				return 'background: #ffffff;'; // Maghreb (Blanc)
 			}
-			return 'background: #d1d5db;'; // France & Europe (Gris standard)
+			return 'background: #D8D8D8;'; // France & Europe (Gris standard)
 		}
 		if (formula === 'casual') {
 			switch (color) {
@@ -1384,7 +1384,7 @@ function capturePhoto() {
 	}
 
 	.photo-preview-card.bg-gray {
-		background: #d1d5db; /* Gris réglementaire */
+		background: #D8D8D8; /* Gris réglementaire */
 	}
 
 	.photo-preview-card.bg-casual {

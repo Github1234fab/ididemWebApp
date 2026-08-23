@@ -230,10 +230,10 @@
 
 					// Appliquer le fond réglementaire sous le détourage pour e-photo et officielle
 					if (formulaId === 'e-photo') {
-						ctx.fillStyle = '#e2e8f0'; // Gris clair réglementaire ANTS
+						ctx.fillStyle = '#D8D8D8'; // Gris clair réglementaire ANTS
 						ctx.fillRect(x, y, photoW, photoH);
 					} else if (formulaId === 'officielle') {
-						ctx.fillStyle = selectedBg === 'white' ? '#ffffff' : '#d1d5db'; // Blanc ou Gris standard
+						ctx.fillStyle = selectedBg === 'white' ? '#ffffff' : '#D8D8D8'; // Blanc ou Gris standard
 						ctx.fillRect(x, y, photoW, photoH);
 					}
 
