@@ -3,6 +3,25 @@ import { villesSEO } from '$lib/data/villes.js';
 
 export const prerender = true;
 
+// Donne à SvelteKit la liste de toutes les combinaisons intentions x villes à pré-générer
+export function entries() {
+	const intentions = [
+		'photo-identite-en-ligne',
+		'e-photo-ANTS-en-ligne',
+		'photo-passeport-en-ligne',
+		'photo-carte-identite-en-ligne',
+		'portrait-professionnel-en-ligne'
+	];
+	
+	const list = [];
+	for (const type_photo of intentions) {
+		for (const ville of Object.keys(villesSEO)) {
+			list.push({ type_photo, ville });
+		}
+	}
+	return list;
+}
+
 /** @type {import('./$types').PageLoad} */
 export function load({ params }) {
 	const slugVille = params.ville ? params.ville.toLowerCase() : '';
