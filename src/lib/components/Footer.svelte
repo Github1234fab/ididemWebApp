@@ -24,10 +24,10 @@
 		<div class="footer-links">
 			<h4>Navigation</h4>
 			<ul>
-				<li><a href="#features">Avantages</a></li>
-				<li><a href="#how-it-works">Comment ça marche</a></li>
-				<li><a href="#pricing">Tarifs</a></li>
-				<li><a href="#faq">FAQ</a></li>
+				<li><a href="/#features">Avantages</a></li>
+				<li><a href="/#how-it-works">Comment ça marche</a></li>
+				<li><a href="/#pricing">Tarifs</a></li>
+				<li><a href="/#faq">FAQ</a></li>
 			</ul>
 		</div>
 		<div class="footer-links">
