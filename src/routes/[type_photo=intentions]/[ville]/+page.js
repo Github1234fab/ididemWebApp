@@ -1,18 +1,18 @@
-// src/routes/[type_photo=intentions]/[ville]/+page.js
-import { villesSEO, villeGenerique } from '$lib/data/villes.js';
+import { error } from '@sveltejs/kit';
+import { villesSEO } from '$lib/data/villes.js';
+
+export const prerender = true;
 
 /** @type {import('./$types').PageLoad} */
 export function load({ params }) {
-	const slugVille = params.ville ? params.ville.toLowerCase() : 'france';
+	const slugVille = params.ville ? params.ville.toLowerCase() : '';
 	const typePhoto = params.type_photo;
 
-	// Résoudre la ville
-	const villeInfo = villesSEO[slugVille] || {
-		...villeGenerique,
-		name: params.ville ? params.ville.charAt(0).toUpperCase() + params.ville.slice(1).replace(/-/g, ' ') : 'France',
-		prep: 'à',
-		prepArticle: `à ${params.ville ? params.ville.charAt(0).toUpperCase() + params.ville.slice(1).replace(/-/g, ' ') : 'France'}`
-	};
+	// Si la ville n'existe pas dans notre liste officielle, on renvoie une vraie erreur 404
+	const villeInfo = villesSEO[slugVille];
+	if (!villeInfo) {
+		throw error(404, 'Cette ville n\'est pas desservie');
+	}
 
 	// Définir les variables SEO selon l'intention de l'URL
 	let seo = {
