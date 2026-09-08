@@ -1798,17 +1798,22 @@ function capturePhoto() {
 
 	.action-arrow {
 		margin-top: 1.5rem;
-		font-size: 0.95rem;
+		font-size: 0.9rem;
 		font-weight: 700;
 		color: var(--white);
 		background: #ff7a00;
-		padding: 0.75rem 1.5rem;
+		padding: 0.8rem 0.75rem;
 		border-radius: var(--radius-md);
 		box-shadow: 0 4px 10px rgba(255, 122, 0, 0.2);
 		transition: all 0.2s ease;
 		width: 100%;
 		box-sizing: border-box;
 		text-align: center;
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
 	}
 
 	.formula-card:hover .action-arrow {
