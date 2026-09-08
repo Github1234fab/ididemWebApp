@@ -50,6 +50,8 @@
 	let cameraError = $state('');
 	let isShutterActive = $state(false);
 	let countdown = $state(0);
+	// Indicates which camera is active: 'user' (front) or 'environment' (rear)
+	let cameraFacing = $state('user');
 
 	// Image capturée (base64)
 	let capturedImage = $state('');
@@ -160,12 +162,14 @@
 	async function startCamera() {
 		cameraError = '';
 		step = 3;
+		// The camera we request (environment = rear-facing)
+		cameraFacing = 'environment';
 		try {
 			stream = await navigator.mediaDevices.getUserMedia({
 				video: {
 					width: { ideal: 1280 },
 					height: { ideal: 720 },
-					facingMode: 'user'
+					facingMode: cameraFacing
 				},
 				audio: false
 			});
@@ -212,8 +216,10 @@ function setZoom(zoomValue) {
     currentZoom = zoomValue;
     
     if (videoEl) {
-      videoEl.style.transform = `scaleX(-1) scale(${currentZoom})`;
-        videoEl.style.transformOrigin = 'center center';
+      // Flip only for front-facing camera to emulate a mirror effect
+      const flip = cameraFacing === 'user' ? 'scaleX(-1) ' : '';
+      videoEl.style.transform = `${flip}scale(${currentZoom})`;
+      videoEl.style.transformOrigin = 'center center';
     }
 }
 
@@ -812,7 +818,7 @@ function capturePhoto() {
 						<div class="video-container">
 							<!-- Flux vidéo réel -->
 							<!-- svelte-ignore a11y_media_has_caption -->
-							<video bind:this={videoEl} autoplay playsinline></video>
+							<video bind:this={videoEl} autoplay playsinline muted></video>
 
 							<!-- Gabarit biométrique dynamique -->
 							{#if activeFormulaDetails}
