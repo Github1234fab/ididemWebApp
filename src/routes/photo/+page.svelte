@@ -56,6 +56,21 @@
 	// Image capturée (base64)
 	let capturedImage = $state('');
 
+	let userEmail = $state('');
+	let bookingDate = $state('');
+	let bookingTime = $state('');
+	let isAppointmentBooked = $state(false);
+	let clientSessionId = $state('ID-' + Math.random().toString(36).substring(2, 9).toUpperCase());
+	let copiedLink = $state(false);
+
+	// SignaturePad pour E-Photo
+	/** @type {any} */
+	let padMethods = $state({});
+	let signatureDataUrl = $state('');
+	let majorCheck = $state(false);
+	let certCheck = $state(false);
+	let drawCoords = [];
+
 	const formulas = [
 		{
 			id: 'e-photo',
@@ -559,20 +574,7 @@ function capturePhoto() {
 		}
 	}
 
-	let userEmail = $state('');
-	let bookingDate = $state('');
-	let bookingTime = $state('');
-	let isAppointmentBooked = $state(false);
-	let clientSessionId = $state('ID-' + Math.random().toString(36).substring(2, 9).toUpperCase());
-	let copiedLink = $state(false);
 
-	// SignaturePad pour E-Photo
-	/** @type {any} */
-	let padMethods = $state({});
-	let signatureDataUrl = $state('');
-	let majorCheck = $state(false);
-	let certCheck = $state(false);
-	let drawCoords = [];
 
 	function handleDrawStart(detail) {
 		drawCoords.push({ type: 'drawstart', x: detail.x, y: detail.y });
