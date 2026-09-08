@@ -50,8 +50,7 @@
 	let cameraError = $state('');
 	let isShutterActive = $state(false);
 	let countdown = $state(0);
-	// Indicates which camera is active: 'user' (front) or 'environment' (rear)
-	let cameraFacing = $state('user');
+	let cameraFacing = $state('user'); // 'user' (front) par défaut, 'environment' (arrière)
 
 	// Image capturée (base64)
 	let capturedImage = $state('');
@@ -162,9 +161,8 @@
 	async function startCamera() {
 		cameraError = '';
 		step = 3;
-		// The camera we request (environment = rear-facing)
-		cameraFacing = 'environment';
 		try {
+			stopCamera();
 			stream = await navigator.mediaDevices.getUserMedia({
 				video: {
 					width: { ideal: 1280 },
@@ -175,11 +173,17 @@
 			});
 			if (videoEl) {
 				videoEl.srcObject = stream;
+				setZoom(currentZoom);
 			}
 		} catch (err) {
 			console.error('Erreur caméra:', err);
 			cameraError = 'Impossible d\'accéder à la caméra. Veuillez vérifier les permissions dans votre navigateur.';
 		}
+	}
+
+	function flipCamera() {
+		cameraFacing = cameraFacing === 'user' ? 'environment' : 'user';
+		startCamera();
 	}
 
 	function stopCamera() {
@@ -336,9 +340,11 @@ function capturePhoto() {
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
-        // Appliquer un effet miroir sur le canvas pour correspondre à l'écran de shooting
-        ctx.translate(canvas.width, 0);
-        ctx.scale(-1, 1);
+        // Appliquer un effet miroir uniquement pour la caméra frontale ('user')
+        if (cameraFacing === 'user') {
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+        }
 
         const cropW = (width * 0.99) / currentZoom;
         const cropH = (height * 0.99) / currentZoom;
@@ -816,6 +822,16 @@ function capturePhoto() {
 						</div>
 					{:else}
 						<div class="video-container">
+							<!-- Bouton tourner la caméra superposé -->
+							<button class="btn-flip-camera-overlay" onclick={flipCamera} aria-label="Changer de caméra" title="Changer de caméra">
+								<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5l2-3h6l2 3h1a2 2 0 0 1 2 2v4"/>
+									<circle cx="12" cy="13" r="3"/>
+									<path d="M18 22l3-3-3-3"/>
+									<path d="M21 19h-6"/>
+								</svg>
+							</button>
+
 							<!-- Flux vidéo réel -->
 							<!-- svelte-ignore a11y_media_has_caption -->
 							<video bind:this={videoEl} autoplay playsinline muted></video>
@@ -851,9 +867,7 @@ function capturePhoto() {
 								<div class="inner-circle"></div>
 							</button>
 
-							<button class="btn-capture-now" disabled={isShutterActive} onclick={capturePhoto}>
-								Instantané
-							</button>
+							<div style="width: 60px;"></div>
 						</div>
 
 						<div class="instructions-live">
@@ -2338,6 +2352,36 @@ function capturePhoto() {
 		border-radius: var(--radius-sm);
 		font-weight: 700;
 		font-size: 0.9rem;
+	}
+
+	.btn-flip-camera-overlay {
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		z-index: 10;
+		background: rgba(0, 0, 0, 0.45);
+		color: #ffffff;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(4px);
+		transition: all 0.2s ease;
+		cursor: pointer;
+		padding: 0;
+	}
+
+	.btn-flip-camera-overlay:hover {
+		background: rgba(0, 0, 0, 0.7);
+		border-color: rgba(255, 255, 255, 0.6);
+		transform: scale(1.08);
+	}
+
+	.btn-flip-camera-overlay:active {
+		transform: scale(0.95);
 	}
 
 	.instructions-live {
