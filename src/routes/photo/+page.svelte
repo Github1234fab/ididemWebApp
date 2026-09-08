@@ -69,6 +69,7 @@
 	let signatureDataUrl = $state('');
 	let majorCheck = $state(false);
 	let certCheck = $state(false);
+	/** @type {any[]} */
 	let drawCoords = [];
 
 	const formulas = [
@@ -576,10 +577,10 @@ function capturePhoto() {
 
 
 
-	function handleDrawStart(detail) {
+	function handleDrawStart(/** @type {any} */ detail) {
 		drawCoords.push({ type: 'drawstart', x: detail.x, y: detail.y });
 	}
-	function handleDraw(detail) {
+	function handleDraw(/** @type {any} */ detail) {
 		drawCoords.push({ type: 'draw', x: detail.x, y: detail.y });
 	}
 	function handleDrawEnd() {
@@ -1162,8 +1163,6 @@ function capturePhoto() {
 										<div style="background: #fafafa; border: 1px dashed var(--gray-300); border-radius: var(--radius-md); padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
 											<SignaturePad 
 												bind:methods={padMethods} 
-												width={340} 
-												height={160} 
 												ondrawstart={handleDrawStart} 
 												ondraw={handleDraw} 
 												ondrawend={handleDrawEnd} 
