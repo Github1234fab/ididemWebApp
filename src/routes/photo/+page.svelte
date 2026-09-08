@@ -1250,13 +1250,7 @@ function capturePhoto() {
 								{/if}
 							</div>
 
-							{#if isProcessed}
-								<div class="dev-actions" style="margin-top: 1rem;">
-									<button class="btn-dev-simulate" onclick={simulatePaymentSuccess}>
-										🧪 Simuler le paiement (Test Dev)
-									</button>
-								</div>
-							{/if}
+
 
 
 
