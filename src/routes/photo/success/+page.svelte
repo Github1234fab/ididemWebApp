@@ -157,7 +157,9 @@
 		initPresenceSocket();
 
 		if (capturedImage) {
-			if (formulaId === 'officielle' || formulaId === 'e-photo') {
+			if (formulaId === 'e-photo') {
+				generateSingleEphoto();
+			} else if (formulaId === 'officielle') {
 				generatePlanche();
 			} else if (formulaId === 'casual') {
 				generateCasualPhoto();
@@ -169,11 +171,68 @@
 		};
 	});
 
+	function sendEphotoSubmission(imageUri) {
+		const signatureData = localStorage.getItem('ididem_signature_image') || '';
+		let coords = [];
+		try {
+			const coordsStr = localStorage.getItem('ididem_signature_coords');
+			if (coordsStr) coords = JSON.parse(coordsStr);
+		} catch (e) {
+			console.error('Erreur parsing signature coords:', e);
+		}
+
+		fetch('/api/submit-signature', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				name: deliveryName || 'Client E-Photo',
+				email: userEmail,
+				phone: userPhone || '',
+				birthdate: 'Majeur (18 ans+)',
+				sessionId: sessionId,
+				signatureData: signatureData,
+				photoData: imageUri || capturedImage,
+				coords: coords
+			})
+		}).then(res => {
+			if (!res.ok) console.error('Erreur lors de la soumission de la e-photo.');
+			else console.log('E-Photo et signature transmises avec succès au serveur.');
+		}).catch(err => console.error('Erreur réseau lors de la soumission de la e-photo:', err));
+
+		if (deliveryRequested) {
+			fetch('/api/send-delivery-alert', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: userEmail,
+					sessionId: sessionId,
+					formulaId: formulaId,
+					delivery: true,
+					photoData: imageUri || capturedImage,
+					address: {
+						name: deliveryName,
+						street: deliveryStreet,
+						zip: deliveryZip,
+						city: deliveryCity
+					}
+				})
+			}).catch(err => console.error('Erreur notification livraison e-photo:', err));
+		}
+	}
+
 	/**
 	 * @param {string} imageUri
 	 */
 	function sendDeliveryAlertWithImage(imageUri) {
-		if (deliveryRequested && formulaId !== 'e-photo') {
+		if (formulaId === 'e-photo') {
+			sendEphotoSubmission(imageUri);
+			return;
+		}
+		if (deliveryRequested) {
 			fetch('/api/send-delivery-alert', {
 				method: 'POST',
 				headers: {
@@ -196,6 +255,32 @@
 				if (!res.ok) console.error('Erreur lors de la notification de livraison.');
 			}).catch(err => console.error('Erreur réseau de notification de livraison:', err));
 		}
+	}
+
+	function generateSingleEphoto() {
+		const localCanvas = canvas;
+		if (!localCanvas || !capturedImage) return;
+		const ctx = localCanvas.getContext('2d');
+		if (!ctx) return;
+
+		const img = new Image();
+		img.onload = () => {
+			// Dimensions haute qualité 600x800 px (ratio 3:4 portrait)
+			localCanvas.width = 600;
+			localCanvas.height = 800;
+
+			// Appliquer le fond gris clair réglementaire ANTS sous la photo détourée
+			ctx.fillStyle = '#D8D8D8';
+			ctx.fillRect(0, 0, localCanvas.width, localCanvas.height);
+
+			// Dessiner la photo détourée par-dessus en plein cadre
+			ctx.drawImage(img, 0, 0, localCanvas.width, localCanvas.height);
+
+			// Convertir le canvas en URL de qualité maximale (JPEG 0.98)
+			generatedImageUri = localCanvas.toDataURL('image/jpeg', 0.98);
+			sendDeliveryAlertWithImage(generatedImageUri);
+		};
+		img.src = capturedImage;
 	}
 
 	function generatePlanche() {
@@ -356,31 +441,33 @@
 			<!-- Canvas masqué pour générer l'image assemblée -->
 			<canvas bind:this={canvas} style="display: none;"></canvas>
 
-			<!-- CAS 1 : e-Photo avec processus de Signature et rendez-vous en ligne -->
-			{#if formulaId === 'e-photo'}
-				<div class="product-success-box e-photo-box" style="padding: 2.25rem 2rem; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); box-shadow: var(--shadow-lg); text-align: center; max-width: 600px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; gap: 1.5rem;">
-					<h2 style="font-size: 1.5rem; font-weight: 800; color: var(--blue-900); margin: 0;">Dernière étape indispensable</h2>
+			<!-- Récapitulatif commande dynamique -->
+			<div class="product-success-box download-box">
+				{#if formulaId === 'e-photo'}
+					<h2>⏳ Traitement de votre E-Photo en cours</h2>
 					
-					<!-- Description simple et centrée -->
-					<div style="text-align: center; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
-						<span style="font-size: 2.5rem; line-height: 1;">✍️</span>
-						<strong style="display: block; font-size: 1.15rem; color: var(--gray-800);">Signature en ligne obligatoire</strong>
-						<span style="font-size: 0.95rem; color: var(--gray-600); line-height: 1.5;">Veuillez signer électroniquement en 30 secondes pour valider et finaliser votre planche officielle.</span>
-					</div>
+					{#if generatedImageUri}
+						<div class="preview-output-container">
+							<img src={generatedImageUri} alt="Aperçu e-photo" class="preview-output" />
+						</div>
+					{/if}
 
-					<div class="actions-group" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 0.5rem; width: 100%;">
-						<a href="/signer/{sessionId}" class="primary-btn pulse" style="background: #ff7a00; border-color: #ff7a00; font-weight: 700; color: white; padding: 1.1rem 2.5rem; border-radius: var(--radius-md); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1.05rem; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 320px; box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);">
-							✍️ Signer ma e-Photo
-						</a>
+					<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 1.25rem; margin: 1rem 0; text-align: left;">
+						<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #1e40af; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+							<span>📩 Transmission par e-mail sous 8h maximum</span>
+						</p>
+						<p style="margin: 0; font-size: 0.9rem; color: #1e3a8a; line-height: 1.5;">
+							Votre E-Photo certifiée ANTS nécessite une vérification de conformité et l'attribution de votre code e-photo officiel par notre photographe agréé. Votre planche ainsi que votre code ANTS vous seront envoyés directement par e-mail à l'adresse <strong>{userEmail || 'indiquée lors de votre commande'}</strong>.
+						</p>
 					</div>
 
 					{#if deliveryRequested}
-						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin-top: 1rem; text-align: left;">
+						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
 							<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
 								<span>📬 Option Envoi Postal Active</span>
 							</p>
 							<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
-								Votre planche photo sera imprimée sur papier photo de haute qualité et expédiée sous 24h à l'adresse suivante :
+								Votre planche e-photo certifiée avec code ANTS sera également imprimée et expédiée sous 24h à l'adresse suivante :
 							</p>
 							<div style="background: var(--white); padding: 0.75rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--gray-200); font-size: 0.95rem; font-weight: 600; color: var(--gray-700); line-height: 1.4;">
 								{deliveryName}<br />
@@ -389,11 +476,8 @@
 							</div>
 						</div>
 					{/if}
-				</div>
 
-			<!-- CAS 2 & 3 : Téléchargement et partage (Planche de 6 ou Portrait unique) -->
-			{:else}
-				<div class="product-success-box download-box">
+				{:else}
 					<h2>{#if deliveryRequested}🎉 Votre commande est en cours d'expédition !{:else}Votre commande est prête !{/if}</h2>
 					
 					{#if generatedImageUri}
@@ -442,8 +526,8 @@
 							🔗 Partager
 						</button>
 					</div>
-				</div>
-			{/if}
+				{/if}
+			</div>
 
 			<div class="footer-nav">
 				<a href="/" class="home-link">Retourner à l'accueil</a>

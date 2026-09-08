@@ -4,6 +4,7 @@
 	import ePhotoImg from '$lib/assets/e-photo_site.jpg';
 	import photoIdentity from '$lib/assets/identite.jpg';
 	import linkedin from '$lib/assets/linkedin.jpg';
+	import SignaturePad from '$lib/components/SignaturePad.svelte';
 
 	// Étape active : 1 = formule, 2 = consignes, 3 = caméra, 4 = résultat
 	let step = $state(1);
@@ -60,6 +61,7 @@
 			id: 'e-photo',
 			title: 'E-Photo Officielle',
 			subtitle: 'Permis de conduire & Titre de séjour',
+			price: '6,99 €',
 			desc: 'Planche de photos biométriques certifiées conforme ANTS avec code e-photo unique.',
 			badge: 'ANTS & OACI',
 			icon: '🚗',
@@ -72,12 +74,13 @@
 				'Lunettes autorisées uniquement sans reflets et monture fine'
 			],
 			gabaritClass: 'official-gabarit',
-			delay: 'Délai : 12h max'
+			delay: 'Délai : 8h max'
 		},
 		{
 			id: 'officielle',
 			title: 'Photo d\'identité standard',
 			subtitle: 'Passeport & Carte d\'identité',
+			price: '4,99 €',
 			desc: 'Planche de 6 photos 100% conforme aux normes OACI et ANTS pour vos démarches en mairie et préfecture.',
 			badge: 'Mairie & préfecture',
 			icon: '🛂',
@@ -96,6 +99,7 @@
 			id: 'casual',
 			title: 'Portrait Professionnel',
 			subtitle: 'LinkedIn, CV & Profils en ligne',
+			price: '2,99 €',
 			desc: 'Mettez en valeur votre image avec un portrait clair, moderne et optimisé pour le web.',
 			badge: 'Réseaux & CV',
 			icon: '✨',
@@ -474,6 +478,33 @@ function capturePhoto() {
 	let isRedirecting = $state(false);
 
 	async function handlePayment() {
+		if (!userEmail || !isEmailValid(userEmail)) {
+			processingError = 'Veuillez saisir une adresse e-mail valide.';
+			alert(processingError);
+			return;
+		}
+
+		if (selectedFormula === 'e-photo') {
+			if (!majorCheck) {
+				processingError = "Veuillez certifier sur l'honneur être majeur (18 ans ou plus).";
+				alert(processingError);
+				return;
+			}
+			if (!certCheck) {
+				processingError = "Vous devez certifier l'exactitude des informations sur l'honneur.";
+				alert(processingError);
+				return;
+			}
+			if (!padMethods.isEmpty || padMethods.isEmpty()) {
+				processingError = "Veuillez apposer votre signature manuscrite ci-dessous pour valider la E-Photo ANTS.";
+				alert(processingError);
+				return;
+			}
+			signatureDataUrl = padMethods.toDataURL ? padMethods.toDataURL() : '';
+			localStorage.setItem('ididem_signature_image', signatureDataUrl);
+			localStorage.setItem('ididem_signature_coords', JSON.stringify(drawCoords));
+		}
+
 		isRedirecting = true;
 		processingError = '';
 		try {
@@ -535,6 +566,29 @@ function capturePhoto() {
 	let clientSessionId = $state('ID-' + Math.random().toString(36).substring(2, 9).toUpperCase());
 	let copiedLink = $state(false);
 
+	// SignaturePad pour E-Photo
+	/** @type {any} */
+	let padMethods = $state({});
+	let signatureDataUrl = $state('');
+	let majorCheck = $state(false);
+	let certCheck = $state(false);
+	let drawCoords = [];
+
+	function handleDrawStart(detail) {
+		drawCoords.push({ type: 'drawstart', x: detail.x, y: detail.y });
+	}
+	function handleDraw(detail) {
+		drawCoords.push({ type: 'draw', x: detail.x, y: detail.y });
+	}
+	function handleDrawEnd() {
+		drawCoords.push({ type: 'drawend' });
+	}
+	function handleClearSignature() {
+		if (padMethods.clear) padMethods.clear();
+		drawCoords.length = 0;
+		signatureDataUrl = '';
+	}
+
 	function copySignatureLinkInline() {
 		const origin = window.location.origin;
 		const link = `${origin}/signer/${clientSessionId}`;
@@ -574,6 +628,11 @@ function capturePhoto() {
 	}
 
 	function simulatePaymentSuccess() {
+		if (selectedFormula === 'e-photo' && padMethods && padMethods.toDataURL) {
+			signatureDataUrl = padMethods.toDataURL();
+			localStorage.setItem('ididem_signature_image', signatureDataUrl);
+			localStorage.setItem('ididem_signature_coords', JSON.stringify(drawCoords));
+		}
 		localStorage.setItem('ididem_captured_image', capturedImage);
 		localStorage.setItem('ididem_selected_formula', selectedFormula);
 		localStorage.setItem('ididem_selected_bg', selectedBgColor);
@@ -689,6 +748,7 @@ function capturePhoto() {
 							</div>
 							<h3>{formula.title}</h3>
 							<p class="formula-subtitle">{formula.subtitle}</p>
+							<div class="formula-price">{formula.price}</div>
 							<div class="formula-delay-badge" class:orange-delay={formula.id === 'e-photo'}>
 								⏱️ {formula.delay}
 							</div>
@@ -981,7 +1041,7 @@ function capturePhoto() {
 												<span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; border: 1px solid #bae6fd; color: #0284c7; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem;">3</span>
 												<div class="step-text" style="display: flex; flex-direction: column; gap: 0.15rem;">
 													<strong style="font-size: 0.9rem; color: var(--gray-800); font-weight: 700;">Envoi & Livraison</strong>
-													<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Envoi par e-mail sous 12h max après validation. Livraison postale sous 24h (si option choisie).</span>
+													<span style="font-size: 0.8rem; color: var(--gray-600); line-height: 1.4;">Envoi par e-mail sous 8h max après validation. Livraison postale sous 24h (si option choisie).</span>
 												</div>
 											</li>
 										{:else}
@@ -1075,6 +1135,56 @@ function capturePhoto() {
 
 
 							{#if isProcessed}
+								<!-- CHAMP ADRESSE E-MAIL DE BASE POUR TOUS -->
+								<div class="email-input-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 0.5rem;">
+									<label for="user-email-field" style="font-weight: 700; font-size: 0.95rem; color: #1d1d1f; display: flex; align-items: center; gap: 0.5rem;">
+										<span>📧 Votre adresse e-mail pour recevoir vos photos</span> <span style="color: #ef4444;">*</span>
+									</label>
+									<input type="email" id="user-email-field" bind:value={userEmail} placeholder="Ex: votre.email@domaine.com" required style="padding: 0.75rem 0.9rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; width: 100%; box-sizing: border-box;" />
+								</div>
+
+								<!-- FORMULAIRE DE SIGNATURE MANUSCRITE E-PHOTO ANTS AVANT PAIEMENT -->
+								{#if selectedFormula === 'e-photo'}
+									<div class="signature-step-card" style="text-align: left; background: #ffffff; border: 2px solid var(--blue-500); border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 145, 255, 0.08); display: flex; flex-direction: column; gap: 1.25rem;">
+										<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+											<h3 style="font-size: 1.1rem; font-weight: 800; color: var(--blue-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+												<span>✍️ Signature électronique ANTS</span>
+											</h3>
+											<span style="background: var(--blue-50); color: var(--blue-700); font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.75rem; border-radius: 12px; border: 1px solid var(--blue-200);">Requis pour Permis / Titre de séjour</span>
+										</div>
+
+										<p style="font-size: 0.85rem; color: var(--gray-600); margin: 0; line-height: 1.45;">
+											Pour générer votre code E-Photo certifié ANTS, apposez votre signature manuscrite ci-dessous à l'aide de votre doigt ou de votre souris :
+										</p>
+
+										<div style="background: #fafafa; border: 1px dashed var(--gray-300); border-radius: var(--radius-md); padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+											<SignaturePad 
+												bind:methods={padMethods} 
+												width={340} 
+												height={160} 
+												ondrawstart={handleDrawStart} 
+												ondraw={handleDraw} 
+												ondrawend={handleDrawEnd} 
+											/>
+											<button type="button" onclick={handleClearSignature} style="background: var(--gray-200); color: var(--gray-700); border: none; padding: 0.4rem 1rem; border-radius: var(--radius-xs); font-size: 0.8rem; font-weight: 700; cursor: pointer; align-self: flex-end;">
+												🗑️ Effacer et recommencer
+											</button>
+										</div>
+
+										<div style="display: flex; flex-direction: column; gap: 0.75rem; padding-top: 0.5rem;">
+											<label style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: var(--gray-700); cursor: pointer; line-height: 1.4;">
+												<input type="checkbox" bind:checked={majorCheck} style="width: 1.15rem; height: 1.15rem; accent-color: var(--blue-600); margin-top: 0.1rem; flex-shrink: 0;" />
+												<span>Je certifie être majeur (18 ans ou plus) ou représentant légal du titulaire.</span>
+											</label>
+
+											<label style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: var(--gray-700); cursor: pointer; line-height: 1.4;">
+												<input type="checkbox" bind:checked={certCheck} style="width: 1.15rem; height: 1.15rem; accent-color: var(--blue-600); margin-top: 0.1rem; flex-shrink: 0;" />
+												<span>Je certifie l'exactitude de ma signature manuscrite ci-dessus.</span>
+											</label>
+										</div>
+									</div>
+								{/if}
+
 								<!-- Option Envoi Postal Premium -->
 								<div class="reassurance-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 1rem;">
 									<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 0.5rem; flex-wrap: wrap;">
@@ -1087,14 +1197,15 @@ function capturePhoto() {
 										<span style="line-height: 1.45;">Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+3,00 €)</span>
 									</label>
 
+									{#if selectedFormula === 'e-photo'}
+										<p style="margin: 0; font-size: 0.8rem; color: #475569; background: #f8fafc; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid #e2e8f0; line-height: 1.45;">
+											💡 <strong>À savoir :</strong> Votre E-Photo certifiée et votre code ANTS vous sont <u>systématiquement envoyés par e-mail</u> sous 8h max pour vos démarches en ligne. L'option postale est un service complémentaire pour recevoir une planche papier imprimée chez vous.
+										</p>
+									{/if}
+
 									{#if deliveryRequested}
 										<div class="delivery-address-form" style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed var(--gray-200); display: flex; flex-direction: column; gap: 1rem;">
 											<h4 style="font-size: 0.95rem; font-weight: 700; color: var(--blue-700); margin: 0;">Adresse de livraison</h4>
-											
-											<div style="display: flex; flex-direction: column; gap: 0.4rem;">
-												<label for="delivery-email" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Votre adresse e-mail (pour la confirmation) :</label>
-												<input type="email" id="delivery-email" bind:value={userEmail} placeholder="Ex: jean.dupont@email.com" required style="padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem;" />
-											</div>
 
 											<div style="display: flex; flex-direction: column; gap: 0.4rem;">
 												<label for="delivery-name" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-600);">Nom complet du destinataire :</label>
@@ -1138,6 +1249,14 @@ function capturePhoto() {
 									</button>
 								{/if}
 							</div>
+
+							{#if isProcessed}
+								<div class="dev-actions" style="margin-top: 1rem;">
+									<button class="btn-dev-simulate" onclick={simulatePaymentSuccess}>
+										🧪 Simuler le paiement (Test Dev)
+									</button>
+								</div>
+							{/if}
 
 
 
@@ -1639,6 +1758,13 @@ function capturePhoto() {
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
+	}
+
+	.formula-price {
+		font-size: 1.65rem;
+		font-weight: 900;
+		color: var(--gray-900);
+		margin-top: 0.25rem;
 	}
 
 	.formula-delay-badge {
