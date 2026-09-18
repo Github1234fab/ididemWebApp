@@ -18,6 +18,7 @@ export async function GET() {
 		'portrait-professionnel-en-ligne'
 	];
 
+	const today = new Date().toISOString().split('T')[0];
 	const urls = [];
 
 	// 1. Pages statiques
@@ -39,6 +40,7 @@ export async function GET() {
 	${urls.map(url => `
 	<url>
 		<loc>${url}</loc>
+		<lastmod>${today}</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>${url === domain ? '1.0' : '0.8'}</priority>
 	</url>`).join('')}
