@@ -12,7 +12,7 @@ export async function GET() {
 	// Intentions valides d'après le matcher params/intentions.js
 	const intentions = [
 		'photo-identite-en-ligne',
-		'e-photo-ANTS-en-ligne',
+		'e-photo-ants-en-ligne',
 		'photo-passeport-en-ligne',
 		'photo-carte-identite-en-ligne',
 		'portrait-professionnel-en-ligne'

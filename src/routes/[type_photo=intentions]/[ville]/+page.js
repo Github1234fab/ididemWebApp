@@ -7,7 +7,7 @@ export const prerender = true;
 export function entries() {
 	const intentions = [
 		'photo-identite-en-ligne',
-		'e-photo-ANTS-en-ligne',
+		'e-photo-ants-en-ligne',
 		'photo-passeport-en-ligne',
 		'photo-carte-identite-en-ligne',
 		'portrait-professionnel-en-ligne'
@@ -42,7 +42,7 @@ export function load({ params }) {
 	};
 
 	switch (typePhoto) {
-		case 'e-photo-ANTS-en-ligne':
+		case 'e-photo-ants-en-ligne':
 			seo.title = `e-Photo ANTS en ligne ${villeInfo.prepArticle} - Signature Permis & Titre de séjour`;
 			seo.description = `Faites votre e-photo officielle ANTS en ligne ${villeInfo.prepArticle}. Obtenez votre code photo signature pour permis de conduire et titre de séjour.`;
 			seo.h1 = `Votre e-photo ANTS officielle en ligne ${villeInfo.prepArticle}`;
