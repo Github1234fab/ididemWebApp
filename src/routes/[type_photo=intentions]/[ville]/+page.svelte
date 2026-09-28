@@ -1,20 +1,65 @@
 <!-- src/routes/[type_photo=intentions]/[ville]/+page.svelte -->
 <script>
-	import logoIdidem from '$lib/assets/favicon.svg'; // Réutilise le favicon ou logo
-	import ePhotoImg from '$lib/assets/EPhoto.png';
-	import photoIdentity from '$lib/assets/photos-identite.webp';
+	import logoIdidem from '$lib/assets/favicon.svg';
+	import { villesSEO } from '$lib/data/villes.js';
 
-	/** @type {{ data: { ville: import('$lib/data/villes').VilleSEO, typePhoto: string, seo: { title: string, description: string, h1: string, focusFormula: string } } }} */
+	/** @type {{ data: { ville: import('$lib/data/villes').VilleSEO, typePhoto: string, seo: any } }} */
 	let { data } = $props();
 	const ville = $derived(data.ville);
 	const typePhoto = $derived(data.typePhoto);
 	const seo = $derived(data.seo);
+
+	const allCities = Object.values(villesSEO);
+
+	const intentionsList = [
+		{ slug: 'e-photo-ants-en-ligne', label: 'e-Photo ANTS' },
+		{ slug: 'photo-identite-en-ligne', label: 'Photo d\'identité' },
+		{ slug: 'photo-passeport-en-ligne', label: 'Photo de passeport' },
+		{ slug: 'photo-carte-identite-en-ligne', label: 'Photo carte d\'identité' },
+		{ slug: 'portrait-professionnel-en-ligne', label: 'Portrait professionnel' }
+	];
+
+	// Génération des données structurées JSON-LD pour Google
+	const jsonLd = $derived(JSON.stringify({
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'Service',
+				'name': seo.h1,
+				'provider': {
+					'@type': 'Organization',
+					'name': 'IDidem',
+					'url': 'https://ididem.com'
+				},
+				'areaServed': {
+					'@type': 'AdministrativeArea',
+					'name': `${ville.name}, ${ville.dep}`
+				},
+				'description': seo.description,
+				'url': `https://ididem.com/${typePhoto}/${ville.slug}`
+			},
+			{
+				'@type': 'FAQPage',
+				'mainEntity': seo.faqs.map((/** @type {{ q: string, a: string }} */ faq) => ({
+					'@type': 'Question',
+					'name': faq.q,
+					'acceptedAnswer': {
+						'@type': 'Answer',
+						'text': faq.a
+					}
+				}))
+			}
+		]
+	}));
 </script>
 
 <svelte:head>
 	<title>{seo.title}</title>
 	<meta name="description" content={seo.description} />
 	<link rel="canonical" href="https://ididem.com/{typePhoto}/{ville.slug}" />
+
+	<!-- Structured Data JSON-LD pour Google Indexing -->
+	{@html `<script type="application/ld+json">${jsonLd}</script>`}
 </svelte:head>
 
 <div class="seo-landing-container">
@@ -30,74 +75,62 @@
 	<!-- Hero Section -->
 	<section class="hero-section">
 		<div class="hero-content">
-			<span class="badge-local">📍 SERVICE DISPONIBLE À {ville.name.toUpperCase()}</span>
+			<span class="badge-local">{seo.badge}</span>
 			<h1>{seo.h1}</h1>
 			<p class="hero-subtitle">
-				{#if seo.focusFormula === 'e-photo'}
-					Réalisez vos photos d'identité numériques et signatures agréées ANTS directement depuis chez vous {ville.prepArticle}. 
-					Plus besoin de chercher une cabine de photographie agréée ou de vous déplacer.
-				{:else if seo.focusFormula === 'casual'}
-					Donnez une dimension professionnelle à votre profil LinkedIn, votre CV et vos réseaux. 
-					Un détourage photo intelligent par IA avec des fonds de studio professionnels en 2 minutes {ville.prepArticle}.
-				{:else}
-					Évitez de chercher une cabine Photomaton ou un photographe {ville.prepArticle}. 
-					Prenez vos photos de carte d'identité ou de passeport directement en ligne, garanties conformes ANTS.
-				{/if}
+				{seo.heroSubtitle}
 			</p>
 			
 			<div class="hero-ctas">
 				<a href="/photo?formula={seo.focusFormula || 'officielle'}" class="btn-main-cta">
-					{#if seo.focusFormula === 'casual'}
-						Créer mon portrait professionnel
-					{:else if seo.focusFormula === 'e-photo'}
-						Faire ma e-photo ANTS
-					{:else}
-						Prendre ma photo d'identité
-					{/if}
+					{seo.ctaText} →
 				</a>
-				<span class="cta-sub">Temps de capture moyen : 2 minutes • Conforme à 100%</span>
+				<span class="cta-sub">Temps de réalisation : 2 minutes • Garantie conformité 100%</span>
 			</div>
 		</div>
 
-		<!-- Reassurance Badges -->
+		<!-- Reassurance Badges spécifiques -->
 		<div class="reassurance-grid">
 			<div class="reassure-card">
 				<span class="icon">🏛️</span>
-				<h3>Mairie de {ville.name}</h3>
-				<p>Vos planches photos sont garanties conformes pour vos rendez-vous de passeport et carte d'identité, en mairie ou préfecture.</p>
+				<h3>{ville.mairie}</h3>
+				<p>Conformité garantie pour vos démarches en mairie ou préfecture dans le département {ville.dep}.</p>
 			</div>
 			<div class="reassure-card">
 				<span class="icon">🛂</span>
 				<h3>{ville.prefecture}</h3>
-				<p>Fichiers numériques aux normes réglementaires du ministère de l'Intérieur pour le département {ville.dep}.</p>
+				<p>Fichiers biométriques validés aux exigences du ministère de l'Intérieur ({ville.region}).</p>
 			</div>
 			<div class="reassure-card">
 				<span class="icon">🛡️</span>
-				<h3>Tutoriel Optimisé</h3>
-				<p>En suivant notre tuto, conçu par notre équipe de photographes professionnels, vos photos seront acceptées à 100% par l'administration française.</p>
+				<h3> Photographes Pros</h3>
+				<p>Conçu par des artisans photographes experts en identité biométrique depuis plus de 20 ans.</p>
 			</div>
 		</div>
 	</section>
 
-	<!-- How it works -->
+	<!-- Local Spec Section (Spécifique par intention et ville) -->
+	<section class="local-spec-section">
+		<div class="spec-card">
+			<div class="spec-icon">📍</div>
+			<div class="spec-body">
+				<h2>{seo.specTitle}</h2>
+				<p>{seo.specText}</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- How it works (Spécifique par intention) -->
 	<section class="how-it-works">
-		<h2>Comment réaliser vos photos {ville.prepArticle} ?</h2>
+		<h2>{seo.stepsTitle}</h2>
 		<div class="steps-row">
-			<div class="step-card">
-				<div class="step-num">1</div>
-				<h3>Sélectionnez votre formule</h3>
-				<p>Permis de conduire out titre de séjour en E-photo 100% conforme ANTS, passeport, carte d'identité ou portrait professionnel LinkedIn.</p>
-			</div>
-			<div class="step-card">
-				<div class="step-num">2</div>
-				<h3>Prenez-vous en photo</h3>
-				<p>Suivez notre guide visuel interactif en ligne. Notre viseur s'occupe de l'alignement parfait.</p>
-			</div>
-			<div class="step-card">
-				<div class="step-num">3</div>
-				<h3>Détourage & Téléchargement</h3>
-				<p>Notre IA supprime l'arrière-plan pour appliquer le fond réglementaire. Téléchargez vos clichés immédiatement.</p>
-			</div>
+			{#each seo.steps as step}
+				<div class="step-card">
+					<div class="step-num">{step.num}</div>
+					<h3>{step.title}</h3>
+					<p>{step.desc}</p>
+				</div>
+			{/each}
 		</div>
 	</section>
 
@@ -108,22 +141,22 @@
 				<span class="expertise-badge">💡 UNE CONCEPTION UNIQUE</span>
 				<h2>Une application conçue par des photographes professionnels</h2>
 				<p class="lead-text">
-					Faire une photo d'identité réglementaire est un métier de précision qui ne s'invente pas. 
+					Faire une photo d'identité réglementaire est un métier de précision. 
 					IDidem a été développée par des artisans photographes cumulant <strong>20 ans d'expérience</strong> dans l'identité biométrique.
 				</p>
 				<div class="expertise-arguments">
 					<div class="arg-item">
-						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA ?</h4>
+						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA automatique ?</h4>
 						<p>
-							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle. 
-							Pourtant, à l'usage, l'IA valide plus de 98% de photos non conformes (par exemple, si vous esquissez un léger sourire ou si vos yeux ne fixent pas l'objectif). Le verdict final en mairie ou préfecture est alors le rejet.
+							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle générative. 
+							Pourtant, à l'usage, l'IA pure valide plus de 98% de photos non conformes (léger sourire, regard légèrement décalé). Le verdict final en mairie ou préfecture est alors le rejet direct de votre dossier.
 						</p>
 					</div>
 					<div class="arg-item">
-						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS</h4>
+						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS guidé par des Pros</h4>
 						<p>
 							Chez IDidem, nous ne laissons rien au hasard. Toutes les étapes de capture et de cadrage ont été minutieusement pensées à partir des cahiers des charges réels de l'ANTS, des mairies et des préfectures. 
-							C'est notre tutoriel interactif précis et nos repères qui vous responsabilisent et vous guident pas à pas, pour que vous preniez votre cliché en parfaite connaissance de cause.
+							Notre tutoriel interactif précis et nos repères vous responsabilisent et vous guident pas à pas pour un cliché accepté du premier coup.
 						</p>
 					</div>
 				</div>
@@ -133,33 +166,33 @@
 
 	<!-- Product formulas selection -->
 	<section class="formulas-section">
-		<h2>Nos formules photo en ligne</h2>
+		<h2>Nos formules disponibles {ville.prepArticle}</h2>
 		<p class="section-desc">Des tarifs transparents, sans abonnement, pour toutes vos démarches administratives.</p>
 		
 		<div class="formulas-grid">
 			<!-- Formula 1: E-Photo ANTS -->
 			<div class="formula-card" class:highlighted={seo.focusFormula === 'e-photo'}>
 				{#if seo.focusFormula === 'e-photo'}
-					<div class="card-badge">CIBLÉ POUR VOTRE DEMANDE</div>
+					<div class="card-badge">RECOMMANDÉ POUR VOTRE RECHERCHE</div>
 				{/if}
 				<div class="card-header">
 					<h3>e-Photo ANTS</h3>
 					<span class="price">6,99 €</span>
 				</div>
-				<p class="formula-desc">Permis de conduire & Titre de séjour. Inclus le code ANTS et la signature en visioconférence.</p>
+				<p class="formula-desc">Permis de conduire & Titre de séjour. Inclus le code ANTS à 22 caractères et la signature numérisée.</p>
 				<ul class="features-list">
-					<li>✓ Code photo unique ANTS fourni</li>
+					<li>✓ Code photo-signature unique ANTS</li>
 					<li>✓ Signature électronique sur smartphone</li>
-					<li>✓ Visioconférence instantanée avec notre agent</li>
+					<li>✓ Visioconférence sécurisée avec notre agent</li>
 					<li>✓ Garantie conformité 100%</li>
 				</ul>
-				<a href="/photo?formula=e-photo" class="btn-select">Choisir cette formule</a>
+				<a href="/photo?formula=e-photo" class="btn-select">Choisir la e-Photo ANTS</a>
 			</div>
 
 			<!-- Formula 2: Photo officielle -->
-			<div class="formula-card" class:highlighted={seo.focusFormula === 'officielle' || (!seo.focusFormula && seo.focusFormula !== 'casual' && seo.focusFormula !== 'e-photo')}>
+			<div class="formula-card" class:highlighted={seo.focusFormula === 'officielle'}>
 				{#if seo.focusFormula === 'officielle'}
-					<div class="card-badge">CIBLÉ POUR VOTRE DEMANDE</div>
+					<div class="card-badge">RECOMMANDÉ POUR VOTRE RECHERCHE</div>
 				{/if}
 				<div class="card-header">
 					<h3>Officielle Norme OACI</h3>
@@ -168,17 +201,17 @@
 				<p class="formula-desc">Carte d'identité nationale, Passeport, Visa, Carte vitale. Format planche 35x45mm.</p>
 				<ul class="features-list">
 					<li>✓ Planche de 6 photos haute définition</li>
-					<li>✓ Fond bleu/gris conforme France</li>
-					<li>✓ Option Fond Blanc (Maghreb)</li>
+					<li>✓ Fond uni (gris ou bleu) conforme France</li>
+					<li>✓ Option Fond Blanc (Maghreb / Visas)</li>
 					<li>✓ Téléchargement numérique immédiat</li>
 				</ul>
-				<a href="/photo?formula=officielle" class="btn-select">Choisir cette formule</a>
+				<a href="/photo?formula=officielle" class="btn-select">Choisir la Photo Officielle</a>
 			</div>
 
 			<!-- Formula 3: Portrait LinkedIn / CV -->
 			<div class="formula-card" class:highlighted={seo.focusFormula === 'casual'}>
 				{#if seo.focusFormula === 'casual'}
-					<div class="card-badge">CIBLÉ POUR VOTRE DEMANDE</div>
+					<div class="card-badge">RECOMMANDÉ POUR VOTRE RECHERCHE</div>
 				{/if}
 				<div class="card-header">
 					<h3>Portrait Pro LinkedIn</h3>
@@ -191,26 +224,47 @@
 					<li>✓ Pipette de couleur personnalisée</li>
 					<li>✓ Téléchargement haute résolution</li>
 				</ul>
-				<a href="/photo?formula=casual" class="btn-select">Choisir cette formule</a>
+				<a href="/photo?formula=casual" class="btn-select">Choisir le Portrait Pro</a>
 			</div>
 		</div>
 	</section>
 
 	<!-- Local FAQ section -->
 	<section class="faq-section">
-		<h2>Questions fréquentes à {ville.name}</h2>
+		<h2>Questions fréquentes {ville.prepArticle} ({ville.dep})</h2>
 		<div class="faq-grid">
-			<div class="faq-item">
-				<h4>Puis-je utiliser ces photos pour ma carte d'identité à la mairie de {ville.name} ?</h4>
-				<p>Oui, absolument. Notre service produit des fichiers strictement conformes aux normes administratives françaises et internationales (norme ISO/IEC 19794-5). Ils sont parfaitement acceptés dans toutes les mairies de {ville.name}.</p>
+			{#each seo.faqs as faq}
+				<div class="faq-item">
+					<h4>{faq.q}</h4>
+					<p>{faq.a}</p>
+				</div>
+			{/each}
+		</div>
+	</section>
+
+	<!-- Internal Linking Block (Crucial pour le Crawl Googlebot) -->
+	<section class="internal-linking-section">
+		<div class="linking-container">
+			<h3>Autre service photo {ville.prepArticle} :</h3>
+			<div class="linking-chips">
+				{#each intentionsList as item}
+					{#if item.slug !== typePhoto}
+						<a href="/{item.slug}/{ville.slug}" class="chip-link">
+							{item.label} {ville.prepArticle}
+						</a>
+					{/if}
+				{/each}
 			</div>
-			<div class="faq-item">
-				<h4>Quelle est la différence avec une cabine Photomaton classique {ville.prepArticle} ?</h4>
-				<p>Chez IDidem, vous prenez la photo chez vous au calme, vous pouvez recommencer autant de fois que vous le souhaitez gratuitement, et notre outil s'occupe de créer un détourage et un fond uni parfait par intelligence artificielle.</p>
-			</div>
-			<div class="faq-item">
-				<h4>Comment fonctionne la e-photo pour le permis de conduire ?</h4>
-				<p>Après capture de votre photo, vous planifiez un court appel de visioconférence sécurisé pour signer directement à l'écran. Vous obtenez immédiatement votre code photo-signature numérique à reporter sur le site de l'ANTS.</p>
+
+			<h3 style="margin-top: 2rem;">Photos d'identité disponibles dans d'autres villes :</h3>
+			<div class="linking-chips">
+				{#each allCities as c}
+					{#if c.slug !== ville.slug}
+						<a href="/{typePhoto}/{c.slug}" class="chip-link">
+							{c.name} ({c.depNum})
+						</a>
+					{/if}
+				{/each}
 			</div>
 		</div>
 	</section>
@@ -251,11 +305,6 @@
 					<div class="phone-mockup-real">
 						<img src="/assets/app-screenshot-1.png" alt="Interface IDidem pour formats internationaux" class="phone-main-screenshot" />
 					</div>
-					<div class="app-screenshots-strip">
-						<img src="/assets/app-screenshot-2.png" alt="Guides intelligents de prise de vue IDidem" />
-						<img src="/assets/app-screenshot-3.png" alt="Détourage IA et validation de portrait IDidem" />
-						<img src="/assets/app-screenshot-4.png" alt="Récapitulatif de commande de planche IDidem" />
-					</div>
 				</div>
 			</div>
 		</div>
@@ -282,7 +331,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 1.25rem 5%;
-		background: var(--white, #ffffff);
+		background: #ffffff;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 
@@ -298,22 +347,22 @@
 		height: 36px;
 	}
 
-	.landing-header .brand-name {
+	.brand-name {
+		font-size: 1.35rem;
 		font-weight: 800;
-		font-size: 1.25rem;
-		color: #1e3a8a;
-		letter-spacing: -0.025em;
+		color: #0f172a;
+		letter-spacing: -0.02em;
 	}
 
 	.btn-primary-sm {
-		background: #1e3a8a;
+		background: #2563eb;
 		color: #ffffff;
 		padding: 0.5rem 1rem;
-		border-radius: 0.375rem;
+		border-radius: 8px;
 		font-weight: 600;
-		font-size: 0.875rem;
+		font-size: 0.9rem;
 		text-decoration: none;
-		transition: background 0.2s ease;
+		transition: background 0.2s;
 	}
 
 	.btn-primary-sm:hover {
@@ -322,421 +371,457 @@
 
 	/* Hero */
 	.hero-section {
-		padding: 5rem 5% 4rem;
-		background: radial-gradient(circle at top right, rgba(224, 242, 254, 0.4) 0%, rgba(255, 255, 255, 0) 60%), #ffffff;
+		padding: 3.5rem 5% 2.5rem;
+		max-width: 1100px;
+		margin: 0 auto;
 		text-align: center;
 	}
 
 	.badge-local {
-		background: #e0f2fe;
-		color: #0369a1;
-		font-size: 0.75rem;
-		font-weight: 800;
-		padding: 0.35rem 0.85rem;
-		border-radius: 9999px;
-		letter-spacing: 0.05em;
 		display: inline-block;
-		margin-bottom: 1.5rem;
+		background: #dbeafe;
+		color: #1e40af;
+		font-weight: 700;
+		font-size: 0.8rem;
+		padding: 0.35rem 0.85rem;
+		border-radius: 999px;
+		letter-spacing: 0.05em;
+		margin-bottom: 1.25rem;
 	}
 
 	.hero-section h1 {
-		font-size: 2.75rem;
-		font-weight: 800;
+		font-size: clamp(1.8rem, 4vw, 2.75rem);
+		font-weight: 900;
 		color: #0f172a;
-		max-width: 900px;
-		margin: 0 auto 1.5rem;
 		line-height: 1.2;
+		margin-bottom: 1.25rem;
 		letter-spacing: -0.03em;
 	}
 
 	.hero-subtitle {
-		font-size: 1.2rem;
+		font-size: 1.15rem;
 		color: #475569;
-		max-width: 750px;
-		margin: 0 auto 2.5rem;
+		max-width: 780px;
+		margin: 0 auto 2rem;
 	}
 
 	.hero-ctas {
-		margin-bottom: 4rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
 	}
 
 	.btn-main-cta {
-		display: inline-block;
 		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 		color: #ffffff;
-		padding: 1rem 2.25rem;
-		border-radius: 0.5rem;
+		font-size: 1.2rem;
 		font-weight: 700;
-		font-size: 1.125rem;
+		padding: 1rem 2.25rem;
+		border-radius: 12px;
 		text-decoration: none;
-		box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+		transition: transform 0.2s, box-shadow 0.2s;
 	}
 
 	.btn-main-cta:hover {
-		transform: translateY(-1px);
-		box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
 	}
 
 	.cta-sub {
-		display: block;
-		font-size: 0.875rem;
+		font-size: 0.85rem;
 		color: #64748b;
-		margin-top: 0.75rem;
 	}
 
-	/* Reassurance Cards */
+	/* Reassurance */
 	.reassurance-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 2rem;
-		max-width: 1100px;
-		margin: 0 auto;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+		margin-top: 3rem;
 		text-align: left;
 	}
 
 	.reassure-card {
-		background: #f8fafc;
-		padding: 2rem;
-		border-radius: 0.75rem;
+		background: #ffffff;
+		padding: 1.5rem;
+		border-radius: 14px;
 		border: 1px solid #e2e8f0;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 	}
 
 	.reassure-card .icon {
-		font-size: 2.25rem;
+		font-size: 1.75rem;
+		margin-bottom: 0.75rem;
 		display: block;
-		margin-bottom: 1rem;
 	}
 
 	.reassure-card h3 {
-		font-size: 1.15rem;
+		font-size: 1.05rem;
 		font-weight: 700;
 		color: #0f172a;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.4rem;
 	}
 
 	.reassure-card p {
-		font-size: 0.925rem;
-		color: #475569;
+		font-size: 0.9rem;
+		color: #64748b;
+		margin: 0;
+	}
+
+	/* Local Spec Section */
+	.local-spec-section {
+		max-width: 1100px;
+		margin: 0 auto 3rem;
+		padding: 0 5%;
+	}
+
+	.spec-card {
+		display: flex;
+		gap: 1.25rem;
+		align-items: flex-start;
+		background: #eff6ff;
+		border: 1px solid #bfdbfe;
+		border-radius: 14px;
+		padding: 1.5rem;
+	}
+
+	.spec-icon {
+		font-size: 2rem;
+		flex-shrink: 0;
+	}
+
+	.spec-body h2 {
+		font-size: 1.2rem;
+		font-weight: 800;
+		color: #1e40af;
+		margin-bottom: 0.5rem;
+	}
+
+	.spec-body p {
+		font-size: 0.95rem;
+		color: #1e3a8a;
 		margin: 0;
 	}
 
 	/* How it works */
 	.how-it-works {
-		padding: 5rem 5%;
+		background: #ffffff;
+		padding: 4rem 5%;
+		border-top: 1px solid #e2e8f0;
+		border-bottom: 1px solid #e2e8f0;
 		text-align: center;
-		background: #f1f5f9;
 	}
 
 	.how-it-works h2 {
-		font-size: 2rem;
+		font-size: 1.8rem;
 		font-weight: 800;
 		color: #0f172a;
-		margin-bottom: 3rem;
+		margin-bottom: 2.5rem;
 	}
 
 	.steps-row {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 2.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 2rem;
 		max-width: 1100px;
 		margin: 0 auto;
 	}
 
 	.step-card {
-		background: #ffffff;
-		padding: 2.5rem 2rem;
-		border-radius: 0.75rem;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 		position: relative;
+		padding: 2rem 1.5rem;
+		background: #f8fafc;
+		border-radius: 16px;
+		border: 1px solid #e2e8f0;
+		text-align: center;
 	}
 
 	.step-num {
-		position: absolute;
-		top: -1.25rem;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 2.5rem;
-		height: 2.5rem;
+		width: 42px;
+		height: 42px;
 		background: #2563eb;
 		color: #ffffff;
+		font-weight: 800;
+		font-size: 1.25rem;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-weight: 800;
-		box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		margin: 0 auto 1.25rem;
 	}
 
 	.step-card h3 {
-		font-size: 1.25rem;
+		font-size: 1.1rem;
 		font-weight: 700;
-		color: #0f172a;
-		margin: 0.5rem 0 1rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.step-card p {
-		font-size: 0.925rem;
+		font-size: 0.9rem;
+		color: #64748b;
+		margin: 0;
+	}
+
+	/* Expertise Section */
+	.expertise-section {
+		padding: 4rem 5%;
+		background: #f8fafc;
+	}
+
+	.expertise-container {
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	.expertise-badge {
+		color: #2563eb;
+		font-weight: 700;
+		font-size: 0.85rem;
+		letter-spacing: 0.05em;
+	}
+
+	.expertise-content h2 {
+		font-size: 1.8rem;
+		font-weight: 800;
+		margin: 0.5rem 0 1rem;
+	}
+
+	.lead-text {
+		font-size: 1.1rem;
+		color: #475569;
+		margin-bottom: 2rem;
+	}
+
+	.expertise-arguments {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1.75rem;
+	}
+
+	.arg-item {
+		background: #ffffff;
+		padding: 1.75rem;
+		border-radius: 14px;
+		border: 1px solid #e2e8f0;
+	}
+
+	.arg-item h4 {
+		font-size: 1.1rem;
+		font-weight: 700;
+		margin-bottom: 0.75rem;
+		color: #0f172a;
+	}
+
+	.arg-item p {
+		font-size: 0.92rem;
 		color: #475569;
 		margin: 0;
 	}
 
 	/* Formulas */
 	.formulas-section {
-		padding: 6rem 5%;
+		padding: 4rem 5%;
+		max-width: 1100px;
+		margin: 0 auto;
 		text-align: center;
-		background: #ffffff;
 	}
 
 	.formulas-section h2 {
-		font-size: 2.25rem;
+		font-size: 1.8rem;
 		font-weight: 800;
-		color: #0f172a;
 		margin-bottom: 0.5rem;
 	}
 
 	.section-desc {
 		color: #64748b;
-		font-size: 1.1rem;
-		margin-bottom: 4rem;
+		margin-bottom: 2.5rem;
 	}
 
 	.formulas-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-		gap: 2.5rem;
-		max-width: 1100px;
-		margin: 0 auto;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 2rem;
 		text-align: left;
 	}
 
 	.formula-card {
-		background: #f8fafc;
-		border: 1px solid #e2e8f0;
-		border-radius: 1rem;
-		padding: 2.5rem 2rem;
+		background: #ffffff;
+		border: 2px solid #e2e8f0;
+		border-radius: 18px;
+		padding: 2rem;
+		position: relative;
 		display: flex;
 		flex-direction: column;
-		position: relative;
 	}
 
 	.formula-card.highlighted {
-		border-color: #3b82f6;
-		box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
-		background: linear-gradient(to bottom, #ffffff, #f8fafc);
+		border-color: #2563eb;
+		box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
 	}
 
 	.card-badge {
 		position: absolute;
-		top: -0.75rem;
-		right: 2rem;
-		background: #3b82f6;
+		top: -12px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: #2563eb;
 		color: #ffffff;
-		font-size: 0.65rem;
+		font-size: 0.7rem;
 		font-weight: 800;
 		padding: 0.25rem 0.75rem;
-		border-radius: 9999px;
-		letter-spacing: 0.05em;
+		border-radius: 999px;
+		white-space: nowrap;
 	}
 
 	.card-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: baseline;
+		align-items: center;
 		margin-bottom: 1rem;
 	}
 
 	.card-header h3 {
-		font-size: 1.35rem;
+		font-size: 1.25rem;
 		font-weight: 800;
-		color: #0f172a;
+
 	}
 
 	.price {
-		font-size: 1.75rem;
+		font-size: 1.4rem;
 		font-weight: 900;
-		color: #1e3a8a;
+		color: #2563eb;
 	}
 
 	.formula-desc {
-		font-size: 0.95rem;
-		color: #475569;
-		margin-bottom: 2rem;
-		min-height: 3.5rem;
+		font-size: 0.9rem;
+		color: #64748b;
+		margin-bottom: 1.5rem;
+		min-height: 48px;
 	}
 
 	.features-list {
 		list-style: none;
 		padding: 0;
-		margin: 0 0 2.5rem;
-		flex-grow: 1;
-	}
-
-	.features-list li {
+		margin: 0 0 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.65rem;
 		font-size: 0.9rem;
 		color: #334155;
-		margin-bottom: 0.75rem;
 	}
 
 	.btn-select {
+		margin-top: auto;
 		display: block;
 		text-align: center;
-		background: #ffffff;
-		color: #1e3a8a;
-		border: 1px solid #cbd5e1;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
+		background: #f1f5f9;
+		color: #0f172a;
 		font-weight: 700;
+		padding: 0.85rem;
+		border-radius: 10px;
 		text-decoration: none;
-		transition: all 0.2s ease;
-	}
-
-	.btn-select:hover {
-		background: #1e3a8a;
-		color: #ffffff;
-		border-color: #1e3a8a;
+		transition: background 0.2s;
 	}
 
 	.formula-card.highlighted .btn-select {
-		background: #3b82f6;
+		background: #2563eb;
 		color: #ffffff;
-		border-color: #3b82f6;
 	}
 
-	.formula-card.highlighted .btn-select:hover {
-		background: #1d4ed8;
-		border-color: #1d4ed8;
+	.btn-select:hover {
+		opacity: 0.9;
 	}
 
 	/* FAQ */
 	.faq-section {
-		padding: 6rem 5%;
-		background: #f8fafc;
+		background: #ffffff;
+		padding: 4rem 5%;
+		border-top: 1px solid #e2e8f0;
 	}
 
 	.faq-section h2 {
-		font-size: 2rem;
-		font-weight: 800;
-		color: #0f172a;
 		text-align: center;
-		margin-bottom: 4rem;
+		font-size: 1.8rem;
+		font-weight: 800;
+		margin-bottom: 2.5rem;
 	}
 
 	.faq-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-		gap: 3rem;
-		max-width: 1100px;
+		max-width: 900px;
 		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.faq-item {
+		background: #f8fafc;
+		padding: 1.5rem;
+		border-radius: 12px;
+		border: 1px solid #e2e8f0;
 	}
 
 	.faq-item h4 {
-		font-size: 1.1rem;
+		font-size: 1.05rem;
 		font-weight: 700;
 		color: #0f172a;
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.faq-item p {
-		font-size: 0.95rem;
+		font-size: 0.92rem;
 		color: #475569;
 		margin: 0;
 	}
 
-	/* Footer */
-	.landing-footer {
+	/* Internal Linking Block */
+	.internal-linking-section {
 		background: #0f172a;
-		color: #94a3b8;
-		padding: 3rem 5%;
-		text-align: center;
-		font-size: 0.875rem;
-		border-top: 1px solid #1e293b;
+		color: #f8fafc;
+		padding: 3.5rem 5%;
 	}
 
-	@media (max-width: 768px) {
-		.hero-section h1 {
-			font-size: 2rem;
-		}
-
-		.faq-grid {
-			grid-template-columns: 1fr;
-			gap: 2rem;
-		}
-	}
-
-	/* Expertise Section */
-	.expertise-section {
-		padding: 5rem 5%;
-		background: #ffffff;
-		border-top: 1px solid #e2e8f0;
-		border-bottom: 1px solid #e2e8f0;
-	}
-
-	.expertise-container {
+	.linking-container {
 		max-width: 1100px;
 		margin: 0 auto;
-		text-align: left;
 	}
 
-	.expertise-badge {
-		background: #fef3c7;
-		color: #d97706;
-		font-size: 0.75rem;
-		font-weight: 800;
-		padding: 0.35rem 0.85rem;
-		border-radius: 9999px;
-		letter-spacing: 0.05em;
-		display: inline-block;
+	.linking-container h3 {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: #94a3b8;
 		margin-bottom: 1rem;
 	}
 
-	.expertise-content h2 {
-		font-size: 2rem;
-		font-weight: 800;
-		color: #0f172a;
-		margin-bottom: 1.5rem;
-		line-height: 1.3;
+	.linking-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
 	}
 
-	.lead-text {
-		font-size: 1.1rem;
-		color: #475569;
-		margin-bottom: 3rem;
+	.chip-link {
+		background: #1e293b;
+		color: #cbd5e1;
+		padding: 0.4rem 0.85rem;
+		border-radius: 8px;
+		font-size: 0.85rem;
+		text-decoration: none;
+		border: 1px solid #334155;
+		transition: background 0.2s, color 0.2s;
 	}
 
-	.expertise-arguments {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 2.5rem;
-	}
-
-	.arg-item {
-		background: #f8fafc;
-		padding: 2rem;
-		border-radius: 0.75rem;
-		border-left: 4px solid #3b82f6;
-	}
-
-	.arg-item h4 {
-		font-size: 1.1rem;
-		font-weight: 700;
-		color: #0f172a;
-		margin-bottom: 0.75rem;
-	}
-
-	.arg-item p {
-		font-size: 0.925rem;
-		color: #475569;
-		margin: 0;
-		line-height: 1.5;
-	}
-
-	/* App Mobile Section */
-	.app-mobile-section {
-		padding: 5rem 5%;
-		background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+	.chip-link:hover {
+		background: #2563eb;
 		color: #ffffff;
-		border-top: 1px solid #1e293b;
+		border-color: #2563eb;
+	}
+
+	/* App Mobile */
+	.app-mobile-section {
+		padding: 4rem 5%;
+		background: #f8fafc;
 	}
 
 	.app-mobile-container {
@@ -745,50 +830,41 @@
 	}
 
 	.app-mobile-card {
-		display: grid;
-		grid-template-columns: 1.2fr 0.8fr;
-		gap: 4rem;
+		background: #ffffff;
+		border-radius: 20px;
+		border: 1px solid #e2e8f0;
+		padding: 3rem;
+		display: flex;
+		gap: 3rem;
 		align-items: center;
-		text-align: left;
+	}
+
+	.app-mobile-text {
+		flex: 1;
 	}
 
 	.app-badge {
-		background: #2563eb;
-		color: #ffffff;
-		font-size: 0.75rem;
+		color: #2563eb;
+		font-size: 0.8rem;
 		font-weight: 800;
-		padding: 0.35rem 0.85rem;
-		border-radius: 9999px;
 		letter-spacing: 0.05em;
-		display: inline-block;
-		margin-bottom: 1.5rem;
 	}
 
 	.app-mobile-text h2 {
-		font-size: 2.25rem;
+		font-size: 1.6rem;
 		font-weight: 800;
-		margin: 0 0 1.5rem 0;
-		line-height: 1.25;
-		color: #ffffff;
-	}
-
-	.app-mobile-text p {
-		color: #cbd5e1;
-		font-size: 1.1rem;
-		margin: 0 0 1.25rem 0;
-		line-height: 1.6;
+		margin: 0.5rem 0 1rem;
 	}
 
 	.app-details {
-		font-size: 0.95rem !important;
-		color: #94a3b8 !important;
+		font-size: 0.95rem;
+		color: #64748b;
+		margin-bottom: 1.5rem;
 	}
 
 	.store-buttons {
 		display: flex;
 		gap: 1rem;
-		margin-top: 2rem;
-		flex-wrap: wrap;
 	}
 
 	.store-btn {
@@ -796,18 +872,10 @@
 		align-items: center;
 		gap: 0.75rem;
 		background: #0f172a;
-		border: 1px solid #334155;
-		padding: 0.6rem 1.25rem;
-		border-radius: 0.5rem;
 		color: #ffffff;
+		padding: 0.65rem 1.25rem;
+		border-radius: 10px;
 		text-decoration: none;
-		transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-	}
-
-	.store-btn:hover {
-		transform: translateY(-2px);
-		border-color: #475569;
-		background: #1e293b;
 	}
 
 	.store-icon {
@@ -817,83 +885,47 @@
 	.store-btn-text {
 		display: flex;
 		flex-direction: column;
-		text-align: left;
 	}
 
-	.store-btn-text .sub-text {
-		font-size: 0.6rem;
+	.sub-text {
+		font-size: 0.65rem;
 		color: #94a3b8;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		line-height: 1.2;
 	}
 
-	.store-btn-text .main-text {
+	.main-text {
 		font-size: 0.95rem;
 		font-weight: 700;
-		line-height: 1.2;
 	}
 
-	/* Phone Mockup with Real Screenshots */
-	.phone-mockup-real {
-		width: 280px;
-		margin: 0 auto 1.5rem auto;
-		border-radius: 1.75rem;
-		overflow: hidden;
-		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-		border: 6px solid #334155;
-		background: #000;
+	.app-mobile-visual {
+		flex: 1;
+		display: flex;
+		justify-content: center;
 	}
 
 	.phone-main-screenshot {
-		width: 100%;
-		height: auto;
-		display: block;
+		max-width: 260px;
+		border-radius: 16px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 	}
 
-	.app-screenshots-strip {
-		display: flex;
-		gap: 0.75rem;
-		justify-content: center;
-		flex-wrap: nowrap;
-	}
-
-	.app-screenshots-strip img {
-		width: 90px;
-		height: auto;
-		border-radius: 0.5rem;
-		border: 2px solid #334155;
-		opacity: 0.8;
-		transition: opacity 0.2s ease, transform 0.2s ease;
-		cursor: pointer;
-	}
-
-	.app-screenshots-strip img:hover {
-		opacity: 1;
-		transform: scale(1.08);
+	/* Footer */
+	.landing-footer {
+		text-align: center;
+		padding: 2rem 5%;
+		background: #020617;
+		color: #64748b;
+		font-size: 0.85rem;
 	}
 
 	@media (max-width: 768px) {
 		.app-mobile-card {
-			grid-template-columns: 1fr;
-			text-align: center;
-			gap: 2rem;
-		}
-
-		.app-mobile-text h2 {
-			font-size: 1.75rem;
+			flex-direction: column;
+			padding: 2rem 1.5rem;
 		}
 
 		.store-buttons {
-			justify-content: center;
-		}
-
-		.phone-mockup-real {
-			width: 200px;
-		}
-
-		.app-screenshots-strip img {
-			width: 70px;
+			flex-direction: column;
 		}
 	}
 </style>

@@ -4,10 +4,13 @@
  * @typedef {Object} VilleSEO
  * @property {string} slug - Le paramètre d'URL (ex: 'paris', 'le-havre')
  * @property {string} name - Le nom propre de la ville (ex: 'Paris', 'Le Havre')
- * @property {string} prep - La préposition devant le nom (ex: 'à', 'au', 'aux')
+ * @property {string} prep - La préposition devant le nom (ex: 'à', 'au')
  * @property {string} prepArticle - Préposition + article combinés (ex: 'à Paris', 'au Havre')
  * @property {string} dep - Le numéro ou nom du département (ex: 'Paris (75)', 'Seine-Maritime (76)')
- * @property {string} prefecture - Le nom de la préfecture/commune associée (ex: 'la préfecture de Paris', 'la préfecture de la Seine-Maritime')
+ * @property {string} depNum - Le numéro du département seul (ex: '75', '76')
+ * @property {string} region - La région administrative (ex: 'Île-de-France', 'Normandie')
+ * @property {string} prefecture - Le nom de la préfecture/commune associée
+ * @property {string} mairie - Le nom de la mairie locale
  */
 
 /** @type {Record<string, VilleSEO>} */
@@ -18,7 +21,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Paris',
 		dep: 'Paris (75)',
-		prefecture: 'la préfecture de Paris'
+		depNum: '75',
+		region: 'Île-de-France',
+		prefecture: 'la Préfecture de Police de Paris',
+		mairie: 'les Mairies d\'arrondissement de Paris'
 	},
 	'marseille': {
 		slug: 'marseille',
@@ -26,7 +32,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Marseille',
 		dep: 'Bouches-du-Rhône (13)',
-		prefecture: 'la préfecture des Bouches-du-Rhône'
+		depNum: '13',
+		region: 'Provence-Alpes-Côte d\'Azur',
+		prefecture: 'la Préfecture des Bouches-du-Rhône',
+		mairie: 'l\'Hôtel de Ville de Marseille'
 	},
 	'lyon': {
 		slug: 'lyon',
@@ -34,7 +43,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Lyon',
 		dep: 'Rhône (69)',
-		prefecture: 'la préfecture du Rhône'
+		depNum: '69',
+		region: 'Auvergne-Rhône-Alpes',
+		prefecture: 'la Préfecture du Rhône',
+		mairie: 'l\'Hôtel de Ville de Lyon'
 	},
 	'toulouse': {
 		slug: 'toulouse',
@@ -42,7 +54,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Toulouse',
 		dep: 'Haute-Garonne (31)',
-		prefecture: 'la préfecture de Haute-Garonne'
+		depNum: '31',
+		region: 'Occitanie',
+		prefecture: 'la Préfecture de Haute-Garonne',
+		mairie: 'la Mairie du Capitole de Toulouse'
 	},
 	'nice': {
 		slug: 'nice',
@@ -50,7 +65,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Nice',
 		dep: 'Alpes-Maritimes (06)',
-		prefecture: 'la préfecture des Alpes-Maritimes'
+		depNum: '06',
+		region: 'Provence-Alpes-Côte d\'Azur',
+		prefecture: 'la Préfecture des Alpes-Maritimes',
+		mairie: 'la Mairie de Nice'
 	},
 	'nantes': {
 		slug: 'nantes',
@@ -58,7 +76,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Nantes',
 		dep: 'Loire-Atlantique (44)',
-		prefecture: 'la préfecture de Loire-Atlantique'
+		depNum: '44',
+		region: 'Pays de la Loire',
+		prefecture: 'la Préfecture de Loire-Atlantique',
+		mairie: 'la Mairie de Nantes'
 	},
 	'montpellier': {
 		slug: 'montpellier',
@@ -66,7 +87,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Montpellier',
 		dep: 'Hérault (34)',
-		prefecture: 'la préfecture de l\'Hérault'
+		depNum: '34',
+		region: 'Occitanie',
+		prefecture: 'la Préfecture de l\'Hérault',
+		mairie: 'la Mairie de Montpellier'
 	},
 	'strasbourg': {
 		slug: 'strasbourg',
@@ -74,7 +98,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Strasbourg',
 		dep: 'Bas-Rhin (67)',
-		prefecture: 'la préfecture du Bas-Rhin'
+		depNum: '67',
+		region: 'Grand Est',
+		prefecture: 'la Préfecture du Bas-Rhin',
+		mairie: 'l\'Hôtel de Ville de Strasbourg'
 	},
 	'bordeaux': {
 		slug: 'bordeaux',
@@ -82,7 +109,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Bordeaux',
 		dep: 'Gironde (33)',
-		prefecture: 'la préfecture de la Gironde'
+		depNum: '33',
+		region: 'Nouvelle-Aquitaine',
+		prefecture: 'la Préfecture de la Gironde',
+		mairie: 'la Mairie de Bordeaux'
 	},
 	'lille': {
 		slug: 'lille',
@@ -90,7 +120,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Lille',
 		dep: 'Nord (59)',
-		prefecture: 'la préfecture du Nord'
+		depNum: '59',
+		region: 'Hauts-de-France',
+		prefecture: 'la Préfecture du Nord',
+		mairie: 'l\'Hôtel de Ville de Lille'
 	},
 	'rennes': {
 		slug: 'rennes',
@@ -98,7 +131,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Rennes',
 		dep: 'Ille-et-Vilaine (35)',
-		prefecture: 'la préfecture d\'Ille-et-Vilaine'
+		depNum: '35',
+		region: 'Bretagne',
+		prefecture: 'la Préfecture d\'Ille-et-Vilaine',
+		mairie: 'la Mairie de Rennes'
 	},
 	'reims': {
 		slug: 'reims',
@@ -106,7 +142,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Reims',
 		dep: 'Marne (51)',
-		prefecture: 'la sous-préfecture de Reims'
+		depNum: '51',
+		region: 'Grand Est',
+		prefecture: 'la Sous-Préfecture de Reims',
+		mairie: 'la Mairie de Reims'
 	},
 	'toulon': {
 		slug: 'toulon',
@@ -114,7 +153,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Toulon',
 		dep: 'Var (83)',
-		prefecture: 'la préfecture du Var'
+		depNum: '83',
+		region: 'Provence-Alpes-Côte d\'Azur',
+		prefecture: 'la Préfecture du Var',
+		mairie: 'la Mairie de Toulon'
 	},
 	'saint-etienne': {
 		slug: 'saint-etienne',
@@ -122,15 +164,21 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Saint-Étienne',
 		dep: 'Loire (42)',
-		prefecture: 'la préfecture de la Loire'
+		depNum: '42',
+		region: 'Auvergne-Rhône-Alpes',
+		prefecture: 'la Préfecture de la Loire',
+		mairie: 'la Mairie de Saint-Étienne'
 	},
 	'le-havre': {
 		slug: 'le-havre',
 		name: 'Le Havre',
 		prep: 'au',
-		prepArticle: 'au Le Havre',
+		prepArticle: 'au Havre',
 		dep: 'Seine-Maritime (76)',
-		prefecture: 'la sous-préfecture du Havre'
+		depNum: '76',
+		region: 'Normandie',
+		prefecture: 'la Sous-Préfecture du Havre',
+		mairie: 'la Mairie du Havre'
 	},
 	'dijon': {
 		slug: 'dijon',
@@ -138,7 +186,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Dijon',
 		dep: 'Côte-d\'Or (21)',
-		prefecture: 'la préfecture de Côte-d\'Or'
+		depNum: '21',
+		region: 'Bourgogne-Franche-Comté',
+		prefecture: 'la Préfecture de Côte-d\'Or',
+		mairie: 'la Mairie de Dijon'
 	},
 	'grenoble': {
 		slug: 'grenoble',
@@ -146,7 +197,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Grenoble',
 		dep: 'Isère (38)',
-		prefecture: 'la préfecture de l\'Isère'
+		depNum: '38',
+		region: 'Auvergne-Rhône-Alpes',
+		prefecture: 'la Préfecture de l\'Isère',
+		mairie: 'la Mairie de Grenoble'
 	},
 	'angers': {
 		slug: 'angers',
@@ -154,7 +208,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Angers',
 		dep: 'Maine-et-Loire (49)',
-		prefecture: 'la préfecture de Maine-et-Loire'
+		depNum: '49',
+		region: 'Pays de la Loire',
+		prefecture: 'la Préfecture de Maine-et-Loire',
+		mairie: 'la Mairie d\'Angers'
 	},
 	'villeurbanne': {
 		slug: 'villeurbanne',
@@ -162,7 +219,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Villeurbanne',
 		dep: 'Rhône (69)',
-		prefecture: 'la préfecture du Rhône'
+		depNum: '69',
+		region: 'Auvergne-Rhône-Alpes',
+		prefecture: 'la Préfecture du Rhône',
+		mairie: 'la Mairie de Villeurbanne'
 	},
 	'nimes': {
 		slug: 'nimes',
@@ -170,7 +230,10 @@ export const villesSEO = {
 		prep: 'à',
 		prepArticle: 'à Nîmes',
 		dep: 'Gard (30)',
-		prefecture: 'la préfecture du Gard'
+		depNum: '30',
+		region: 'Occitanie',
+		prefecture: 'la Préfecture du Gard',
+		mairie: 'la Mairie de Nîmes'
 	}
 };
 
@@ -184,5 +247,8 @@ export const villeGenerique = {
 	prep: 'en',
 	prepArticle: 'en France',
 	dep: 'France',
-	prefecture: 'votre préfecture ou mairie locale'
+	depNum: 'FR',
+	region: 'France',
+	prefecture: 'votre préfecture ou mairie locale',
+	mairie: 'votre mairie locale'
 };
