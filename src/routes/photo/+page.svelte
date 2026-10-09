@@ -1195,7 +1195,7 @@ function capturePhoto() {
 
 									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 700; color: #27272a; cursor: pointer; font-size: 0.9rem; margin: 0; text-align: left;">
 										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.25rem; height: 1.25rem; accent-color: var(--blue-600); cursor: pointer; flex-shrink: 0; margin-top: 0.1rem;" />
-										<span style="line-height: 1.45;">Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+3,00 €)</span>
+										<span style="line-height: 1.45;">Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+2,00 €)</span>
 									</label>
 
 									{#if selectedFormula === 'e-photo'}
@@ -1241,7 +1241,7 @@ function capturePhoto() {
 											<span>Redirection...</span>
 										{:else}
 											<span style="display: block; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Payer</span>
-											<span style="display: block; font-size: 0.85rem; font-weight: 500; opacity: 0.9; margin-top: 0.15rem;">Montant : {selectedFormula === 'e-photo' ? (deliveryRequested ? '9,99' : '6,99') : selectedFormula === 'officielle' ? (deliveryRequested ? '7,99' : '4,99') : (deliveryRequested ? '5,99' : '2,99')} €</span>
+											<span style="display: block; font-size: 0.85rem; font-weight: 500; opacity: 0.9; margin-top: 0.15rem;">Montant : {selectedFormula === 'e-photo' ? (deliveryRequested ? '8,99' : '6,99') : selectedFormula === 'officielle' ? (deliveryRequested ? '6,99' : '4,99') : (deliveryRequested ? '4,99' : '2,99')} €</span>
 										{/if}
 									</button>
 								{:else}

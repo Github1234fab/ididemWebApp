@@ -60,7 +60,7 @@ export async function POST({ request }) {
 						name: 'Impression & Envoi postal premium',
 						description: `Planche photo imprimée de haute qualité expédiée par la poste à l'adresse de ${address.name || 'Client'}`
 					},
-					unit_amount: 300 // 3.00 €
+					unit_amount: 200 // 2.00 €
 				},
 				quantity: 1
 			});

@@ -1,6 +1,5 @@
-<!-- src/routes/[type_photo=intentions]/[ville]/+page.svelte -->
 <script>
-	import logoIdidem from '$lib/assets/favicon.svg';
+	const logoIdidem = '/logoIdidem_1024.png';
 	import { villesSEO } from '$lib/data/villes.js';
 
 	/** @type {{ data: { ville: import('$lib/data/villes').VilleSEO, typePhoto: string, seo: any } }} */
@@ -11,21 +10,13 @@
 
 	const allCities = Object.values(villesSEO);
 
-	const intentionsList = [
-		{ slug: 'e-photo-ants-en-ligne', label: 'e-Photo ANTS' },
-		{ slug: 'photo-identite-en-ligne', label: 'Photo d\'identité' },
-		{ slug: 'photo-passeport-en-ligne', label: 'Photo de passeport' },
-		{ slug: 'photo-carte-identite-en-ligne', label: 'Photo carte d\'identité' },
-		{ slug: 'portrait-professionnel-en-ligne', label: 'Portrait professionnel' }
-	];
-
-	// Génération des données structurées JSON-LD pour Google
+	// Génération des données structurées JSON-LD (FAQPage + HowTo) pour Google Rich Snippets
 	const jsonLd = $derived(JSON.stringify({
 		'@context': 'https://schema.org',
 		'@graph': [
 			{
 				'@type': 'Service',
-				'name': seo.h1,
+				'name': `Photos d'identité et e-photo ANTS à ${ville.name}`,
 				'provider': {
 					'@type': 'Organization',
 					'name': 'IDidem',
@@ -37,6 +28,31 @@
 				},
 				'description': seo.description,
 				'url': `https://ididem.com/${typePhoto}/${ville.slug}`
+			},
+			{
+				'@type': 'HowTo',
+				'name': `Comment faire ses photos d'identité ou e-photo ANTS à ${ville.name}`,
+				'description': `Guide étape par étape pour obtenir votre planche photo d'identité ou code e-photo ANTS à ${ville.name}.`,
+				'step': [
+					{
+						'@type': 'HowToStep',
+						'position': 1,
+						'name': 'Pré-demande ANTS',
+						'text': `Effectuez votre pré-demande de passeport, CNI ou permis sur le site officiel ANTS ou auprès de ${ville.mairie}.`
+					},
+					{
+						'@type': 'HowToStep',
+						'position': 2,
+						'name': 'Prise de vue IDidem & Signature',
+						'text': `Prenez votre photo depuis chez vous sur l'application IDidem et signez sur l'écran pour générer le code e-photo à 22 caractères.`
+					},
+					{
+						'@type': 'HowToStep',
+						'position': 3,
+						'name': 'Saisie du code ou Dépôt dossier',
+						'text': `Renseignez votre code e-photo en ligne ou présentez la planche imprimée lors de votre rendez-vous à ${ville.mairie}.`
+					}
+				]
 			},
 			{
 				'@type': 'FAQPage',
@@ -54,8 +70,8 @@
 </script>
 
 <svelte:head>
-	<title>{seo.title}</title>
-	<meta name="description" content={seo.description} />
+	<title>Photo d'identité à {ville.name} (ANTS & Passeport) – Conforme en 2 min</title>
+	<meta name="description" content={`Faire ses photos d'identité et e-photo ANTS à ${ville.name}. Conforme Mairie & ANTS en 2 minutes. Code photo-signature à 22 caractères reçu par e-mail.`} />
 	<link rel="canonical" href="https://ididem.com/{typePhoto}/{ville.slug}" />
 
 	<!-- Structured Data JSON-LD pour Google Indexing -->
@@ -72,109 +88,186 @@
 		<a href="/photo" class="btn-primary-sm">Lancer le Studio →</a>
 	</header>
 
-	<!-- Hero Section -->
+	<!-- 1. Hero Section avec H1 ciblé local -->
 	<section class="hero-section">
 		<div class="hero-content">
-			<span class="badge-local">{seo.badge}</span>
-			<h1>{seo.h1}</h1>
+			<span class="badge-local">📍 SERVICE ACCRÉDITÉ EN LIGNE – DÉPARTEMENT {ville.depNum}</span>
+			<h1>Faire ses photos d'identité et e-photo ANTS {ville.prepArticle}</h1>
 			<p class="hero-subtitle">
-				{seo.heroSubtitle}
+				Obtenez des clichés certifiés conformes pour passeport, carte nationale d'identité (CNI), permis de conduire et titre de séjour sans vous déplacer {ville.prepArticle}.
 			</p>
 			
 			<div class="hero-ctas">
-				<a href="/photo?formula={seo.focusFormula || 'officielle'}" class="btn-main-cta">
-					{seo.ctaText} →
+				<a href="/photo" class="btn-main-cta">
+					Prendre ma photo maintenant →
 				</a>
-				<span class="cta-sub">Temps de réalisation : 2 minutes • Garantie conformité 100%</span>
-			</div>
-		</div>
-
-		<!-- Reassurance Badges spécifiques -->
-		<div class="reassurance-grid">
-			<div class="reassure-card">
-				<span class="icon">🏛️</span>
-				<h3>{ville.mairie}</h3>
-				<p>Conformité garantie pour vos démarches en mairie ou préfecture dans le département {ville.dep}.</p>
-			</div>
-			<div class="reassure-card">
-				<span class="icon">🛂</span>
-				<h3>{ville.prefecture}</h3>
-				<p>Fichiers biométriques validés aux exigences du ministère de l'Intérieur ({ville.region}).</p>
-			</div>
-			<div class="reassure-card">
-				<span class="icon">🛡️</span>
-				<h3> Photographes Pros</h3>
-				<p>Conçu par des artisans photographes experts en identité biométrique depuis plus de 20 ans.</p>
+				<span class="cta-sub">Temps de réalisation : 2 minutes • 100% Conforme ou Remboursé</span>
 			</div>
 		</div>
 	</section>
 
-	<!-- Local Spec Section (Spécifique par intention et ville) -->
-	<section class="local-spec-section">
-		<div class="spec-card">
-			<div class="spec-icon">📍</div>
-			<div class="spec-body">
-				<h2>{seo.specTitle}</h2>
-				<p>{seo.specText}</p>
+	<!-- 2. Comparatif Cabine Photomaton vs IDidem -->
+	<section class="comparison-section">
+		<div class="comparison-container">
+			<h2>Cabine vs IDidem {ville.prepArticle}</h2>
+			<div class="comparison-grid">
+				<div class="comparison-card offline">
+					<div class="card-header-comp">
+						<h3>En cabine {ville.prepArticle}</h3>
+						<span class="price-comp price-offline">8,00 €</span>
+					</div>
+					<ul class="comp-list">
+						<li>❌ Déplacements et files d'attente sur place</li>
+						<li>❌ Éclairage et assise souvent mal adaptés</li>
+						<li>❌ Quasi impossible pour les nourrissons, handicapés et séniors</li>
+						<li>❌ Risque d'erreur de cadrage non corrigé</li>
+						<li>❌ Pas de signature numérique ANTS intégrée</li>
+					</ul>
+				</div>
+				<div class="comparison-card ididem-card">
+					<div class="card-badge-comp">💡 LA SOLUTION IDÉALE</div>
+					<div class="card-header-comp">
+						<h3>Avec IDidem</h3>
+						<span class="price-comp">Dès 4,99 €</span>
+					</div>
+					<ul class="comp-list">
+						<li>✅ Depuis chez vous, en 2 minutes chrono</li>
+						<li>✅ Essais illimités jusqu'au cliché parfait</li>
+						<li>✅ Parfaitement adapté aux bébés & toute la famille</li>
+						<li>✅ Validation et contrôle biométrique professionnel</li>
+						<li>✅ Code e-photo ANTS officiel immédiat par e-mail</li>
+						<li>✅ 100% Conforme ou Remboursé</li>
+					</ul>
+					<a href="/photo" class="btn-comp-cta">Faire ma photo chez moi</a>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- How it works (Spécifique par intention) -->
+	<!-- Section Avantages Clés & Piliers de Valeur IDidem -->
+	<section class="value-props-section">
+		<div class="value-props-container">
+			<span class="value-badge">⚡ LA RÉVOLUTION PHOTO D'IDENTITÉ</span>
+			<h2>Pourquoi choisir IDidem plutôt qu'une cabine ?</h2>
+			<p class="value-intro">Une application pensée de A à Z pour vous simplifier la vie, sans compromis sur la conformité légale.</p>
+
+			<div class="value-cards-grid">
+				<div class="val-card">
+					<div class="val-icon">🏠</div>
+					<h3>Zéro Déplacement & 2 Min Chrono</h3>
+					<p>Faites votre photo directement depuis votre salon en 2 minutes. Fini les trajets, les recherches de cabine et les files d'attente.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">🔄</div>
+					<h3>Essais Illimités & Gratuit</h3>
+					<p>Impossible de la rater ! Recommencez autant de fois que vous le souhaitez gratuitement avant de valider votre cliché idéal.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">📷</div>
+					<h3>Conçu & Vérifié par des Photographes Pros</h3>
+					<p>Développé par des artisans photographes cumulant 20 ans d'expérience. Chaque photo est contrôlée pour être 100% conforme.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">🛡️</div>
+					<h3>100% Conforme ou Remboursé</h3>
+					<p>Vos photos respectent scrupuleusement les normes ANTS, OACI et Ministère de l'Intérieur. Acceptation garantie ou remboursement immédiat.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">📜</div>
+					<h3>Code e-Photo ANTS Officiel</h3>
+					<p>Service e-photo 100% certifié et optimisé juridiquement pour permis de conduire et titres de séjour avec signature numérique.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">📮</div>
+					<h3>Option Envoi Postal à Domicile (+2 €)</h3>
+					<p>Recevez vos planches photos haute définition imprimées sur papier photo directement dans votre boîte aux lettres pour seulement 2 € de plus.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">🌍</div>
+					<h3>Tous les Formats Mondiaux sur Mobile</h3>
+					<p>Besoins de visasa américain, canadien, chinois ou passeports étrangers ? Retrouvez l'ensemble des formats mondiaux sur nos applications App Store & Google Play.</p>
+				</div>
+
+				<div class="val-card">
+					<div class="val-icon">💰</div>
+					<h3>Économique & Moins Cher</h3>
+					<p>Profitez de tarifs avantageux dès 4,99 € sans abonnement caché, idéal pour toute la famille (nourrissons, adultes et séniors).</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 3. Informations Pratiques Locales & Google Map Embed -->
+	<section class="local-info-section">
+		<div class="local-info-container">
+			<h2>Informations pratiques : Mairie & Démarches {ville.prepArticle}</h2>
+			<p class="section-intro">Où déposer votre dossier de passeport et carte d'identité dans la commune de {ville.name} :</p>
+			
+			<div class="local-details-grid">
+				<div class="info-card">
+					<div class="info-icon">🏛️</div>
+					<h3>{ville.mairie}</h3>
+					<p><strong>Adresse :</strong> {ville.adresseMairie}</p>
+					<p><strong>Horaires d'ouverture :</strong> {ville.horairesMairie}</p>
+					<p><strong>Préfecture référente :</strong> {ville.prefecture}</p>
+					{#if ville.linkRdvMairie}
+						<a href={ville.linkRdvMairie} target="_blank" rel="noopener noreferrer" class="btn-rdv-link">
+							📅 Prise de rdv en mairie de {ville.name} →
+						</a>
+					{/if}
+				</div>
+
+				<div class="map-card">
+					<h3>Localisation Mairie / Préfecture</h3>
+					<div class="map-embed-wrapper">
+						<iframe
+							title={`Carte Mairie de ${ville.name}`}
+							width="100%"
+							height="260"
+							style="border:0; border-radius: 12px;"
+							loading="lazy"
+							allowfullscreen
+							src={`https://maps.google.com/maps?q=${ville.mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`}>
+						</iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 4. Guide Démarche Express en 3 Etapes -->
 	<section class="how-it-works">
-		<h2>{seo.stepsTitle}</h2>
+		<h2>Guide démarche express passeport & CNI {ville.prepArticle}</h2>
 		<div class="steps-row">
-			{#each seo.steps as step}
-				<div class="step-card">
-					<div class="step-num">{step.num}</div>
-					<h3>{step.title}</h3>
-					<p>{step.desc}</p>
-				</div>
-			{/each}
-		</div>
-	</section>
-
-	<!-- Section Expertise Photographe vs IA -->
-	<section class="expertise-section">
-		<div class="expertise-container">
-			<div class="expertise-content">
-				<span class="expertise-badge">💡 UNE CONCEPTION UNIQUE</span>
-				<h2>Une application conçue par des photographes professionnels</h2>
-				<p class="lead-text">
-					Faire une photo d'identité réglementaire est un métier de précision. 
-					IDidem a été développée par des artisans photographes cumulant <strong>20 ans d'expérience</strong> dans l'identité biométrique.
-				</p>
-				<div class="expertise-arguments">
-					<div class="arg-item">
-						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA automatique ?</h4>
-						<p>
-							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle générative. 
-							Pourtant, à l'usage, l'IA pure valide plus de 98% de photos non conformes (léger sourire, regard légèrement décalé). Le verdict final en mairie ou préfecture est alors le rejet direct de votre dossier.
-						</p>
-					</div>
-					<div class="arg-item">
-						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS guidé par des Pros</h4>
-						<p>
-							Chez IDidem, nous ne laissons rien au hasard. Toutes les étapes de capture et de cadrage ont été minutieusement pensées à partir des cahiers des charges réels de l'ANTS, des mairies et des préfectures. 
-							Notre tutoriel interactif précis et nos repères vous responsabilisent et vous guident pas à pas pour un cliché accepté du premier coup.
-						</p>
-					</div>
-				</div>
+			<div class="step-card">
+				<div class="step-num">1</div>
+				<h3>Pré-demande en ligne</h3>
+				<p>Remplissez votre dossier sur le site officiel de l'ANTS ou préparez vos pièces justificatives.</p>
+			</div>
+			<div class="step-card">
+				<div class="step-num">2</div>
+				<h3>Photo & Signature IDidem</h3>
+				<p>Prenez votre cliché sur l'application IDidem et signez à l'écran pour générer votre code e-photo à 22 caractères.</p>
+			</div>
+			<div class="step-card">
+				<div class="step-num">3</div>
+				<h3>Dépôt du dossier {ville.prepArticle}</h3>
+				<p>Renseignez votre code en ligne ou présentez votre planche imprimée lors de votre rdv à {ville.mairie}.</p>
 			</div>
 		</div>
 	</section>
 
-	<!-- Product formulas selection -->
+	<!-- Formules tarifaires -->
 	<section class="formulas-section">
-		<h2>Nos formules disponibles {ville.prepArticle}</h2>
-		<p class="section-desc">Des tarifs transparents, sans abonnement, pour toutes vos démarches administratives.</p>
-		
+		<h2>Formules disponibles {ville.prepArticle}</h2>
 		<div class="formulas-grid">
-			<!-- Formula 1: E-Photo ANTS -->
-			<div class="formula-card" class:highlighted={seo.focusFormula === 'e-photo'}>
-				{#if seo.focusFormula === 'e-photo'}
-					<div class="card-badge">RECOMMANDÉ POUR VOTRE RECHERCHE</div>
-				{/if}
+			<div class="formula-card">
 				<div class="card-header">
 					<h3>e-Photo ANTS</h3>
 					<span class="price">6,99 €</span>
@@ -183,129 +276,59 @@
 				<ul class="features-list">
 					<li>✓ Code photo-signature unique ANTS</li>
 					<li>✓ Signature électronique sur smartphone</li>
-					<li>✓ Visioconférence sécurisée avec notre agent</li>
 					<li>✓ Garantie conformité 100%</li>
 				</ul>
-				<a href="/photo?formula=e-photo" class="btn-select">Choisir la e-Photo ANTS</a>
+				<a href="/photo?formula=e-photo" class="btn-select">Choisir e-Photo ANTS</a>
 			</div>
 
-			<!-- Formula 2: Photo officielle -->
-			<div class="formula-card" class:highlighted={seo.focusFormula === 'officielle'}>
-				{#if seo.focusFormula === 'officielle'}
-					<div class="card-badge">RECOMMANDÉ POUR VOTRE RECHERCHE</div>
-				{/if}
+			<div class="formula-card highlighted">
+				<div class="card-badge">RECOMMANDÉ</div>
 				<div class="card-header">
 					<h3>Officielle Norme OACI</h3>
 					<span class="price">4,99 €</span>
 				</div>
-				<p class="formula-desc">Carte d'identité nationale, Passeport, Visa, Carte vitale. Format planche 35x45mm.</p>
+				<p class="formula-desc">Carte d'identité nationale, Passeport, Visa. Format planche 35x45mm.</p>
 				<ul class="features-list">
-					<li>✓ Planche de 6 photos haute définition</li>
-					<li>✓ Fond uni (gris ou bleu) conforme France</li>
-					<li>✓ Option Fond Blanc (Maghreb / Visas)</li>
-					<li>✓ Téléchargement numérique immédiat</li>
+					<li>✓ Planche 6 photos HD certifiées</li>
+					<li>✓ Fond uni (gris ou bleu) réglementaire</li>
+					<li>✓ Téléchargement immédiat</li>
 				</ul>
-				<a href="/photo?formula=officielle" class="btn-select">Choisir la Photo Officielle</a>
-			</div>
-
-			<!-- Formula 3: Portrait LinkedIn / CV -->
-			<div class="formula-card" class:highlighted={seo.focusFormula === 'casual'}>
-				{#if seo.focusFormula === 'casual'}
-					<div class="card-badge">RECOMMANDÉ POUR VOTRE RECHERCHE</div>
-				{/if}
-				<div class="card-header">
-					<h3>Portrait Pro LinkedIn</h3>
-					<span class="price">2,99 €</span>
-				</div>
-				<p class="formula-desc">Pour vos CV, profils professionnels et réseaux sociaux. Rendu studio haut de gamme.</p>
-				<ul class="features-list">
-					<li>✓ Détourage de précision par IA</li>
-					<li>✓ Palette étendue de fonds de couleur</li>
-					<li>✓ Pipette de couleur personnalisée</li>
-					<li>✓ Téléchargement haute résolution</li>
-				</ul>
-				<a href="/photo?formula=casual" class="btn-select">Choisir le Portrait Pro</a>
+				<a href="/photo?formula=officielle" class="btn-select">Choisir Photo Officielle</a>
 			</div>
 		</div>
 	</section>
 
-	<!-- Local FAQ section -->
+	<!-- 5. Questions fréquents FAQ (FAQPage JSON-LD) -->
 	<section class="faq-section">
-		<h2>Questions fréquentes {ville.prepArticle} ({ville.dep})</h2>
+		<h2>Questions fréquentes sur vos démarches {ville.prepArticle}</h2>
 		<div class="faq-grid">
-			{#each seo.faqs as faq}
-				<div class="faq-item">
-					<h4>{faq.q}</h4>
-					<p>{faq.a}</p>
-				</div>
-			{/each}
+			<div class="faq-item">
+				<h4>Les photos IDidem sont-elles acceptées à {ville.mairie} ?</h4>
+				<p>Oui, absolument. Nos photos sont strictement conformes à la norme ISO/IEC 19794-5 et valides dans toutes les mairies du département {ville.dep}.</p>
+			</div>
+			<div class="faq-item">
+				<h4>Comment fonctionne le code e-photo ANTS ?</h4>
+				<p>Une fois votre photo prise et votre signature apposée sur l'écran, vous recevez un code unique à 22 caractères à saisir directement dans votre dossier sur ants.gouv.fr.</p>
+			</div>
+			<div class="faq-item">
+				<h4>Que faire si ma photo n'est pas acceptée ?</h4>
+				<p>Grâce aux repères biométriques IDidem et à nos vérifications, la conformité est garantie à 100% ou remboursée intégralement.</p>
+			</div>
 		</div>
 	</section>
 
-	<!-- Internal Linking Block (Crucial pour le Crawl Googlebot) -->
+	<!-- Maillage interne inter-villes -->
 	<section class="internal-linking-section">
 		<div class="linking-container">
-			<h3>Autre service photo {ville.prepArticle} :</h3>
-			<div class="linking-chips">
-				{#each intentionsList as item}
-					{#if item.slug !== typePhoto}
-						<a href="/{item.slug}/{ville.slug}" class="chip-link">
-							{item.label} {ville.prepArticle}
-						</a>
-					{/if}
-				{/each}
-			</div>
-
-			<h3 style="margin-top: 2rem;">Photos d'identité disponibles dans d'autres villes :</h3>
+			<h3>Photos d'identité biométriques dans les autres métropoles :</h3>
 			<div class="linking-chips">
 				{#each allCities as c}
 					{#if c.slug !== ville.slug}
-						<a href="/{typePhoto}/{c.slug}" class="chip-link">
+						<a href="/photo-identite-en-ligne/{c.slug}" class="chip-link">
 							{c.name} ({c.depNum})
 						</a>
 					{/if}
 				{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- Section Application Mobile (International) -->
-	<section class="app-mobile-section">
-		<div class="app-mobile-container">
-			<div class="app-mobile-card">
-				<div class="app-mobile-text">
-					<span class="app-badge">🌍 VISA & FORMATS INTERNATIONAUX</span>
-					<h2>Besoin d'un passeport étranger ou d'un visa international ?</h2>
-					<p>
-						Notre site web est spécialisé dans les normes de photos officielles françaises et du Maghreb. 
-						Si vous devez réaliser une photo pour un visa canadien, américain, chinois, ou un passeport étranger, utilisez notre application mobile <strong>IDidem</strong>.
-					</p>
-					<p class="app-details">
-						Disponible sur iOS et Android, elle prend en charge <strong>tous les formats officiels internationaux</strong> et est intégralement traduite en <strong>11 langues</strong>.
-					</p>
-					
-					<div class="store-buttons">
-						<a href="https://apps.apple.com/fr/iphone/search?term=ididem" target="_blank" rel="noopener noreferrer" class="store-btn">
-							<span class="store-icon">🍏</span>
-							<div class="store-btn-text">
-								<span class="sub-text">Télécharger dans l'</span>
-								<span class="main-text">App Store</span>
-							</div>
-						</a>
-						<a href="https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr" target="_blank" rel="noopener noreferrer" class="store-btn">
-							<span class="store-icon">🤖</span>
-							<div class="store-btn-text">
-								<span class="sub-text">Disponible sur</span>
-								<span class="main-text">Google Play</span>
-							</div>
-						</a>
-					</div>
-				</div>
-				<div class="app-mobile-visual">
-					<div class="phone-mockup-real">
-						<img src="/assets/app-screenshot-1.png" alt="Interface IDidem pour formats internationaux" class="phone-main-screenshot" />
-					</div>
-				</div>
 			</div>
 		</div>
 	</section>
@@ -317,6 +340,271 @@
 </div>
 
 <style>
+	/* Value Propositions Section */
+	.value-props-section {
+		padding: 4.5rem 5%;
+		background: #ffffff;
+		border-top: 1px solid #e2e8f0;
+	}
+
+	.value-props-container {
+		max-width: 1100px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.value-badge {
+		display: inline-block;
+		color: #2563eb;
+		font-weight: 800;
+		font-size: 0.8rem;
+		letter-spacing: 0.05em;
+		margin-bottom: 0.75rem;
+	}
+
+	.value-props-container h2 {
+		font-size: 1.85rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin-bottom: 0.5rem;
+	}
+
+	.value-intro {
+		color: #64748b;
+		font-size: 1.05rem;
+		margin-bottom: 3rem;
+	}
+
+	.value-cards-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.75rem;
+		text-align: left;
+	}
+
+	.val-card {
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 16px;
+		padding: 1.75rem;
+		transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+	}
+
+	.val-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+		border-color: #bfdbfe;
+		background: #ffffff;
+	}
+
+	.val-icon {
+		font-size: 2rem;
+		margin-bottom: 1rem;
+	}
+
+	.val-card h3 {
+		font-size: 1.1rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin-bottom: 0.5rem;
+	}
+
+	.val-card p {
+		font-size: 0.9rem;
+		color: #475569;
+		margin: 0;
+		line-height: 1.55;
+	}
+
+	/* Comparison Section */
+	.comparison-section {
+		padding: 4rem 5%;
+		background: #f8fafc;
+		border-top: 1px solid #e2e8f0;
+	}
+
+	.comparison-container {
+		max-width: 1000px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.comparison-container h2 {
+		font-size: 1.8rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin-bottom: 2.5rem;
+	}
+
+	.comparison-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+		text-align: left;
+	}
+
+	.comparison-card {
+		padding: 2rem;
+		border-radius: 18px;
+		border: 1px solid #e2e8f0;
+		background: #f8fafc;
+		position: relative;
+	}
+
+	.comparison-card.offline {
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		opacity: 0.85;
+	}
+
+	.comparison-card.offline h3 {
+		color: #64748b;
+	}
+
+	.price-offline {
+		color: #64748b !important;
+	}
+
+	.comparison-card.ididem-card {
+		border: 2px solid #2563eb;
+		background: #ffffff;
+		box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
+		transform: scale(1.02);
+	}
+
+	.card-badge-comp {
+		position: absolute;
+		top: -12px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: #2563eb;
+		color: #ffffff;
+		font-size: 0.75rem;
+		font-weight: 800;
+		padding: 0.3rem 0.85rem;
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+
+	.card-header-comp {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.card-header-comp h3 {
+		font-size: 1.25rem;
+		font-weight: 800;
+	}
+
+	.price-comp {
+		font-size: 1.3rem;
+		font-weight: 900;
+		color: #2563eb;
+	}
+
+	.comp-list {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+		font-size: 0.95rem;
+	}
+
+	.btn-comp-cta {
+		display: block;
+		text-align: center;
+		background: #2563eb;
+		color: #ffffff;
+		font-weight: 700;
+		padding: 0.85rem;
+		border-radius: 10px;
+		text-decoration: none;
+		transition: background 0.2s;
+	}
+
+	.btn-comp-cta:hover {
+		background: #1d4ed8;
+	}
+
+	/* Local Info & Maps Embed */
+	.local-info-section {
+		padding: 4rem 5%;
+		background: #f1f5f9;
+	}
+
+	.local-info-container {
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	.local-info-container h2 {
+		font-size: 1.8rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin-bottom: 0.5rem;
+		text-align: center;
+	}
+
+	.section-intro {
+		text-align: center;
+		color: #64748b;
+		margin-bottom: 2.5rem;
+	}
+
+	.local-details-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		gap: 2rem;
+	}
+
+	.info-card, .map-card {
+		background: #ffffff;
+		border-radius: 16px;
+		padding: 2rem;
+		border: 1px solid #e2e8f0;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+	}
+
+	.info-icon {
+		font-size: 2rem;
+		margin-bottom: 1rem;
+	}
+
+	.info-card h3, .map-card h3 {
+		font-size: 1.2rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin-bottom: 1rem;
+	}
+
+	.info-card p {
+		font-size: 0.95rem;
+		color: #334155;
+		margin-bottom: 0.75rem;
+	}
+
+	.btn-rdv-link {
+		display: inline-block;
+		margin-top: 1rem;
+		background: #eff6ff;
+		color: #2563eb;
+		border: 1px solid #bfdbfe;
+		font-weight: 700;
+		padding: 0.65rem 1.1rem;
+		border-radius: 10px;
+		text-decoration: none;
+		font-size: 0.9rem;
+		transition: background 0.2s;
+	}
+
+	.btn-rdv-link:hover {
+		background: #dbeafe;
+	}
+
 	.seo-landing-container {
 		font-family: 'Inter', -apple-system, sans-serif;
 		color: #1e293b;
@@ -434,91 +722,20 @@
 		color: #64748b;
 	}
 
-	/* Reassurance */
-	.reassurance-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 1.5rem;
-		margin-top: 3rem;
-		text-align: left;
-	}
-
-	.reassure-card {
-		background: #ffffff;
-		padding: 1.5rem;
-		border-radius: 14px;
-		border: 1px solid #e2e8f0;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-	}
-
-	.reassure-card .icon {
-		font-size: 1.75rem;
-		margin-bottom: 0.75rem;
-		display: block;
-	}
-
-	.reassure-card h3 {
-		font-size: 1.05rem;
-		font-weight: 700;
-		color: #0f172a;
-		margin-bottom: 0.4rem;
-	}
-
-	.reassure-card p {
-		font-size: 0.9rem;
-		color: #64748b;
-		margin: 0;
-	}
-
-	/* Local Spec Section */
-	.local-spec-section {
-		max-width: 1100px;
-		margin: 0 auto 3rem;
-		padding: 0 5%;
-	}
-
-	.spec-card {
-		display: flex;
-		gap: 1.25rem;
-		align-items: flex-start;
-		background: #eff6ff;
-		border: 1px solid #bfdbfe;
-		border-radius: 14px;
-		padding: 1.5rem;
-	}
-
-	.spec-icon {
-		font-size: 2rem;
-		flex-shrink: 0;
-	}
-
-	.spec-body h2 {
-		font-size: 1.2rem;
-		font-weight: 800;
-		color: #1e40af;
-		margin-bottom: 0.5rem;
-	}
-
-	.spec-body p {
-		font-size: 0.95rem;
-		color: #1e3a8a;
-		margin: 0;
-	}
-
 	/* How it works */
 	.how-it-works {
 		background: #ffffff;
-		padding: 4rem 5%;
+		padding: 4.5rem 5%;
 		border-top: 1px solid #e2e8f0;
 		border-bottom: 1px solid #e2e8f0;
 		text-align: center;
 	}
 
 	.how-it-works h2 {
-		font-size: 1.8rem;
+		font-size: 1.85rem;
 		font-weight: 800;
 		color: #0f172a;
-		margin-bottom: 2.5rem;
+		margin-bottom: 3rem;
 	}
 
 	.steps-row {
@@ -530,94 +747,49 @@
 	}
 
 	.step-card {
-		position: relative;
-		padding: 2rem 1.5rem;
 		background: #f8fafc;
-		border-radius: 16px;
 		border: 1px solid #e2e8f0;
+		border-radius: 18px;
+		padding: 2.25rem 1.75rem;
 		text-align: center;
+		position: relative;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	.step-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08);
+		border-color: #bfdbfe;
 	}
 
 	.step-num {
-		width: 42px;
-		height: 42px;
-		background: #2563eb;
+		width: 46px;
+		height: 46px;
+		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 		color: #ffffff;
-		font-weight: 800;
-		font-size: 1.25rem;
+		font-weight: 900;
+		font-size: 1.35rem;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		margin: 0 auto 1.25rem;
+		box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 	}
 
 	.step-card h3 {
-		font-size: 1.1rem;
-		font-weight: 700;
-		margin-bottom: 0.5rem;
+		font-size: 1.15rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin-bottom: 0.75rem;
 	}
 
 	.step-card p {
-		font-size: 0.9rem;
-		color: #64748b;
-		margin: 0;
-	}
-
-	/* Expertise Section */
-	.expertise-section {
-		padding: 4rem 5%;
-		background: #f8fafc;
-	}
-
-	.expertise-container {
-		max-width: 1100px;
-		margin: 0 auto;
-	}
-
-	.expertise-badge {
-		color: #2563eb;
-		font-weight: 700;
-		font-size: 0.85rem;
-		letter-spacing: 0.05em;
-	}
-
-	.expertise-content h2 {
-		font-size: 1.8rem;
-		font-weight: 800;
-		margin: 0.5rem 0 1rem;
-	}
-
-	.lead-text {
-		font-size: 1.1rem;
-		color: #475569;
-		margin-bottom: 2rem;
-	}
-
-	.expertise-arguments {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 1.75rem;
-	}
-
-	.arg-item {
-		background: #ffffff;
-		padding: 1.75rem;
-		border-radius: 14px;
-		border: 1px solid #e2e8f0;
-	}
-
-	.arg-item h4 {
-		font-size: 1.1rem;
-		font-weight: 700;
-		margin-bottom: 0.75rem;
-		color: #0f172a;
-	}
-
-	.arg-item p {
 		font-size: 0.92rem;
 		color: #475569;
 		margin: 0;
+		line-height: 1.6;
 	}
 
 	/* Formulas */
@@ -631,11 +803,6 @@
 	.formulas-section h2 {
 		font-size: 1.8rem;
 		font-weight: 800;
-		margin-bottom: 0.5rem;
-	}
-
-	.section-desc {
-		color: #64748b;
 		margin-bottom: 2.5rem;
 	}
 
@@ -818,97 +985,6 @@
 		border-color: #2563eb;
 	}
 
-	/* App Mobile */
-	.app-mobile-section {
-		padding: 4rem 5%;
-		background: #f8fafc;
-	}
-
-	.app-mobile-container {
-		max-width: 1100px;
-		margin: 0 auto;
-	}
-
-	.app-mobile-card {
-		background: #ffffff;
-		border-radius: 20px;
-		border: 1px solid #e2e8f0;
-		padding: 3rem;
-		display: flex;
-		gap: 3rem;
-		align-items: center;
-	}
-
-	.app-mobile-text {
-		flex: 1;
-	}
-
-	.app-badge {
-		color: #2563eb;
-		font-size: 0.8rem;
-		font-weight: 800;
-		letter-spacing: 0.05em;
-	}
-
-	.app-mobile-text h2 {
-		font-size: 1.6rem;
-		font-weight: 800;
-		margin: 0.5rem 0 1rem;
-	}
-
-	.app-details {
-		font-size: 0.95rem;
-		color: #64748b;
-		margin-bottom: 1.5rem;
-	}
-
-	.store-buttons {
-		display: flex;
-		gap: 1rem;
-	}
-
-	.store-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		background: #0f172a;
-		color: #ffffff;
-		padding: 0.65rem 1.25rem;
-		border-radius: 10px;
-		text-decoration: none;
-	}
-
-	.store-icon {
-		font-size: 1.5rem;
-	}
-
-	.store-btn-text {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.sub-text {
-		font-size: 0.65rem;
-		color: #94a3b8;
-	}
-
-	.main-text {
-		font-size: 0.95rem;
-		font-weight: 700;
-	}
-
-	.app-mobile-visual {
-		flex: 1;
-		display: flex;
-		justify-content: center;
-	}
-
-	.phone-main-screenshot {
-		max-width: 260px;
-		border-radius: 16px;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-	}
-
 	/* Footer */
 	.landing-footer {
 		text-align: center;
@@ -916,16 +992,5 @@
 		background: #020617;
 		color: #64748b;
 		font-size: 0.85rem;
-	}
-
-	@media (max-width: 768px) {
-		.app-mobile-card {
-			flex-direction: column;
-			padding: 2rem 1.5rem;
-		}
-
-		.store-buttons {
-			flex-direction: column;
-		}
 	}
 </style>

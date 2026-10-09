@@ -3,19 +3,10 @@ import { villesSEO } from '$lib/data/villes.js';
 export async function GET() {
 	const domain = 'https://ididem.com';
 	
-	// Pages de base
+	// Pages statiques principales
 	const staticPages = [
 		'',
 		'/photo'
-	];
-
-	// Intentions valides d'après le matcher params/intentions.js
-	const intentions = [
-		'photo-identite-en-ligne',
-		'e-photo-ants-en-ligne',
-		'photo-passeport-en-ligne',
-		'photo-carte-identite-en-ligne',
-		'portrait-professionnel-en-ligne'
 	];
 
 	const today = new Date().toISOString().split('T')[0];
@@ -26,12 +17,12 @@ export async function GET() {
 		urls.push(`${domain}${page}`);
 	}
 
-	// 2. Pages d'intention x villes
+	// 2. Les 20 Vraies Pages Locales Dédiées aux Métropoles
+	// Utilisation de la route canonique principale photo-identite-en-ligne
 	const citySlugs = Object.keys(villesSEO);
-	for (const intention of intentions) {
-		for (const city of citySlugs) {
-			urls.push(`${domain}/${intention}/${city}`);
-		}
+	const primaryIntention = 'photo-identite-en-ligne';
+	for (const city of citySlugs) {
+		urls.push(`${domain}/${primaryIntention}/${city}`);
 	}
 
 	// Générer l'XML
