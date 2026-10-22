@@ -10,7 +10,7 @@ let manualPresenceUntil = 0;
 
 // Gestion des sessions de signature actives
 // Structure : { [sessionId]: { clientSocket: ws, adminSocket: ws } }
-/** @type {Record<string, { clientSocket?: any, adminSocket?: any }>} */
+/** @type {Record<string, { clientSocket?: any, adminSocket?: any, bridgeSocket?: any }>} */
 const sessions = {};
 
 const server = createServer((req, res) => {

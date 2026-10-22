@@ -336,3 +336,32 @@ export const villeGenerique = {
 	prefecture: 'votre préfecture ou mairie locale',
 	mairie: 'votre mairie locale'
 };
+
+/**
+ * Calcule la cible de redirection 301 pour une URL [type_photo]/[ville].
+ * Retourne null si l'URL est canonique et doit renvoyer 200 OK.
+ * @param {string} typePhoto 
+ * @param {string} slugVille 
+ * @returns {string | null}
+ */
+export function getRedirectTarget(typePhoto, slugVille) {
+	if (!slugVille) return null;
+	const normalizedCity = slugVille.toLowerCase();
+	const normalizedType = (typePhoto || '').toLowerCase();
+
+	const ville = villesSEO[normalizedCity];
+	if (!ville) {
+		// Ville non répertoriée dans nos métropoles officielles
+		return '/photo';
+	}
+
+	// URL canonique officielle du sitemap
+	const canonicalPath = `/photo-identite-en-ligne/${normalizedCity}`;
+
+	// Si l'URL actuelle diffère de l'URL canonique (ancienne intention ou casse non normalisée)
+	if (normalizedType !== 'photo-identite-en-ligne' || typePhoto !== 'photo-identite-en-ligne' || slugVille !== normalizedCity) {
+		return canonicalPath;
+	}
+
+	return null;
+}

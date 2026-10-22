@@ -27,7 +27,7 @@
 					'name': `${ville.name}, ${ville.dep}`
 				},
 				'description': seo.description,
-				'url': `https://ididem.com/${typePhoto}/${ville.slug}`
+				'url': `https://ididem.com/photo-identite-en-ligne/${ville.slug}`
 			},
 			{
 				'@type': 'HowTo',
@@ -72,7 +72,7 @@
 <svelte:head>
 	<title>Photo d'identité à {ville.name} (ANTS & Passeport) – Conforme en 2 min</title>
 	<meta name="description" content={`Faire ses photos d'identité et e-photo ANTS à ${ville.name}. Conforme Mairie & ANTS en 2 minutes. Code photo-signature à 22 caractères reçu par e-mail.`} />
-	<link rel="canonical" href="https://ididem.com/{typePhoto}/{ville.slug}" />
+	<link rel="canonical" href="https://ididem.com/photo-identite-en-ligne/{ville.slug}" />
 
 	<!-- Structured Data JSON-LD pour Google Indexing -->
 	{@html `<script type="application/ld+json">${jsonLd}</script>`}

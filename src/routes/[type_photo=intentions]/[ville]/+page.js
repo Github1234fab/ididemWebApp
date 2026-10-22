@@ -1,26 +1,15 @@
 // src/routes/[type_photo=intentions]/[ville]/+page.js
-import { error } from '@sveltejs/kit';
-import { villesSEO } from '$lib/data/villes.js';
+import { error, redirect } from '@sveltejs/kit';
+import { villesSEO, getRedirectTarget } from '$lib/data/villes.js';
 
 export const prerender = true;
 
-// Liste de toutes les combinaisons intentions x villes à pré-générer
+// Donne à SvelteKit uniquement la liste des 20 métropoles officielles du sitemap à pré-générer
 export function entries() {
-	const intentions = [
-		'photo-identite-en-ligne',
-		'e-photo-ants-en-ligne',
-		'photo-passeport-en-ligne',
-		'photo-carte-identite-en-ligne',
-		'portrait-professionnel-en-ligne'
-	];
-	
-	const list = [];
-	for (const type_photo of intentions) {
-		for (const ville of Object.keys(villesSEO)) {
-			list.push({ type_photo, ville });
-		}
-	}
-	return list;
+	return Object.keys(villesSEO).map(ville => ({
+		type_photo: 'photo-identite-en-ligne',
+		ville
+	}));
 }
 
 /**
@@ -56,6 +45,12 @@ export function entries() {
 export function load({ params }) {
 	const slugVille = params.ville ? params.ville.toLowerCase() : '';
 	const typePhoto = params.type_photo;
+
+	// Redirection 301 pour les anciennes intentions ou URLs non-canoniques
+	const redirectUrl = getRedirectTarget(typePhoto, slugVille);
+	if (redirectUrl) {
+		redirect(301, redirectUrl);
+	}
 
 	// Si la ville n'existe pas dans notre liste officielle, erreur 404
 	const villeInfo = villesSEO[slugVille];

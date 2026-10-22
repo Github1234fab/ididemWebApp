@@ -171,6 +171,7 @@
 		};
 	});
 
+	/** @param {string} [imageUri] */
 	function sendEphotoSubmission(imageUri) {
 		const signatureData = localStorage.getItem('ididem_signature_image') || '';
 		let coords = [];
@@ -448,7 +449,7 @@
 					
 					{#if generatedImageUri}
 						<div class="preview-output-container">
-							<img src={generatedImageUri} alt="Aperçu e-photo" class="preview-output" />
+							<img src={generatedImageUri} alt="Aperçu du document d'identité" class="preview-output" />
 						</div>
 					{/if}
 
@@ -697,15 +698,7 @@
 	}
 
 	/* Animation pulsation */
-	@keyframes pulse {
-		0%, 100% { transform: scale(1); }
-		50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(29, 78, 216, 0.4); }
-	}
 
-	.primary-btn.pulse {
-		animation: pulse 2s infinite ease-in-out;
-		flex: 1;
-	}
 
 	.footer-nav {
 		margin-top: 1rem;

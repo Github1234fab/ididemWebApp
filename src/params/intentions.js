@@ -8,5 +8,5 @@ export function match(param) {
 		'photo-passeport-en-ligne',
 		'photo-carte-identite-en-ligne',
 		'portrait-professionnel-en-ligne'
-	].includes(param);
+	].includes(param.toLowerCase());
 }
