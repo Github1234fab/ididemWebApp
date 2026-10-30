@@ -349,6 +349,18 @@ export function getRedirectTarget(typePhoto, slugVille) {
 	const normalizedCity = slugVille.toLowerCase();
 	const normalizedType = (typePhoto || '').toLowerCase();
 
+	const isKnownIntention = [
+		'photo-identite-en-ligne',
+		'e-photo-ants-en-ligne',
+		'photo-passeport-en-ligne',
+		'photo-carte-identite-en-ligne',
+		'portrait-professionnel-en-ligne'
+	].includes(normalizedType);
+
+	if (!isKnownIntention) {
+		return null;
+	}
+
 	const ville = villesSEO[normalizedCity];
 	if (!ville) {
 		// Ville non répertoriée dans nos métropoles officielles

@@ -462,11 +462,14 @@ function capturePhoto() {
 			});
 
 			if (!res.ok) {
-				const errorData = await res.json();
-				throw new Error(errorData.error || 'Erreur lors du traitement.');
+				const errorData = await res.json().catch(() => null);
+				throw new Error((errorData && errorData.error) || `Erreur (${res.status}) lors du traitement de l'image.`);
 			}
 
-			const data = await res.json();
+			const data = await res.json().catch(() => null);
+			if (!data || !data.image) {
+				throw new Error('Réponse inattendue lors du détourage de la photo.');
+			}
 			capturedImage = data.image;
 			isProcessed = true;
 			
@@ -558,12 +561,12 @@ function capturePhoto() {
 			});
 
 			if (!res.ok) {
-				const errorData = await res.json();
-				throw new Error(errorData.error || 'Impossible d\'initialiser le paiement.');
+				const errorData = await res.json().catch(() => null);
+				throw new Error((errorData && errorData.error) || `Erreur (${res.status}) lors de l'initialisation du paiement.`);
 			}
 
-			const data = await res.json();
-			if (data.url) {
+			const data = await res.json().catch(() => null);
+			if (data && data.url) {
 				window.location.href = data.url;
 			} else {
 				throw new Error('Lien de paiement invalide.');
