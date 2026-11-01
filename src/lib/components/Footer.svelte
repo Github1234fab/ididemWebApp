@@ -22,6 +22,17 @@
 			</p>
 		</div>
 		<div class="footer-links">
+			<h4>Démarches Officielles</h4>
+			<ul>
+				<li><a href="/e-photo-ants">e-Photo ANTS Officielle</a></li>
+				<li><a href="/photo-permis-de-conduire">Permis de conduire</a></li>
+				<li><a href="/photo-titre-de-sejour">Titre de séjour (ANEF)</a></li>
+				<li><a href="/photo-passeport-en-ligne">Passeport biométrique</a></li>
+				<li><a href="/photo-carte-identite-en-ligne">Carte d'identité (CNI)</a></li>
+				<li><a href="/photo-identite-bebe">Photo Bébé & Nourrisson</a></li>
+			</ul>
+		</div>
+		<div class="footer-links">
 			<h4>Navigation</h4>
 			<ul>
 				<li><a href="/#features">Avantages</a></li>
@@ -62,8 +73,8 @@
 	}
 	.footer-content {
 		display: grid;
-		grid-template-columns: 2fr 1fr 1fr;
-		gap: 4rem;
+		grid-template-columns: 1.5fr 1.2fr 1fr 1fr;
+		gap: 2.5rem;
 	}
 	.footer-brand {
 		display: flex;

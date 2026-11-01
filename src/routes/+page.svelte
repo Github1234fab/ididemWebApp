@@ -25,61 +25,120 @@
 	let steps = [
 		{
 			num: "1",
-			title: "Cadrez avec les guides",
-			desc: "Placez votre visage au centre des guides verts dynamiques pour un cadrage biométrique parfait."
+			title: "Prise de vue guidée sur smartphone",
+			desc: "Placez votre visage au centre du viseur biométrique interactif. Notre outil vérifie la posture, la neutralité du regard et applique le fond uni réglementaire conforme ANTS."
 		},
 		{
 			num: "2",
-			title: "Détourage & Fond automatique",
-			desc: "Notre IA de précision supprime le fond de votre pièce et crée le fond uni réglementaire (bleu, gris, blanc)."
+			title: "Signature numérique & Contrôle de conformité",
+			desc: "Signez directement avec votre doigt sur l'écran tactile de votre smartphone pour générer votre planche e-photo ANTS officielle avec signature intégrée."
 		},
 		{
 			num: "3",
-			title: "Imprimez ou Recevez",
-			desc: "Téléchargez votre planche 10x15cm immédiatement, ou recevez-la chez vous par la poste avec un étui offert."
+			title: "Code e-Photo à 22 caractères ou Planche 35×45mm",
+			desc: "Recevez instantanément votre code e-photo par e-mail pour ants.gouv.fr (permis et titre de séjour) ou téléchargez votre planche 6 photos certifiée pour la Mairie."
 		}
 	];
 
 	let advantages = [
 		{
-			title: "Prise de vue simplifiée",
-			desc: "Suivez les guides pour placer votre visage, le recadrage et le fond sont gérés automatiquement."
+			title: "e-Photo ANTS officielle avec signature numérique",
+			desc: "Obtenez en 2 minutes votre code officiel à 22 caractères obligatoire pour vos démarches en ligne de permis de conduire et titre de séjour sur ants.gouv.fr."
 		},
 		{
-			title: "+20 ans d'expertise en photo d'identité",
-			desc: "Créée par des photographes professionnels. Nous connaissons les moindres exigences des mairies et des consulats."
+			title: "Photos certifiées Passeport, CNI & Mairie",
+			desc: "Planches de photos d'identité haute définition conformes aux normes internationales OACI (ISO/IEC 19794-5) garanties acceptées en Mairie, Préfecture et Consulat."
 		},
 		{
-			title: "Idéal pour toute la famille",
-			desc: "Plus de pleurs ou de contorsions en cabine. Prenez en photo vos nourrissons, enfants et même vos seniors tranquillement chez vous."
+			title: "Spécial Bébé, Nourrisson & Famille",
+			desc: "Évitez le cauchemar des cabines Photomaton avec un nouveau-né. Prenez la photo chez vous au calme sur smartphone avec essais illimités gratuits jusqu'au cliché parfait."
 		},
 		{
-			title: "Accessibilité totale",
-			desc: "Notre solution permet à tous, y compris aux personnes à mobilité réduite, de faire leurs démarches sans fatigue ni déplacement."
+			title: "Démarches 100% en ligne sans déplacement",
+			desc: "Fini les files d'attente en cabine de gare ou supermarché. Réalisez vos photos officielles en ligne depuis votre canapé avec garantie Conforme ou Remboursé."
 		}
 	];
 
 	let faqs = [
 		{
-			q: "Comment fonctionne le tutoriel de conformité ?",
-			a: "Notre guide interactif pas à pas a été conçu par des photographes professionnels. Il vous indique exactement comment vous positionner, fixer le regard et ajuster la luminosité pour que votre cliché soit accepté à 100% par l'administration."
+			q: "Comment obtenir un code e-photo ANTS pour le permis de conduire ou le titre de séjour ?",
+			a: "Prenez votre photo sur l'application IDidem au smartphone, signez sur l'écran tactile et validez. Vous recevez immédiatement par e-mail votre code sécurisé à 22 caractères transmis au serveur de l'ANTS, à reporter directement sur ants.gouv.fr ou sur la plateforme ANEF."
 		},
 		{
-			q: "Comment puis-je imprimer mes photos d'identité ?",
-			a: "L'application génère une planche au format standard 10x15cm (contenant 6 photos d'identité). Vous pouvez l'imprimer pour quelques centimes dans n'importe quel borne photo de supermarché ou sur une imprimante photo domestique."
+			q: "Les photos prises sur smartphone sont-elles acceptées en Mairie pour un passeport ou une CNI ?",
+			a: "Oui, à 100%. Nos planches 6 photos respectent rigoureusement la norme internationale ISO/IEC 19794-5 (dimensions 35×45mm, hauteur du visage 32-36mm, fond uni gris clair sans ombre). Elles sont validées par nos photographes professionnels et garanties acceptées par toutes les mairies de France."
 		},
 		{
-			q: "Les photos de bébé sont-elles acceptées ?",
-			a: "Oui ! C'est même le point fort d'IDidem. Il est extrêmement difficile d'obtenir une photo conforme avec un bébé dans un photomaton classique. Chez vous, allongé ou assis, vous pouvez multiplier les essais."
+			q: "Comment fonctionne la signature numérique sur smartphone ?",
+			a: "À la suite de la prise de vue, notre écran de signature vous permet d'apposer votre signature manuscrite avec le doigt ou un stylet. Cette signature est cryptée et intégrée à votre planche e-photo officielle pour l'administration."
+		},
+		{
+			q: "Comment réussir la photo d'identité d'un bébé ou nourrisson à la maison ?",
+			a: "Allongez votre bébé sur le dos sur un drap clair, à la lumière du jour (sans flash). Positionnez votre smartphone au-dessus de lui et prenez la photo lorsqu'il regarde vers vous. Notre IA détoure automatiquement le contour et applique le fond réglementaire sans laisser apparaître les mains des parents."
+		},
+		{
+			q: "Peut-on utiliser les photos IDidem pour la Carte Vitale ou un visa étranger ?",
+			a: "Absolument. Nos photos officielles 35×45mm sont conformes pour l'espace Ameli (Carte Vitale), les cartes de transport, et nous couvrons également tous les formats internationaux (visas USA, Canada, Chine, Inde, etc.) sur nos applications mobiles."
+		},
+		{
+			q: "Quelle est la différence entre IDidem et une cabine Photomaton classique ?",
+			a: "Avec IDidem, vous ne vous déplacez pas, vous faites autant d'essais gratuits que nécessaire pour être satisfait de votre photo, vous signez directement sur votre smartphone pour l'e-photo, et chaque cliché est contrôlé pour éviter tout rejet en mairie ou préfecture."
 		}
 	];
+
+	const homeJsonLd = JSON.stringify({
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebSite',
+				'name': 'IDidem',
+				'url': 'https://ididem.com',
+				'description': 'Photos d\'identité officielles et e-Photo ANTS en ligne sur smartphone en 2 minutes.'
+			},
+			{
+				'@type': 'Organization',
+				'name': 'IDidem',
+				'url': 'https://ididem.com',
+				'logo': 'https://ididem.com/logoIdidem_1024.png'
+			},
+			{
+				'@type': 'Service',
+				'name': 'Photos d\'identité en ligne et e-Photo ANTS officielle',
+				'provider': {
+					'@type': 'Organization',
+					'name': 'IDidem'
+				},
+				'description': 'Service agréé de photos d\'identité et e-photo ANTS avec signature numérique pour permis de conduire, passeport, carte d\'identité, titre de séjour et carte vitale.',
+				'areaServed': 'FR'
+			},
+			{
+				'@type': 'FAQPage',
+				'mainEntity': faqs.map(f => ({
+					'@type': 'Question',
+					'name': f.q,
+					'acceptedAnswer': {
+						'@type': 'Answer',
+						'text': f.a
+					}
+				}))
+			}
+		]
+	});
 
 	let co2Saved = 14280; // Example live counter representation
 </script>
 
 <svelte:head>
-	<title>IDidem - Vos photos d'identité officielles et certifiées conformes</title>
-	<meta name="description" content="Prenez vos photos d'identité conformes (passeport, carte d'identité, visa) en 30 secondes chez vous avec notre guidage biométrique intelligent. Conforme ANTS/OACI." />
+	<title>Photo d'identité en ligne & e-Photo ANTS sur smartphone | IDidem</title>
+	<meta name="description" content="Faites vos photos d'identité en ligne et e-photo ANTS sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, titre de séjour et carte vitale." />
+	<link rel="canonical" href="https://ididem.com" />
+	<meta property="og:title" content="Photo d'identité en ligne & e-Photo ANTS sur smartphone | IDidem" />
+	<meta property="og:description" content="Faites vos photos d'identité en ligne et e-photo ANTS sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, titre de séjour et carte vitale." />
+	<meta property="og:url" content="https://ididem.com" />
+	<meta property="og:type" content="website" />
+
+	<!-- Structured Data JSON-LD pour Google Search Rich Snippets (FAQPage + Service) -->
+	{@html `<script type="application/ld+json">${homeJsonLd}</script>`}
 </svelte:head>
 
 <main class="landing">
@@ -88,8 +147,8 @@
 		<div class="container hero-grid">
 			<div class="hero-text animate-fade-in-up">
 				<div class="badge">🇫🇷 Technologie Française & Expertise Photographes professionnels</div>
-				<h1>Vos photos d'identité en <span class="highlight2">2 minutes</span></h1>
-				<p class="subtitle">Plus de 190 normes officielles. Prenez votre photo chez vous avec notre guide intelligent en temps réel. Simple, rapide et 100% conforme.</p>
+				<h1>Vos photos d'identité et e-Photo ANTS <span class="highlight2">en ligne sur smartphone</span></h1>
+				<p class="subtitle">Prenez votre photo d'identité officielle sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, titre de séjour et carte vitale. Guidage biométrique intelligent 100% conforme ANTS & OACI.</p>
 				
 				<div class="cta-group">
 					<a href={storeLink} class="primary-btn">{storeText}</a>
@@ -239,14 +298,14 @@
 		<div class="container">
 			<div class="app-mobile-card">
 				<div class="app-mobile-text">
-					<span class="app-badge">🌍 VISA & FORMATS INTERNATIONAUX</span>
-					<h2>Besoin d'un passeport étranger ou d'un visa international ?</h2>
+					<span class="app-badge">📱 APPLICATION MOBILE IOS & ANDROID • 11 LANGUES</span>
+					<h2>Vos photos d'identité et e-Photo ANTS aussi sur notre application mobile</h2>
 					<p>
-						Notre site web est spécialisé dans les normes de photos officielles françaises et du Maghreb. 
-						Si vous devez réaliser une photo pour un visa canadien, américain, chinois, ou un passeport étranger, utilisez notre application mobile <strong>IDidem</strong>.
+						Vous préférez utiliser une application installée sur votre smartphone ? Retrouvez toute la puissance d'<strong>IDidem</strong> sur l'App Store et Google Play. 
+						Générez votre <strong>e-photo officielle ANTS avec signature numérique</strong> pour le permis de conduire ou le titre de séjour, et vos photos d'identité conformes pour <strong>passeport, carte d'identité (CNI) et bébés</strong> en 2 minutes chrono.
 					</p>
 					<p class="app-details">
-						Disponible sur iOS et Android, elle prend en charge <strong>tous les formats officiels internationaux</strong> et est intégralement traduite en <strong>11 langues</strong>.
+						<strong>Le + exclusif de l'application :</strong> elle prend en charge <strong>tous les formats officiels internationaux</strong> (visas USA, Canada, Chine, Inde, passeports étrangers) et est intégralement disponible en <strong>11 langues</strong> pour vous accompagner partout dans le monde.
 					</p>
 					
 					<div class="store-buttons">
@@ -268,12 +327,12 @@
 				</div>
 				<div class="app-mobile-visual">
 					<div class="phone-mockup-real">
-						<img src="/assets/app-screenshot-1.png" alt="Interface IDidem pour formats internationaux" class="phone-main-screenshot" />
+						<img src="/assets/app-screenshot-1.png" alt="Application mobile IDidem pour démarches ANTS et titres d'identité" class="phone-main-screenshot" />
 					</div>
 					<div class="app-screenshots-strip">
-						<img src="/assets/app-screenshot-2.png" alt="Guides intelligents de prise de vue IDidem" />
-						<img src="/assets/app-screenshot-3.png" alt="Détourage IA et validation de portrait IDidem" />
-						<img src="/assets/app-screenshot-4.png" alt="Récapitulatif de commande de planche IDidem" />
+						<img src="/assets/app-screenshot-2.png" alt="Guides biométriques de cadrage sur smartphone IDidem" />
+						<img src="/assets/app-screenshot-3.png" alt="Détourage IA conforme et validation biométrique IDidem" />
+						<img src="/assets/app-screenshot-4.png" alt="Génération de code officiel ANTS et planche 35x45mm IDidem" />
 					</div>
 				</div>
 			</div>
@@ -284,25 +343,23 @@
 	<section class="expertise-section">
 		<div class="container">
 			<div class="expertise-content">
-				<span class="expertise-badge">💡 UNE CONCEPTION UNIQUE</span>
-				<h2>Une application conçue par des photographes professionnels</h2>
+				<span class="expertise-badge">💡 EXPERTISE & AGRÉMENT OFFICIEL</span>
+				<h2>Une application photo d'identité conçue par des artisans photographes</h2>
 				<p class="lead-text">
-					Faire une photo d'identité réglementaire est un métier de précision qui ne s'invente pas. 
-					IDidem a été développée par des artisans photographes cumulant <strong>20 ans d'expérience</strong> dans l'identité biométrique.
+					Faire une photo d'identité ou une e-photo officielle réglementaire est un métier de haute précision. 
+					IDidem a été conçue par des artisans photographes cumulant <strong>plus de 20 ans d'expérience</strong> dans l'identité biométrique conforme aux exigences strictes de l'ANTS, des mairies et des préfectures.
 				</p>
 				<div class="expertise-arguments">
 					<div class="arg-item">
-						<h4>⚠️ Pourquoi ne pas faire confiance à 100% à l'IA ?</h4>
+						<h4>⚠️ Pourquoi une simple IA ne suffit pas pour un passeport ou un permis ?</h4>
 						<p>
-							Certaines applications confient entièrement la validation de votre visage à une Intelligence Artificielle. 
-							Pourtant, à l'usage, l'IA valide plus de 98% de photos non conformes (par exemple, si vous esquissez un léger sourire ou si vos yeux ne fixent pas l'objectif). Le verdict final en mairie ou préfecture est alors le rejet.
+							Beaucoup d'applications se contentent d'un filtre automatique qui valide par erreur des photos non conformes (ombres légères, inclinaison du regard, reflet imperceptible). Résultat : votre dossier de passeport ou de permis de conduire est rejeté en mairie ou sur ants.gouv.fr après plusieurs semaines d'attente.
 						</p>
 					</div>
 					<div class="arg-item">
-						<h4>🎓 Le meilleur garant de la conformité, c'est VOUS</h4>
+						<h4>🎓 Double contrôle biométrique & Agrément ANTS officiel</h4>
 						<p>
-							Chez IDidem, nous ne laissons rien au hasard. Toutes les étapes de capture et de cadrage ont été minutieusement pensées à partir des cahiers des charges réels de l'ANTS, des mairies et des préfectures. 
-							C'est notre tutoriel interactif précis et nos repères qui vous responsabilisent et vous guident pas à pas, pour que vous preniez votre cliché en parfaite connaissance de cause.
+							Chez IDidem, vous bénéficiez du meilleur des deux mondes : un cadrage intelligent temps réel guidé au millimètre selon les normes OACI (ISO/IEC 19794-5), associé au contrôle rigoureux d'experts de l'identité. C'est l'assurance d'une acceptation à 100% pour vos titres sécurisés (CNI, passeport, permis, titre de séjour).
 						</p>
 					</div>
 				</div>

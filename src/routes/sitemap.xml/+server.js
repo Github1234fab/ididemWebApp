@@ -3,18 +3,27 @@ import { villesSEO } from '$lib/data/villes.js';
 export async function GET() {
 	const domain = 'https://ididem.com';
 	
-	// Pages statiques principales
-	const staticPages = [
-		'',
-		'/photo'
+	// 1. Pages statiques principales & Démarches nationales
+	const nationalPages = [
+		{ path: '', priority: '1.0' },
+		{ path: '/photo', priority: '0.8' },
+		{ path: '/e-photo-ants', priority: '0.9' },
+		{ path: '/photo-permis-de-conduire', priority: '0.9' },
+		{ path: '/photo-titre-de-sejour', priority: '0.9' },
+		{ path: '/photo-passeport-en-ligne', priority: '0.9' },
+		{ path: '/photo-carte-identite-en-ligne', priority: '0.9' },
+		{ path: '/photo-identite-bebe', priority: '0.9' }
 	];
 
 	const today = new Date().toISOString().split('T')[0];
-	const urls = [];
+	const entries = [];
 
-	// 1. Pages statiques
-	for (const page of staticPages) {
-		urls.push(`${domain}${page}`);
+	for (const page of nationalPages) {
+		entries.push({
+			loc: `${domain}${page.path}`,
+			priority: page.priority,
+			changefreq: 'weekly'
+		});
 	}
 
 	// 2. Les 20 Vraies Pages Locales Dédiées aux Métropoles
@@ -22,18 +31,22 @@ export async function GET() {
 	const citySlugs = Object.keys(villesSEO);
 	const primaryIntention = 'photo-identite-en-ligne';
 	for (const city of citySlugs) {
-		urls.push(`${domain}/${primaryIntention}/${city}`);
+		entries.push({
+			loc: `${domain}/${primaryIntention}/${city}`,
+			priority: '0.8',
+			changefreq: 'weekly'
+		});
 	}
 
 	// Générer l'XML
 	const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-	${urls.map(url => `
+	${entries.map(entry => `
 	<url>
-		<loc>${url}</loc>
+		<loc>${entry.loc}</loc>
 		<lastmod>${today}</lastmod>
-		<changefreq>weekly</changefreq>
-		<priority>${url === domain ? '1.0' : '0.8'}</priority>
+		<changefreq>${entry.changefreq}</changefreq>
+		<priority>${entry.priority}</priority>
 	</url>`).join('')}
 </urlset>`;
 

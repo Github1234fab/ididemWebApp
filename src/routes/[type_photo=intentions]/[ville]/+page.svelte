@@ -10,13 +10,36 @@
 
 	const allCities = Object.values(villesSEO);
 
+	const localFaqs = $derived([
+		{
+			q: `Les photos IDidem sont-elles acceptées à ${ville.mairie} pour un passeport ou une CNI ?`,
+			a: `Oui, absolument. Nos photos sont strictement conformes à la norme biométrique internationale ISO/IEC 19794-5 et au cahier des charges de ${ville.prefecture}. Elles sont 100% garanties acceptées lors de votre rendez-vous à ${ville.mairie}.`
+		},
+		{
+			q: `Comment obtenir et utiliser le code e-Photo ANTS ${ville.prepArticle} ?`,
+			a: `Prenez votre cliché sur l'application IDidem au smartphone, signez sur l'écran tactile et validez. Vous recevez immédiatement par e-mail votre code sécurisé à 22 caractères à reporter directement sur ants.gouv.fr pour votre permis de conduire ou titre de séjour.`
+		},
+		{
+			q: `Comment réussir la photo d'identité d'un bébé ou nourrisson ${ville.prepArticle} ?`,
+			a: `Évitez le stress et les pleurs en cabine Photomaton à ${ville.name}. Prenez la photo chez vous au smartphone, avec bébé confortablement allongé sur un drap clair. Notre IA nettoie automatiquement l'arrière-plan et applique le fond réglementaire.`
+		},
+		{
+			q: `Faut-il imprimer la e-photo pour une démarche administrative en ligne ?`,
+			a: `Non, la e-photo ANTS est 100% dématérialisée : le code à 22 caractères suffit pour l'ANTS. Pour le passeport et la CNI en mairie, vous pouvez imprimer votre planche PDF 35×45mm ou souscrire à notre option d'envoi postal à domicile.`
+		},
+		{
+			q: `Que se passe-t-il si la photo est refusée par l'administration ?`,
+			a: `Grâce au guidage biométrique conçu par des photographes professionnels, nos photos sont validées à 100%. En cas de doute ou de refus rarissime en mairie, nous vous accompagnons ou vous remboursons intégralement.`
+		}
+	]);
+
 	// Génération des données structurées JSON-LD (FAQPage + HowTo) pour Google Rich Snippets
 	const jsonLd = $derived(JSON.stringify({
 		'@context': 'https://schema.org',
 		'@graph': [
 			{
 				'@type': 'Service',
-				'name': `Photos d'identité et e-photo ANTS à ${ville.name}`,
+				'name': `Photos d'identité en ligne et e-photo ANTS à ${ville.name}`,
 				'provider': {
 					'@type': 'Organization',
 					'name': 'IDidem',
@@ -37,13 +60,13 @@
 					{
 						'@type': 'HowToStep',
 						'position': 1,
-						'name': 'Pré-demande ANTS',
+						'name': 'Pré-demande ANTS ou Mairie',
 						'text': `Effectuez votre pré-demande de passeport, CNI ou permis sur le site officiel ANTS ou auprès de ${ville.mairie}.`
 					},
 					{
 						'@type': 'HowToStep',
 						'position': 2,
-						'name': 'Prise de vue IDidem & Signature',
+						'name': 'Prise de vue IDidem sur smartphone & Signature',
 						'text': `Prenez votre photo depuis chez vous sur l'application IDidem et signez sur l'écran pour générer le code e-photo à 22 caractères.`
 					},
 					{
@@ -56,7 +79,7 @@
 			},
 			{
 				'@type': 'FAQPage',
-				'mainEntity': seo.faqs.map((/** @type {{ q: string, a: string }} */ faq) => ({
+				'mainEntity': localFaqs.map(faq => ({
 					'@type': 'Question',
 					'name': faq.q,
 					'acceptedAnswer': {
@@ -70,8 +93,8 @@
 </script>
 
 <svelte:head>
-	<title>Photo d'identité à {ville.name} (ANTS & Passeport) – Conforme en 2 min</title>
-	<meta name="description" content={`Faire ses photos d'identité et e-photo ANTS à ${ville.name}. Conforme Mairie & ANTS en 2 minutes. Code photo-signature à 22 caractères reçu par e-mail.`} />
+	<title>Photo d'identité en ligne & e-Photo ANTS {ville.prepArticle} sur smartphone – IDidem</title>
+	<meta name="description" content={`Faites vos photos d'identité en ligne et e-photo ANTS ${ville.prepArticle} sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis et titre de séjour.`} />
 	<link rel="canonical" href="https://ididem.com/photo-identite-en-ligne/{ville.slug}" />
 
 	<!-- Structured Data JSON-LD pour Google Indexing -->
@@ -92,9 +115,9 @@
 	<section class="hero-section">
 		<div class="hero-content">
 			<span class="badge-local">📍 SERVICE ACCRÉDITÉ EN LIGNE – DÉPARTEMENT {ville.depNum}</span>
-			<h1>Faire ses photos d'identité et e-photo ANTS {ville.prepArticle}</h1>
+			<h1>Photos d'identité en ligne et e-Photo ANTS {ville.prepArticle} sur smartphone</h1>
 			<p class="hero-subtitle">
-				Obtenez des clichés certifiés conformes pour passeport, carte nationale d'identité (CNI), permis de conduire et titre de séjour sans vous déplacer {ville.prepArticle}.
+				Obtenez vos clichés certifiés conformes pour passeport, carte nationale d'identité (CNI), permis de conduire, titre de séjour et carte vitale sans vous déplacer {ville.prepArticle}.
 			</p>
 			
 			<div class="hero-ctas">
@@ -189,9 +212,9 @@
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">🌍</div>
-					<h3>Tous les Formats Mondiaux sur Mobile</h3>
-					<p>Besoins de visasa américain, canadien, chinois ou passeports étrangers ? Retrouvez l'ensemble des formats mondiaux sur nos applications App Store & Google Play.</p>
+					<div class="val-icon">📱</div>
+					<h3>e-Photo ANTS & Formats Mondiaux sur Application</h3>
+					<p>Retrouvez aussi IDidem sur iOS et Android : réalisez vos e-photos ANTS avec signature, passeports français ou visas internationaux (USA, Canada, Chine) en 11 langues.</p>
 				</div>
 
 				<div class="val-card">
@@ -298,28 +321,32 @@
 		</div>
 	</section>
 
-	<!-- 5. Questions fréquents FAQ (FAQPage JSON-LD) -->
+	<!-- 5. Questions fréquentes FAQ (FAQPage JSON-LD) -->
 	<section class="faq-section">
 		<h2>Questions fréquentes sur vos démarches {ville.prepArticle}</h2>
 		<div class="faq-grid">
-			<div class="faq-item">
-				<h4>Les photos IDidem sont-elles acceptées à {ville.mairie} ?</h4>
-				<p>Oui, absolument. Nos photos sont strictement conformes à la norme ISO/IEC 19794-5 et valides dans toutes les mairies du département {ville.dep}.</p>
-			</div>
-			<div class="faq-item">
-				<h4>Comment fonctionne le code e-photo ANTS ?</h4>
-				<p>Une fois votre photo prise et votre signature apposée sur l'écran, vous recevez un code unique à 22 caractères à saisir directement dans votre dossier sur ants.gouv.fr.</p>
-			</div>
-			<div class="faq-item">
-				<h4>Que faire si ma photo n'est pas acceptée ?</h4>
-				<p>Grâce aux repères biométriques IDidem et à nos vérifications, la conformité est garantie à 100% ou remboursée intégralement.</p>
-			</div>
+			{#each localFaqs as faq}
+				<div class="faq-item">
+					<h4>{faq.q}</h4>
+					<p>{faq.a}</p>
+				</div>
+			{/each}
 		</div>
 	</section>
 
-	<!-- Maillage interne inter-villes -->
+	<!-- Maillage interne démarches nationales + villes -->
 	<section class="internal-linking-section">
 		<div class="linking-container">
+			<h3>Toutes nos démarches officielles en ligne sur smartphone :</h3>
+			<div class="linking-chips" style="margin-bottom: 2rem;">
+				<a href="/e-photo-ants" class="chip-link">📜 e-Photo ANTS Officielle</a>
+				<a href="/photo-permis-de-conduire" class="chip-link">🚗 Photo Permis de Conduire</a>
+				<a href="/photo-titre-de-sejour" class="chip-link">🌍 Photo Titre de Séjour ANEF</a>
+				<a href="/photo-passeport-en-ligne" class="chip-link">🛂 Photo Passeport Biométrique</a>
+				<a href="/photo-carte-identite-en-ligne" class="chip-link">🪪 Photo Carte d'Identité (CNI)</a>
+				<a href="/photo-identite-bebe" class="chip-link">👶 Photo Bébé & Nourrisson</a>
+			</div>
+
 			<h3>Photos d'identité biométriques dans les autres métropoles :</h3>
 			<div class="linking-chips">
 				{#each allCities as c}
