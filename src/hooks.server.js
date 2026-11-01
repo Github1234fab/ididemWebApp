@@ -45,14 +45,32 @@ export async function handle({ event, resolve }) {
 		}
 	}
 
-	// Cas 2 : Intention seule sans ville (ex: /e-photo-ants-en-ligne)
+	// Cas 2 : Ancienne intention seule sans ville (ex: /e-photo-ants-en-ligne)
 	if (parts.length === 1) {
 		const segment = parts[0].toLowerCase();
-		if (LEGACY_INTENTIONS.has(segment)) {
+		if (segment === 'e-photo-ants-en-ligne') {
 			return new Response(null, {
 				status: 301,
 				headers: {
-					Location: '/photo',
+					Location: '/e-photo-ants',
+					'Cache-Control': 'public, max-age=31536000, immutable'
+				}
+			});
+		}
+		if (segment === 'photo-identite-en-ligne') {
+			return new Response(null, {
+				status: 301,
+				headers: {
+					Location: '/',
+					'Cache-Control': 'public, max-age=31536000, immutable'
+				}
+			});
+		}
+		if (segment === 'portrait-professionnel-en-ligne') {
+			return new Response(null, {
+				status: 301,
+				headers: {
+					Location: '/photo?formula=casual',
 					'Cache-Control': 'public, max-age=31536000, immutable'
 				}
 			});
