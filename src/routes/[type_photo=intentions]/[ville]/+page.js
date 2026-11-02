@@ -205,7 +205,7 @@ export function load({ params }) {
 				description: `Faites vos photos de carte d'identité, passeport et e-photo ANTS en ligne ${villeInfo.prepArticle}. Alternative rapide, économique et conforme aux cabines Photomaton.`,
 				h1: `Votre Photo d'Identité Officielle en Ligne ${villeInfo.prepArticle}`,
 				badge: `📍 SERVICE PHOTO OFFICIEL – ${villeInfo.name.toUpperCase()} (${villeInfo.depNum})`,
-				heroSubtitle: `Évitez de chercher une cabine Photomaton ou un studio ${villeInfo.prepArticle}. Prenez vos photos d'identité biométriques ou votre e-photo ANTS directement depuis chez vous en 2 minutes.`,
+				heroSubtitle: villeInfo.localIntro || `Évitez de chercher une cabine Photomaton ou un studio ${villeInfo.prepArticle}. Prenez vos photos d'identité biométriques ou votre e-photo ANTS directement depuis chez vous en 2 minutes.`,
 				focusFormula: 'officielle',
 				ctaText: 'Prendre ma photo d\'identité',
 				stepsTitle: `Comment réaliser vos photos ${villeInfo.prepArticle} ?`,
@@ -229,7 +229,7 @@ export function load({ params }) {
 					}
 				],
 				specTitle: `Service Photo Agréé pour ${villeInfo.name} et le Département ${villeInfo.depNum}`,
-				specText: `Que ce soit pour ${villeInfo.mairie} ou ${villeInfo.prefecture}, nos outils sont développés en conformité avec les réglementations officielles pour garantir l'acceptation de vos clichés d'identité.`
+				specText: `${villeInfo.localIntro ? villeInfo.localIntro + ' ' : ''}Que ce soit pour ${villeInfo.mairie} ou ${villeInfo.prefecture}, nos outils sont développés en conformité avec les réglementations officielles pour garantir l'acceptation de vos clichés d'identité.`
 			};
 			break;
 	}

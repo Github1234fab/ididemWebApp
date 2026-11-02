@@ -16,8 +16,16 @@
 			a: `Oui, absolument. Nos photos sont strictement conformes à la norme biométrique internationale ISO/IEC 19794-5 et au cahier des charges de ${ville.prefecture}. Elles sont 100% garanties acceptées lors de votre rendez-vous à ${ville.mairie}.`
 		},
 		{
+			q: `Où déposer son dossier de passeport ou carte d'identité ${ville.prepArticle} ?`,
+			a: `Votre dossier peut être déposé à ${ville.mairie} ou dans les mairies de quartier et antennes équipées (${ville.pointsRecueil ? ville.pointsRecueil.slice(0, 3).join(', ') : 'antennes locales'}). ${ville.localTip || ''}`
+		},
+		{
 			q: `Comment obtenir et utiliser le code e-Photo ANTS ${ville.prepArticle} ?`,
 			a: `Prenez votre cliché sur l'application IDidem au smartphone, signez sur l'écran tactile et validez. Vous recevez immédiatement par e-mail votre code sécurisé à 22 caractères à reporter directement sur ants.gouv.fr pour votre permis de conduire ou titre de séjour.`
+		},
+		{
+			q: `Quels sont les délais constatés pour un titre d'identité ${ville.prepArticle} (${ville.depNum}) ?`,
+			a: `${ville.delaisInfo || 'Les délais de rendez-vous en mairie varient fortement selon la saison.'} Disposer de vos photos biométriques prêtes dès la prise de rendez-vous vous assure de ne pas perdre votre créneau.`
 		},
 		{
 			q: `Comment réussir la photo d'identité d'un bébé ou nourrisson ${ville.prepArticle} ?`,
@@ -49,7 +57,7 @@
 					'@type': 'AdministrativeArea',
 					'name': `${ville.name}, ${ville.dep}`
 				},
-				'description': seo.description,
+				'description': ville.localIntro || seo.description,
 				'url': `https://ididem.com/photo-identite-en-ligne/${ville.slug}`
 			},
 			{
@@ -93,8 +101,8 @@
 </script>
 
 <svelte:head>
-	<title>Photo d'identité en ligne & e-Photo ANTS {ville.prepArticle} sur smartphone – IDidem</title>
-	<meta name="description" content={`Faites vos photos d'identité en ligne et e-photo ANTS ${ville.prepArticle} sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis et titre de séjour.`} />
+	<title>Photo d'identité en ligne & e-Photo ANTS {ville.prepArticle} ({ville.depNum}) sur smartphone – IDidem</title>
+	<meta name="description" content={`Faites vos photos d'identité conformes et e-photo ANTS ${ville.prepArticle} (${ville.depNum}). Passeport, CNI, permis. Valable à ${ville.mairie}.`} />
 	<link rel="canonical" href="https://ididem.com/photo-identite-en-ligne/{ville.slug}" />
 
 	<!-- Structured Data JSON-LD pour Google Indexing -->
@@ -119,6 +127,13 @@
 			<p class="hero-subtitle">
 				Obtenez vos clichés certifiés conformes pour passeport, carte nationale d'identité (CNI), permis de conduire, titre de séjour et carte vitale sans vous déplacer {ville.prepArticle}.
 			</p>
+
+			{#if ville.localIntro}
+				<div class="hero-local-context">
+					<div class="context-icon">💡</div>
+					<p>{ville.localIntro}</p>
+				</div>
+			{/if}
 			
 			<div class="hero-ctas">
 				<a href="/photo" class="btn-main-cta">
@@ -261,6 +276,44 @@
 					</div>
 				</div>
 			</div>
+
+			{#if ville.localTip || (ville.pointsRecueil && ville.pointsRecueil.length > 0)}
+				<div class="local-differentiation-grid">
+					{#if ville.localTip}
+						<div class="local-tip-card">
+							<div class="tip-header">
+								<span class="tip-icon">💡</span>
+								<h3>Conseil démarches pour les habitants {ville.prep === 'au' ? 'du' : 'de'} {ville.name}</h3>
+							</div>
+							<p class="tip-text">{ville.localTip}</p>
+							{#if ville.delaisInfo}
+								<div class="delais-badge">
+									<span class="delais-icon">⏱️</span>
+									<span><strong>Délais & Affluence :</strong> {ville.delaisInfo}</span>
+								</div>
+							{/if}
+						</div>
+					{/if}
+
+					{#if ville.pointsRecueil && ville.pointsRecueil.length > 0}
+						<div class="points-recueil-card">
+							<div class="points-header">
+								<span class="points-icon">📍</span>
+								<h3>Mairies de quartier & Antennes biométriques {ville.prepArticle}</h3>
+							</div>
+							<p class="points-subtitle">Vous pouvez également déposer votre dossier et enregistrer vos empreintes dans ces pôles municipaux équipés :</p>
+							<ul class="points-list">
+								{#each ville.pointsRecueil as point}
+									<li>
+										<span class="point-check">✓</span>
+										<span>{point}</span>
+									</li>
+								{/each}
+							</ul>
+						</div>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</section>
 
@@ -630,6 +683,126 @@
 
 	.btn-rdv-link:hover {
 		background: #dbeafe;
+	}
+
+	/* Hero Local Context Note */
+	.hero-local-context {
+		max-width: 840px;
+		margin: 0 auto 2.25rem;
+		background: #ffffff;
+		border: 1px solid #bfdbfe;
+		border-left: 4px solid #2563eb;
+		border-radius: 12px;
+		padding: 1.15rem 1.35rem;
+		display: flex;
+		align-items: flex-start;
+		gap: 0.85rem;
+		box-shadow: 0 4px 14px rgba(37, 99, 235, 0.05);
+		text-align: left;
+	}
+
+	.hero-local-context .context-icon {
+		font-size: 1.35rem;
+		flex-shrink: 0;
+		line-height: 1.4;
+	}
+
+	.hero-local-context p {
+		font-size: 0.95rem;
+		color: #334155;
+		margin: 0;
+		line-height: 1.6;
+	}
+
+	/* Local Differentiation Grid */
+	.local-differentiation-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		gap: 2rem;
+		margin-top: 2rem;
+	}
+
+	.local-tip-card, .points-recueil-card {
+		background: #ffffff;
+		border-radius: 16px;
+		padding: 2rem;
+		border: 1px solid #e2e8f0;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.tip-header, .points-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 0.85rem;
+	}
+
+	.tip-icon, .points-icon {
+		font-size: 1.5rem;
+	}
+
+	.tip-header h3, .points-header h3 {
+		font-size: 1.15rem;
+		font-weight: 800;
+		color: #0f172a;
+		margin: 0;
+	}
+
+	.tip-text {
+		font-size: 0.95rem;
+		color: #475569;
+		line-height: 1.6;
+		margin: 0 0 1.25rem 0;
+		flex-grow: 1;
+	}
+
+	.delais-badge {
+		background: #fef3c7;
+		border: 1px solid #fde68a;
+		border-radius: 10px;
+		padding: 0.65rem 0.9rem;
+		font-size: 0.85rem;
+		color: #92400e;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		line-height: 1.4;
+	}
+
+	.points-subtitle {
+		font-size: 0.9rem;
+		color: #64748b;
+		margin: 0 0 1rem 0;
+	}
+
+	.points-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.points-list li {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.6rem;
+		font-size: 0.9rem;
+		color: #1e293b;
+		background: #f8fafc;
+		border: 1px solid #f1f5f9;
+		padding: 0.55rem 0.75rem;
+		border-radius: 8px;
+		font-weight: 500;
+	}
+
+	.point-check {
+		color: #16a34a;
+		font-weight: 800;
+		font-size: 0.95rem;
 	}
 
 	.seo-landing-container {
