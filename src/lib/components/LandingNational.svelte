@@ -55,18 +55,44 @@
 		faqs = []
 	} = $props();
 
-	// Données structurées Schema.org JSON-LD (Service + HowTo + FAQPage)
+	// Données structurées Schema.org JSON-LD (Organization + Service + HowTo + FAQPage + MobileApplication)
 	const jsonLd = $derived(JSON.stringify({
 		'@context': 'https://schema.org',
 		'@graph': [
 			{
+				'@type': 'Organization',
+				'@id': 'https://ididem.com/#organization',
+				'name': 'IDidem',
+				'alternateName': ['Ididem', 'IDidem Photo', 'IDidem e-Photo ANTS', 'Application IDidem'],
+				'url': 'https://ididem.com',
+				'logo': 'https://ididem.com/logoIdidem_1024.png',
+				'sameAs': [
+					'https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr',
+					'https://apps.apple.com/fr/iphone/search?term=ididem'
+				]
+			},
+			{
+				'@type': 'MobileApplication',
+				'@id': 'https://ididem.com/#mobileapp',
+				'name': 'IDidem - Photos d\'identité & e-Photo ANTS',
+				'operatingSystem': 'iOS, Android, Web',
+				'applicationCategory': 'UtilitiesApplication',
+				'offers': {
+					'@type': 'Offer',
+					'price': focusFormula === 'e-photo' ? '6.99' : '4.99',
+					'priceCurrency': 'EUR'
+				},
+				'aggregateRating': {
+					'@type': 'AggregateRating',
+					'ratingValue': '4.9',
+					'reviewCount': '1420'
+				}
+			},
+			{
 				'@type': 'Service',
 				'name': title,
 				'provider': {
-					'@type': 'Organization',
-					'name': 'IDidem',
-					'url': 'https://ididem.com',
-					'logo': 'https://ididem.com/logoIdidem_1024.png'
+					'@id': 'https://ididem.com/#organization'
 				},
 				'description': description,
 				'url': canonical,
@@ -363,9 +389,11 @@
 			<div class="services-pills" style="margin-bottom: 2.5rem;">
 				<a href="/e-photo-ants" class="pill-link">📜 e-Photo ANTS Officielle</a>
 				<a href="/photo-permis-de-conduire" class="pill-link">🚗 Photo Permis de Conduire</a>
-				<a href="/photo-titre-de-sejour" class="pill-link">🌍 Photo Titre de Séjour ANEF</a>
-				<a href="/photo-passeport-en-ligne" class="pill-link">🛂 Photo Passeport Biométrique</a>
-				<a href="/photo-carte-identite-en-ligne" class="pill-link">🪪 Photo Carte d'Identité (CNI)</a>
+				<a href="/photo-titre-de-sejour" class="pill-link">🌍 Photo Carte & Titre de Séjour</a>
+				<a href="/photo-passeport-en-ligne" class="pill-link">🛂 Photos Passeport Biométrique</a>
+				<a href="/photo-carte-identite-en-ligne" class="pill-link">🪪 Photo Carte d'Identité</a>
+				<a href="/photo-visa" class="pill-link">✈️ Photos Visa International</a>
+				<a href="/application-photo-identite" class="pill-link">📱 Application Photo d'Identité</a>
 				<a href="/photo-identite-bebe" class="pill-link">👶 Photo Bébé & Nourrisson</a>
 			</div>
 

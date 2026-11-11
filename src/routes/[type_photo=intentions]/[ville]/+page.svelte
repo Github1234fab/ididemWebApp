@@ -101,8 +101,8 @@
 </script>
 
 <svelte:head>
-	<title>Photo d'identité en ligne & e-Photo ANTS {ville.prepArticle} ({ville.depNum}) sur smartphone – IDidem</title>
-	<meta name="description" content={`Faites vos photos d'identité conformes et e-photo ANTS ${ville.prepArticle} (${ville.depNum}). Passeport, CNI, permis. Valable à ${ville.mairie}.`} />
+	<title>Photo d'identité {ville.prepArticle} ({ville.depNum}) & en ligne – e-Photo ANTS | IDidem</title>
+	<meta name="description" content={`Faites vos photos d'identité ${ville.prepArticle} et e-photo ANTS en ligne en 2 min. Conforme ${ville.mairie}, préfecture, passeport, CNI et permis. 100% conforme ou remboursé.`} />
 	<link rel="canonical" href="https://ididem.com/photo-identite-en-ligne/{ville.slug}" />
 
 	<!-- Structured Data JSON-LD pour Google Indexing -->
@@ -123,7 +123,7 @@
 	<section class="hero-section">
 		<div class="hero-content">
 			<span class="badge-local">📍 SERVICE ACCRÉDITÉ EN LIGNE – DÉPARTEMENT {ville.depNum}</span>
-			<h1>Photos d'identité en ligne et e-Photo ANTS {ville.prepArticle} sur smartphone</h1>
+			<h1>Photo d'identité {ville.prepArticle} & e-Photo ANTS en ligne sur smartphone</h1>
 			<p class="hero-subtitle">
 				Obtenez vos clichés certifiés conformes pour passeport, carte nationale d'identité (CNI), permis de conduire, titre de séjour et carte vitale sans vous déplacer {ville.prepArticle}.
 			</p>
@@ -394,9 +394,11 @@
 			<div class="linking-chips" style="margin-bottom: 2rem;">
 				<a href="/e-photo-ants" class="chip-link">📜 e-Photo ANTS Officielle</a>
 				<a href="/photo-permis-de-conduire" class="chip-link">🚗 Photo Permis de Conduire</a>
-				<a href="/photo-titre-de-sejour" class="chip-link">🌍 Photo Titre de Séjour ANEF</a>
-				<a href="/photo-passeport-en-ligne" class="chip-link">🛂 Photo Passeport Biométrique</a>
-				<a href="/photo-carte-identite-en-ligne" class="chip-link">🪪 Photo Carte d'Identité (CNI)</a>
+				<a href="/photo-titre-de-sejour" class="chip-link">🌍 Photo Carte & Titre de Séjour</a>
+				<a href="/photo-passeport-en-ligne" class="chip-link">🛂 Photos Passeport Biométrique</a>
+				<a href="/photo-carte-identite-en-ligne" class="chip-link">🪪 Photo Carte d'Identité</a>
+				<a href="/photo-visa" class="chip-link">✈️ Photos Visa International</a>
+				<a href="/application-photo-identite" class="chip-link">📱 Application Photo d'Identité</a>
 				<a href="/photo-identite-bebe" class="chip-link">👶 Photo Bébé & Nourrisson</a>
 			</div>
 

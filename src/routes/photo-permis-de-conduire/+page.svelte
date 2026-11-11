@@ -3,12 +3,12 @@
 	import LandingNational from '$lib/components/LandingNational.svelte';
 
 	const landingData = {
-		title: "Photo Permis de Conduire en Ligne – e-Photo ANTS sur Smartphone | IDidem",
-		description: "Faites votre photo pour permis de conduire et e-photo ANTS en ligne sur smartphone en 2 minutes. Code photo-signature à 22 caractères agréé pour auto-école et permis.",
+		title: "Photo Permis de Conduire en Ligne – e-Photo ANTS & Ephoto Smartphone | IDidem",
+		description: "Faites votre photo pour permis de conduire et e-photo ANTS officielle en ligne sur smartphone en 2 min. Code photo-signature à 22 caractères agréé pour auto-école et permis.",
 		canonical: "https://ididem.com/photo-permis-de-conduire",
-		badge: "🚗 PERMIS DE CONDUIRE AUTO & MOTO • AGRÉMENT ANTS",
-		h1: "Photo Permis de Conduire en Ligne avec e-Photo ANTS sur Smartphone",
-		heroSubtitle: "Obtenez immédiatement le code e-photo officiel à 22 caractères indispensable pour votre inscription en auto-école, renouvellement de permis de conduire ou duplicata après perte/vol. Prise de vue guidée et signature numérique sur smartphone.",
+		badge: "🚗 PERMIS DE CONDUIRE AUTO & MOTO • CODE e-PHOTO AGRÉMENT ANTS",
+		h1: "Photo Permis de Conduire en Ligne – e-Photo ANTS Officielle sur Smartphone",
+		heroSubtitle: "Obtenez immédiatement le code e-photo officiel à 22 caractères indispensable pour votre inscription en auto-école (numéro NEPH), fabrication ou renouvellement de permis de conduire sur ants.gouv.fr.",
 		focusFormula: /** @type {'e-photo'} */ ('e-photo'),
 		ctaText: "Créer ma e-photo Permis de conduire →",
 		sampleImage: "/photo_femme.png",

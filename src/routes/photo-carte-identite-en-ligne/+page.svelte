@@ -3,11 +3,11 @@
 	import LandingNational from '$lib/components/LandingNational.svelte';
 
 	const landingData = {
-		title: "Photo Carte d'Identité en Ligne sur Smartphone – Conforme CNI | IDidem",
-		description: "Réalisez vos photos pour carte nationale d'identité (CNI) en ligne sur smartphone en 2 minutes. Conforme Mairie et pré-demande ANTS. Planche 6 photos certifiée 35×45mm.",
+		title: "Photo Carte Identité en Ligne sur Smartphone – Conforme CNI | IDidem",
+		description: "Réalisez vos photos pour carte d'identité (CNI) en ligne sur smartphone en 2 minutes. Conforme Mairie et pré-demande ANTS. Planche 6 photos certifiée 35×45mm.",
 		canonical: "https://ididem.com/photo-carte-identite-en-ligne",
-		badge: "🪪 CARTE NATIONALE D'IDENTITÉ (CNI) • CONFORME MAIRIE & ANTS",
-		h1: "Photo Carte d'Identité en Ligne sur Smartphone",
+		badge: "🪪 CARTE D'IDENTITÉ (CNI) • CONFORME MAIRIE & PRÉFECTURE",
+		h1: "Photo Carte d'Identité en Ligne sur Smartphone (CNI Conforme)",
 		heroSubtitle: "Créez vos photos d'identité certifiées conformes pour votre première demande ou renouvellement de Carte Nationale d'Identité (CNI). Directement sur smartphone, validé par des photographes professionnels.",
 		focusFormula: /** @type {'officielle'} */ ('officielle'),
 		ctaText: "Créer ma photo pour carte d'identité →",

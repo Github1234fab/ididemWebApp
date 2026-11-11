@@ -81,20 +81,21 @@ export const villesSEO = {
 		dep: 'Rhône (69)',
 		depNum: '69',
 		region: 'Auvergne-Rhône-Alpes',
-		prefecture: 'la Préfecture du Rhône',
+		prefecture: 'la Préfecture du Rhône (Lyon 3e)',
 		mairie: 'l\'Hôtel de Ville de Lyon',
 		adresseMairie: '1 Place de la Comédie, 69001 Lyon',
 		horairesMairie: 'Du Lundi au Vendredi : 08h45 - 16h45',
 		linkRdvMairie: 'https://www.lyon.fr/demarche/papiers-didentite/carte-didentite-et-passeport-prise-de-rendez-vous',
 		mapQuery: '1+Place+de+la+Comédie+69001+Lyon',
-		localIntro: 'À Lyon, les demandes de titres d\'identité se concentrent dans les mairies des 9 arrondissements, où les créneaux de dépôt sont souvent saturés plusieurs semaines à l\'avance. Prendre vos photos d\'identité ou votre e-Photo ANTS chez vous sur IDidem vous garantit des clichés 100% conformes aux exigences strictes de la Ville de Lyon et de la Préfecture du Rhône, sans risque de devoir reprendre rendez-vous suite à un rejet au guichet.',
-		localTip: 'Les créneaux de rendez-vous sont mis à jour quotidiennement sur le site de la Ville de Lyon. Vous n\'êtes pas obligé de réserver dans votre arrondissement de résidence : les mairies du 3e (place Guichard), du 7e ou du 8e disposent souvent de plages supplémentaires.',
+		localIntro: 'Besoin d\'une photo d\'identité à Lyon ou d\'une e-photo ANTS officielle ? Évitez la cohue des cabines Photomaton dans les gares de Lyon Part-Dieu ou Perrache et les centres commerciaux de Confluence et la Part-Dieu. À Lyon, les créneaux en mairie des 9 arrondissements sont pris d\'assaut plusieurs semaines à l\'avance. Prendre vos photos d\'identité ou votre e-Photo ANTS en ligne chez vous avec IDidem vous garantit des clichés 100% conformes aux exigences strictes de la Ville de Lyon et de la Préfecture du Rhône, sans risque de rejet au guichet.',
+		localTip: 'Pour vos dépôts de passeport et carte d\'identité à Lyon, les créneaux sont renouvelés chaque jour sur le site lyon.fr. Vous pouvez déposer votre dossier dans n\'importe quelle mairie d\'arrondissement de Lyon : les mairies du 3e (Guichard), du 7e (Jean Macé) et du 8e (Mermoz) ouvrent régulièrement des créneaux désistés.',
 		pointsRecueil: [
 			'Mairie du 3e arrondissement (Place Guichard)',
 			'Mairie du 7e arrondissement (Place Jean Macé)',
 			'Mairie du 8e arrondissement (Avenue Jean Mermoz)',
 			'Mairie du 6e arrondissement (Rue de Sèze)',
-			'Mairie du 9e (Place du Marché - Vaise)'
+			'Mairie du 2e arrondissement (Rue d\'Enghien)',
+			'Mairie du 9e arrondissement (Place du Marché - Vaise)'
 		],
 		delaisInfo: 'Renouvellement quotidien des rendez-vous en ligne à 8h45 et 13h sur le portail de la Ville de Lyon.'
 	},

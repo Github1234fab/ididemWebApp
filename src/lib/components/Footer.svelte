@@ -26,9 +26,11 @@
 			<ul>
 				<li><a href="/e-photo-ants">e-Photo ANTS Officielle</a></li>
 				<li><a href="/photo-permis-de-conduire">Permis de conduire</a></li>
-				<li><a href="/photo-titre-de-sejour">Titre de séjour (ANEF)</a></li>
+				<li><a href="/photo-titre-de-sejour">Carte & Titre de séjour (ANEF)</a></li>
 				<li><a href="/photo-passeport-en-ligne">Passeport biométrique</a></li>
 				<li><a href="/photo-carte-identite-en-ligne">Carte d'identité (CNI)</a></li>
+				<li><a href="/photo-visa">Photos Visa International</a></li>
+				<li><a href="/application-photo-identite">Application Mobile & Web</a></li>
 				<li><a href="/photo-identite-bebe">Photo Bébé & Nourrisson</a></li>
 			</ul>
 		</div>

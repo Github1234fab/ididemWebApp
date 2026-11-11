@@ -12,6 +12,8 @@ export async function GET() {
 		{ path: '/photo-titre-de-sejour', priority: '0.9' },
 		{ path: '/photo-passeport-en-ligne', priority: '0.9' },
 		{ path: '/photo-carte-identite-en-ligne', priority: '0.9' },
+		{ path: '/photo-visa', priority: '0.9' },
+		{ path: '/application-photo-identite', priority: '0.9' },
 		{ path: '/photo-identite-bebe', priority: '0.9' }
 	];
 

@@ -201,9 +201,9 @@ export function load({ params }) {
 		case 'photo-identite-en-ligne':
 		default:
 			seo = {
-				title: `Photo d'Identité en Ligne ${villeInfo.prepArticle} (${villeInfo.depNum}) - Mairie & ANTS`,
-				description: `Faites vos photos de carte d'identité, passeport et e-photo ANTS en ligne ${villeInfo.prepArticle}. Alternative rapide, économique et conforme aux cabines Photomaton.`,
-				h1: `Votre Photo d'Identité Officielle en Ligne ${villeInfo.prepArticle}`,
+				title: `Photo d'Identité ${villeInfo.prepArticle} (${villeInfo.depNum}) & en Ligne - e-Photo ANTS`,
+				description: `Faites vos photos d'identité ${villeInfo.prepArticle} et e-photo ANTS en ligne en 2 minutes. Conforme ${villeInfo.mairie}, passeport, CNI et permis. 100% conforme ou remboursé.`,
+				h1: `Photo d'Identité ${villeInfo.prepArticle} & e-Photo ANTS en Ligne`,
 				badge: `📍 SERVICE PHOTO OFFICIEL – ${villeInfo.name.toUpperCase()} (${villeInfo.depNum})`,
 				heroSubtitle: villeInfo.localIntro || `Évitez de chercher une cabine Photomaton ou un studio ${villeInfo.prepArticle}. Prenez vos photos d'identité biométriques ou votre e-photo ANTS directement depuis chez vous en 2 minutes.`,
 				focusFormula: 'officielle',

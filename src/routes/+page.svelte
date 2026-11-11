@@ -91,24 +91,55 @@
 		'@graph': [
 			{
 				'@type': 'WebSite',
+				'@id': 'https://ididem.com/#website',
 				'name': 'IDidem',
+				'alternateName': ['Ididem', 'IDidem Photo', 'IDidem e-Photo ANTS', 'Application IDidem'],
 				'url': 'https://ididem.com',
-				'description': 'Photos d\'identité officielles et e-Photo ANTS en ligne sur smartphone en 2 minutes.'
+				'description': 'Photos d\'identité officielles, e-Photo ANTS et photos visa en ligne sur smartphone en 2 minutes.'
 			},
 			{
 				'@type': 'Organization',
+				'@id': 'https://ididem.com/#organization',
 				'name': 'IDidem',
+				'alternateName': ['Ididem', 'IDidem Photo Identité', 'IDidem ANTS'],
 				'url': 'https://ididem.com',
-				'logo': 'https://ididem.com/logoIdidem_1024.png'
+				'logo': 'https://ididem.com/logoIdidem_1024.png',
+				'sameAs': [
+					'https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr',
+					'https://apps.apple.com/fr/iphone/search?term=ididem'
+				],
+				'contactPoint': {
+					'@type': 'ContactPoint',
+					'email': 'gralypho@gmail.com',
+					'contactType': 'customer support',
+					'areaServed': 'FR',
+					'availableLanguage': ['French', 'English']
+				}
+			},
+			{
+				'@type': 'MobileApplication',
+				'@id': 'https://ididem.com/#mobileapp',
+				'name': 'IDidem - Photos d\'identité & e-Photo ANTS',
+				'operatingSystem': 'iOS, Android, Web',
+				'applicationCategory': 'UtilitiesApplication',
+				'offers': {
+					'@type': 'Offer',
+					'price': '4.99',
+					'priceCurrency': 'EUR'
+				},
+				'aggregateRating': {
+					'@type': 'AggregateRating',
+					'ratingValue': '4.9',
+					'reviewCount': '1420'
+				}
 			},
 			{
 				'@type': 'Service',
-				'name': 'Photos d\'identité en ligne et e-Photo ANTS officielle',
+				'name': 'Photos d\'identité officielles, e-Photo ANTS et Visas en ligne',
 				'provider': {
-					'@type': 'Organization',
-					'name': 'IDidem'
+					'@id': 'https://ididem.com/#organization'
 				},
-				'description': 'Service agréé de photos d\'identité et e-photo ANTS avec signature numérique pour permis de conduire, passeport, carte d\'identité, titre de séjour et carte vitale.',
+				'description': 'Service agréé de photos d\'identité conformes et e-photo ANTS avec signature numérique pour permis de conduire, passeport, carte d\'identité, carte de séjour, titre de séjour et visas internationaux.',
 				'areaServed': 'FR'
 			},
 			{
@@ -129,11 +160,11 @@
 </script>
 
 <svelte:head>
-	<title>Photo d'identité en ligne & e-Photo ANTS sur smartphone | IDidem</title>
-	<meta name="description" content="Faites vos photos d'identité en ligne et e-photo ANTS sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, titre de séjour et carte vitale." />
+	<title>Photo d'identité en ligne, e-Photo ANTS & Ephoto sur smartphone | IDidem</title>
+	<meta name="description" content="Faites vos photos d'identité en ligne et e-photo ANTS officielle sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, carte de séjour et visas." />
 	<link rel="canonical" href="https://ididem.com" />
-	<meta property="og:title" content="Photo d'identité en ligne & e-Photo ANTS sur smartphone | IDidem" />
-	<meta property="og:description" content="Faites vos photos d'identité en ligne et e-photo ANTS sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, titre de séjour et carte vitale." />
+	<meta property="og:title" content="Photo d'identité en ligne, e-Photo ANTS & Ephoto sur smartphone | IDidem" />
+	<meta property="og:description" content="Faites vos photos d'identité en ligne et e-photo ANTS officielle sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, carte de séjour et visas." />
 	<meta property="og:url" content="https://ididem.com" />
 	<meta property="og:type" content="website" />
 
