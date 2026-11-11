@@ -6,7 +6,7 @@
 		title: "Photo Permis de Conduire en Ligne – e-Photo ANTS & Ephoto Smartphone | IDidem",
 		description: "Faites votre photo pour permis de conduire et e-photo ANTS officielle en ligne sur smartphone en 2 min. Code photo-signature à 22 caractères agréé pour auto-école et permis.",
 		canonical: "https://ididem.com/photo-permis-de-conduire",
-		badge: "🚗 PERMIS DE CONDUIRE AUTO & MOTO • CODE e-PHOTO AGRÉMENT ANTS",
+		badge: "PERMIS DE CONDUIRE AUTO & MOTO • CODE e-PHOTO AGRÉMENT ANTS",
 		h1: "Photo Permis de Conduire en Ligne – e-Photo ANTS Officielle sur Smartphone",
 		heroSubtitle: "Obtenez immédiatement le code e-photo officiel à 22 caractères indispensable pour votre inscription en auto-école (numéro NEPH), fabrication ou renouvellement de permis de conduire sur ants.gouv.fr.",
 		focusFormula: /** @type {'e-photo'} */ ('e-photo'),

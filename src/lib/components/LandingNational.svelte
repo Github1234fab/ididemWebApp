@@ -23,16 +23,19 @@
 	 * @property {string} badge
 	 * @property {string} h1
 	 * @property {string} heroSubtitle
-	 * @property {'e-photo' | 'officielle'} focusFormula
-	 * @property {string} ctaText
-	 * @property {string} sampleImage
-	 * @property {string} sampleCaption
-	 * @property {string} specTitle
-	 * @property {string} specText
-	 * @property {string[]} specPoints
-	 * @property {string} stepsTitle
-	 * @property {Step[]} steps
-	 * @property {Faq[]} faqs
+	 * @property {'e-photo' | 'officielle'} [focusFormula]
+	 * @property {string} [ctaText]
+	 * @property {string} [sampleImage]
+	 * @property {string} [sampleCaption]
+	 * @property {string} [specTitle]
+	 * @property {string} [specText]
+	 * @property {string[]} [specPoints]
+	 * @property {string} [stepsTitle]
+	 * @property {Step[]} [steps]
+	 * @property {Faq[]} [faqs]
+	 * @property {'web' | 'stores'} [ctaMode]
+	 * @property {string} [storeNotice]
+	 * @property {boolean} [showWebFallback]
 	 */
 
 	/** @type {Props} */
@@ -52,8 +55,14 @@
 		specPoints = [],
 		stepsTitle,
 		steps = [],
-		faqs = []
+		faqs = [],
+		ctaMode = 'web',
+		storeNotice = '',
+		showWebFallback = false
 	} = $props();
+
+	const appleStoreUrl = "https://apps.apple.com/fr/iphone/search?term=ididem";
+	const googlePlayUrl = "https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr";
 
 	// Données structurées Schema.org JSON-LD (Organization + Service + HowTo + FAQPage + MobileApplication)
 	const jsonLd = $derived(JSON.stringify({
@@ -111,6 +120,23 @@
 				}))
 			},
 			{
+				'@type': 'BreadcrumbList',
+				'itemListElement': [
+					{
+						'@type': 'ListItem',
+						'position': 1,
+						'name': 'Accueil',
+						'item': 'https://ididem.com'
+					},
+					{
+						'@type': 'ListItem',
+						'position': 2,
+						'name': title.split('–')[0].split('|')[0].trim(),
+						'item': canonical
+					}
+				]
+			},
+			{
 				'@type': 'FAQPage',
 				'mainEntity': faqs.map(faq => ({
 					'@type': 'Question',
@@ -150,30 +176,62 @@
 				<h1>{h1}</h1>
 				<p class="hero-subtitle">{heroSubtitle}</p>
 
+				{#if storeNotice}
+					<div class="store-notice-box">
+						<p>{storeNotice}</p>
+					</div>
+				{/if}
+
 				<div class="hero-ctas">
-					<a href={ctaUrl} class="btn-primary-cta">
-						{ctaText}
-					</a>
+					{#if ctaMode === 'stores'}
+						<div class="hero-store-group">
+							<span class="store-group-label">Télécharger directement l'application :</span>
+							<div class="store-buttons hero-stores">
+								<a href={appleStoreUrl} target="_blank" rel="noopener noreferrer" class="store-btn">
+									<div class="store-btn-text">
+										<span class="sub-text">Télécharger dans l'</span>
+										<span class="main-text">App Store</span>
+									</div>
+								</a>
+								<a href={googlePlayUrl} target="_blank" rel="noopener noreferrer" class="store-btn">
+									<div class="store-btn-text">
+										<span class="sub-text">Disponible sur</span>
+										<span class="main-text">Google Play</span>
+									</div>
+								</a>
+							</div>
+							{#if showWebFallback}
+								<a href="/photo" class="web-fallback-link">
+									Ou accéder à la version Web sans installation (France) →
+								</a>
+							{/if}
+						</div>
+					{:else}
+						<a href={ctaUrl} class="btn-primary-cta">
+							{ctaText}
+						</a>
+					{/if}
 					<span class="cta-guarantee">
-						⚡ Prise de vue en 2 minutes • 100% Conforme ou Remboursé • Sans déplacement
+						Prise de vue en 2 minutes • 100% Conforme ou Remboursé • Sans déplacement
 					</span>
 				</div>
 
 				<div class="trust-badges">
 					<div class="trust-pill"><span>🇫🇷</span> Photographes agréés</div>
-					<div class="trust-pill"><span>🔒</span> Données protégées</div>
-					<div class="trust-pill"><span>✅</span> Garanti Mairie & ANTS</div>
+					<div class="trust-pill">Données 100% protégées</div>
+					<div class="trust-pill">Garanti Mairie & ANTS</div>
 				</div>
 			</div>
 
 			<div class="hero-visual">
 				<div class="visual-card">
 					<div class="photo-preview">
-						<img src={sampleImage} alt={sampleCaption} class="preview-img" />
+						<img src={sampleImage} alt={sampleCaption} class="preview-img" class:child-img={sampleImage && sampleImage.includes('enfant')} />
 						<div class="biometric-guides">
 							<div class="guide-oval"></div>
 							<div class="guide-line eye-line"></div>
 							<div class="guide-line chin-line"></div>
+							<div class="biometric-tag">Visage 32–36 mm (80%)</div>
 						</div>
 						<div class="stamp-verified">
 							<span>✓ CONFORME</span>
@@ -210,7 +268,7 @@
 				</div>
 
 				<div class="comp-card online-winner">
-					<div class="winner-badge">⭐ LA SOLUTION MODERNE</div>
+					<div class="winner-badge">LA SOLUTION MODERNE</div>
 					<div class="comp-header">
 						<h3>Sur smartphone avec IDidem</h3>
 						<span class="price-highlight">Dès {focusFormula === 'e-photo' ? '6,99 €' : '4,99 €'}</span>
@@ -223,7 +281,11 @@
 						<li>✅ Signature numérique sur écran & code reçu immédiatement</li>
 						<li>✅ 100% Conforme ou Remboursé sous 24h</li>
 					</ul>
-					<a href={ctaUrl} class="btn-comp-cta">Lancer la prise de vue →</a>
+					{#if ctaMode === 'stores'}
+						<a href="#app-mobile" class="btn-comp-cta">Télécharger sur l'App Store ou Google Play →</a>
+					{:else}
+						<a href={ctaUrl} class="btn-comp-cta">Lancer la prise de vue →</a>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -234,7 +296,6 @@
 		<section class="specs-section">
 			<div class="container">
 				<div class="specs-card">
-					<div class="specs-icon">⚖️</div>
 					<h2>{specTitle}</h2>
 					<p class="specs-lead">{specText}</p>
 					{#if specPoints.length > 0}
@@ -267,7 +328,11 @@
 				</div>
 
 				<div class="text-center" style="margin-top: 3rem;">
-					<a href={ctaUrl} class="btn-primary-cta">Commencer maintenant →</a>
+					{#if ctaMode === 'stores'}
+						<a href="#app-mobile" class="btn-primary-cta">Télécharger l'application IDidem →</a>
+					{:else}
+						<a href={ctaUrl} class="btn-primary-cta">Commencer maintenant →</a>
+					{/if}
 				</div>
 			</div>
 		</section>
@@ -294,7 +359,11 @@
 						<li>✓ Option envoi postal chez vous (+2 €)</li>
 						<li>✓ Contrôle et garantie acceptation 100%</li>
 					</ul>
-					<a href="/photo?formula=e-photo" class="btn-price-cta">Choisir e-Photo ANTS</a>
+					{#if ctaMode === 'stores'}
+						<a href="#app-mobile" class="btn-price-cta">Choisir sur l'application</a>
+					{:else}
+						<a href="/photo?formula=e-photo" class="btn-price-cta">Choisir e-Photo ANTS</a>
+					{/if}
 				</div>
 
 				<div class="price-box {focusFormula === 'officielle' ? 'highlighted' : ''}">
@@ -311,7 +380,11 @@
 						<li>✓ Option tirage papier livré à domicile (+2 €)</li>
 						<li>✓ Conforme mairie, préfecture et consulats</li>
 					</ul>
-					<a href="/photo?formula=officielle" class="btn-price-cta">Choisir Photo Officielle</a>
+					{#if ctaMode === 'stores'}
+						<a href="#app-mobile" class="btn-price-cta">Choisir sur l'application</a>
+					{:else}
+						<a href="/photo?formula=officielle" class="btn-price-cta">Choisir Photo Officielle</a>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -337,11 +410,11 @@
 	{/if}
 
 	<!-- Section Application Mobile (iOS & Android) -->
-	<section class="app-mobile-section">
+	<section class="app-mobile-section" id="app-mobile">
 		<div class="container">
 			<div class="app-mobile-card">
 				<div class="app-mobile-text">
-					<span class="app-badge">📱 APPLICATION MOBILE IOS & ANDROID • 11 LANGUES</span>
+					<span class="app-badge">APPLICATION MOBILE IOS & ANDROID • 11 LANGUES</span>
 					<h2>Vos photos d'identité et e-Photo ANTS aussi sur notre application mobile</h2>
 					<p>
 						Vous préférez réaliser votre photo depuis une application dédiée sur votre smartphone ? Retrouvez toute la puissance d'<strong>IDidem</strong> sur l'App Store et Google Play. 
@@ -353,14 +426,12 @@
 					
 					<div class="store-buttons">
 						<a href="https://apps.apple.com/fr/iphone/search?term=ididem" target="_blank" rel="noopener noreferrer" class="store-btn">
-							<span class="store-icon">🍏</span>
 							<div class="store-btn-text">
 								<span class="sub-text">Télécharger dans l'</span>
 								<span class="main-text">App Store</span>
 							</div>
 						</a>
 						<a href="https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr" target="_blank" rel="noopener noreferrer" class="store-btn">
-							<span class="store-icon">🤖</span>
 							<div class="store-btn-text">
 								<span class="sub-text">Disponible sur</span>
 								<span class="main-text">Google Play</span>
@@ -387,14 +458,14 @@
 		<div class="container">
 			<h3>Toutes nos démarches officielles en ligne sur smartphone</h3>
 			<div class="services-pills" style="margin-bottom: 2.5rem;">
-				<a href="/e-photo-ants" class="pill-link">📜 e-Photo ANTS Officielle</a>
-				<a href="/photo-permis-de-conduire" class="pill-link">🚗 Photo Permis de Conduire</a>
-				<a href="/photo-titre-de-sejour" class="pill-link">🌍 Photo Carte & Titre de Séjour</a>
-				<a href="/photo-passeport-en-ligne" class="pill-link">🛂 Photos Passeport Biométrique</a>
-				<a href="/photo-carte-identite-en-ligne" class="pill-link">🪪 Photo Carte d'Identité</a>
-				<a href="/photo-visa" class="pill-link">✈️ Photos Visa International</a>
-				<a href="/application-photo-identite" class="pill-link">📱 Application Photo d'Identité</a>
-				<a href="/photo-identite-bebe" class="pill-link">👶 Photo Bébé & Nourrisson</a>
+				<a href="/e-photo-ants" class="pill-link">e-Photo ANTS Officielle</a>
+				<a href="/photo-permis-de-conduire" class="pill-link">Photo Permis de Conduire</a>
+				<a href="/photo-titre-de-sejour" class="pill-link">Photo Carte & Titre de Séjour</a>
+				<a href="/photo-passeport-en-ligne" class="pill-link">Photos Passeport Biométrique</a>
+				<a href="/photo-carte-identite-en-ligne" class="pill-link">Photo Carte d'Identité</a>
+				<a href="/photo-visa" class="pill-link">Photos Visa International</a>
+				<a href="/application-photo-identite" class="pill-link">Application Photo d'Identité</a>
+				<a href="/photo-identite-bebe" class="pill-link">Photo Bébé & Nourrisson</a>
 			</div>
 
 			<h3 style="font-size: 1.15rem; color: #cbd5e1; margin-bottom: 1rem;">Photos d'identité conformes dans les principales métropoles :</h3>
@@ -464,6 +535,65 @@
 		line-height: 1.6;
 		color: #475569;
 		margin-bottom: 2rem;
+	}
+
+	.store-notice-box {
+		background: #eff6ff;
+		border: 1px solid #bfdbfe;
+		border-left: 4px solid #2563eb;
+		border-radius: 12px;
+		padding: 1rem 1.25rem;
+		margin-bottom: 1.75rem;
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		text-align: left;
+		box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);
+	}
+
+	.store-notice-box p {
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.55;
+		color: #1e3a8a;
+		font-weight: 600;
+	}
+
+	/* .store-notice-box .notice-icon {
+		font-size: 1.35rem;
+		flex-shrink: 0;
+		line-height: 1.3;
+	} */
+
+	.hero-store-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+		align-items: flex-start;
+	}
+
+	.store-group-label {
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: #0f172a;
+	}
+
+	.hero-stores {
+		margin-top: 0 !important;
+	}
+
+	.web-fallback-link {
+		display: inline-block;
+		margin-top: 0.25rem;
+		font-size: 0.9rem;
+		color: #2563eb;
+		text-decoration: underline;
+		font-weight: 600;
+		transition: color 0.2s;
+	}
+
+	.web-fallback-link:hover {
+		color: #1d4ed8;
 	}
 
 	.hero-ctas {
@@ -545,22 +675,67 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		transform: scale(1.7);
+		transform-origin: 50% 18.5%;
+		display: block;
+	}
+
+	/* Réglage spécifique pour la photo bébé & nourrisson */
+	.preview-img.child-img {
+		transform: scale(1.15);
+		transform-origin: 50% 25%;
 	}
 
 	.biometric-guides {
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 	}
 
 	.guide-oval {
-		width: 60%;
-		height: 72%;
-		border: 2px dashed rgba(34, 197, 94, 0.8);
-		border-radius: 50%;
+		position: absolute;
+		top: 8%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 58%;
+		height: 78%;
+		border: 2.5px dashed #22c55e;
+		border-radius: 50% 50% 48% 48% / 54% 54% 46% 46%;
+	}
+
+	.guide-line {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		border-top: 1px dashed rgba(34, 197, 94, 0.65);
+	}
+
+	.guide-line.eye-line {
+		top: 42%;
+		width: 54%;
+	}
+
+	.guide-line.chin-line {
+		top: 86%;
+		width: 32%;
+	}
+
+	.biometric-tag {
+		position: absolute;
+		bottom: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: rgba(15, 23, 42, 0.85);
+		backdrop-filter: blur(4px);
+		color: #ffffff;
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.3px;
+		padding: 0.25rem 0.65rem;
+		border-radius: 9999px;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		white-space: nowrap;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 	}
 
 	.stamp-verified {
@@ -736,10 +911,10 @@
 		box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 	}
 
-	.specs-icon {
+	/* .specs-icon {
 		font-size: 2.2rem;
 		margin-bottom: 1rem;
-	}
+	} */
 
 	.specs-card h2 {
 		font-size: 1.8rem;
@@ -844,11 +1019,24 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+		cursor: pointer;
+	}
+
+	.price-box:hover {
+		transform: translateY(-8px) scale(1.035);
+		box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.12), 0 10px 18px -6px rgba(0, 0, 0, 0.06);
+		border-color: #ea580c;
+		z-index: 2;
 	}
 
 	.price-box.highlighted {
 		border: 2px solid #ea580c;
 		box-shadow: 0 12px 30px rgba(234, 88, 12, 0.15);
+	}
+
+	.price-box.highlighted:hover {
+		box-shadow: 0 25px 45px -8px rgba(234, 88, 12, 0.28), 0 12px 20px -6px rgba(234, 88, 12, 0.15);
 	}
 
 	.box-badge {
@@ -1076,9 +1264,9 @@
 		background: #1e293b;
 	}
 
-	.store-icon {
+	/* .store-icon {
 		font-size: 1.5rem;
-	}
+	} */
 
 	.store-btn-text {
 		display: flex;

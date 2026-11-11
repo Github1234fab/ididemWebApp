@@ -6,7 +6,7 @@
 		title: "Photo Carte de Séjour & Titre de Séjour en Ligne – e-Photo ANTS ANEF | IDidem",
 		description: "Faites votre photo pour carte de séjour et titre de séjour en ligne sur smartphone en 2 min. Code e-photo ANTS officiel à 22 caractères agréé préfecture et plateforme ANEF.",
 		canonical: "https://ididem.com/photo-titre-de-sejour",
-		badge: "🌍 CARTE DE SÉJOUR & TITRE DE SÉJOUR • PLATEFORME ANEF / PRÉFECTURE",
+		badge: "CARTE DE SÉJOUR & TITRE DE SÉJOUR • PLATEFORME ANEF / PRÉFECTURE",
 		h1: "Photo Carte de Séjour et Titre de Séjour en Ligne – e-Photo ANTS ANEF",
 		heroSubtitle: "Obtenez votre e-photo officielle avec signature électronique et code à 22 caractères agréé pour vos demandes de carte de séjour et titre de séjour sur le portail ANEF (administration-etrangers-en-france.interieur.gouv.fr) ou en préfecture.",
 		focusFormula: /** @type {'e-photo'} */ ('e-photo'),

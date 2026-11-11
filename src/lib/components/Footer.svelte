@@ -55,7 +55,7 @@
 	<!-- Section Maillage Interne pour le SEO des villes -->
 	<div class="container seo-cities-linking" style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--gray-800); text-align: left;">
 		<h4 style="color: var(--white); font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">
-			📍 Vos photos d'identité certifiées en ligne :
+			Vos photos d'identité certifiées en ligne :
 		</h4>
 		<div class="cities-grid" style="display: flex; flex-wrap: wrap; gap: 0.5rem 0.85rem; font-size: 0.85rem; line-height: 1.6;">
 			{#each sortedCities as ville}

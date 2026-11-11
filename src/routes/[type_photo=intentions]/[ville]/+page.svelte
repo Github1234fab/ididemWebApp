@@ -185,55 +185,47 @@
 	<!-- Section Avantages Clés & Piliers de Valeur IDidem -->
 	<section class="value-props-section">
 		<div class="value-props-container">
-			<span class="value-badge">⚡ LA RÉVOLUTION PHOTO D'IDENTITÉ</span>
+			<span class="value-badge">LA RÉVOLUTION PHOTO D'IDENTITÉ</span>
 			<h2>Pourquoi choisir IDidem plutôt qu'une cabine ?</h2>
 			<p class="value-intro">Une application pensée de A à Z pour vous simplifier la vie, sans compromis sur la conformité légale.</p>
 
 			<div class="value-cards-grid">
 				<div class="val-card">
-					<div class="val-icon">🏠</div>
 					<h3>Zéro Déplacement & 2 Min Chrono</h3>
 					<p>Faites votre photo directement depuis votre salon en 2 minutes. Fini les trajets, les recherches de cabine et les files d'attente.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">🔄</div>
 					<h3>Essais Illimités & Gratuit</h3>
 					<p>Impossible de la rater ! Recommencez autant de fois que vous le souhaitez gratuitement avant de valider votre cliché idéal.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">📷</div>
 					<h3>Conçu & Vérifié par des Photographes Pros</h3>
 					<p>Développé par des artisans photographes cumulant 20 ans d'expérience. Chaque photo est contrôlée pour être 100% conforme.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">🛡️</div>
 					<h3>100% Conforme ou Remboursé</h3>
 					<p>Vos photos respectent scrupuleusement les normes ANTS, OACI et Ministère de l'Intérieur. Acceptation garantie ou remboursement immédiat.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">📜</div>
 					<h3>Code e-Photo ANTS Officiel</h3>
 					<p>Service e-photo 100% certifié et optimisé juridiquement pour permis de conduire et titres de séjour avec signature numérique.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">📮</div>
 					<h3>Option Envoi Postal à Domicile (+2 €)</h3>
 					<p>Recevez vos planches photos haute définition imprimées sur papier photo directement dans votre boîte aux lettres pour seulement 2 € de plus.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">📱</div>
 					<h3>e-Photo ANTS & Formats Mondiaux sur Application</h3>
 					<p>Retrouvez aussi IDidem sur iOS et Android : réalisez vos e-photos ANTS avec signature, passeports français ou visas internationaux (USA, Canada, Chine) en 11 langues.</p>
 				</div>
 
 				<div class="val-card">
-					<div class="val-icon">💰</div>
 					<h3>Économique & Moins Cher</h3>
 					<p>Profitez de tarifs avantageux dès 4,99 € sans abonnement caché, idéal pour toute la famille (nourrissons, adultes et séniors).</p>
 				</div>
@@ -256,7 +248,7 @@
 					<p><strong>Préfecture référente :</strong> {ville.prefecture}</p>
 					{#if ville.linkRdvMairie}
 						<a href={ville.linkRdvMairie} target="_blank" rel="noopener noreferrer" class="btn-rdv-link">
-							📅 Prise de rdv en mairie de {ville.name} →
+							Prise de rdv en mairie de {ville.name} →
 						</a>
 					{/if}
 				</div>
@@ -392,14 +384,14 @@
 		<div class="linking-container">
 			<h3>Toutes nos démarches officielles en ligne sur smartphone :</h3>
 			<div class="linking-chips" style="margin-bottom: 2rem;">
-				<a href="/e-photo-ants" class="chip-link">📜 e-Photo ANTS Officielle</a>
-				<a href="/photo-permis-de-conduire" class="chip-link">🚗 Photo Permis de Conduire</a>
-				<a href="/photo-titre-de-sejour" class="chip-link">🌍 Photo Carte & Titre de Séjour</a>
-				<a href="/photo-passeport-en-ligne" class="chip-link">🛂 Photos Passeport Biométrique</a>
-				<a href="/photo-carte-identite-en-ligne" class="chip-link">🪪 Photo Carte d'Identité</a>
-				<a href="/photo-visa" class="chip-link">✈️ Photos Visa International</a>
-				<a href="/application-photo-identite" class="chip-link">📱 Application Photo d'Identité</a>
-				<a href="/photo-identite-bebe" class="chip-link">👶 Photo Bébé & Nourrisson</a>
+				<a href="/e-photo-ants" class="chip-link">e-Photo ANTS Officielle</a>
+				<a href="/photo-permis-de-conduire" class="chip-link">Photo Permis de Conduire</a>
+				<a href="/photo-titre-de-sejour" class="chip-link">Photo Carte & Titre de Séjour</a>
+				<a href="/photo-passeport-en-ligne" class="chip-link">Photos Passeport Biométrique</a>
+				<a href="/photo-carte-identite-en-ligne" class="chip-link">Photo Carte d'Identité</a>
+				<a href="/photo-visa" class="chip-link">Photos Visa International</a>
+				<a href="/application-photo-identite" class="chip-link">Application Photo d'Identité</a>
+				<a href="/photo-identite-bebe" class="chip-link">Photo Bébé & Nourrisson</a>
 			</div>
 
 			<h3>Photos d'identité biométriques dans les autres métropoles :</h3>

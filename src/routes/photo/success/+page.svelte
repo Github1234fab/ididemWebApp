@@ -445,7 +445,7 @@
 			<!-- Récapitulatif commande dynamique -->
 			<div class="product-success-box download-box">
 				{#if formulaId === 'e-photo'}
-					<h2>⏳ Traitement de votre E-Photo en cours</h2>
+					<h2>Traitement de votre E-Photo en cours</h2>
 					
 					{#if generatedImageUri}
 						<div class="preview-output-container">
@@ -455,7 +455,7 @@
 
 					<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 1.25rem; margin: 1rem 0; text-align: left;">
 						<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #1e40af; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-							<span>📩 Transmission par e-mail sous 8h maximum</span>
+							<span>Transmission par e-mail sous 8h maximum</span>
 						</p>
 						<p style="margin: 0; font-size: 0.9rem; color: #1e3a8a; line-height: 1.5;">
 							Votre E-Photo certifiée ANTS nécessite une vérification de conformité et l'attribution de votre code e-photo officiel par notre photographe agréé. Votre planche ainsi que votre code ANTS vous seront envoyés directement par e-mail à l'adresse <strong>{userEmail || 'indiquée lors de votre commande'}</strong>.
@@ -465,7 +465,7 @@
 					{#if deliveryRequested}
 						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
 							<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
-								<span>📬 Option Envoi Postal Active</span>
+								<span>Option Envoi Postal Active</span>
 							</p>
 							<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
 								Votre planche e-photo certifiée avec code ANTS sera également imprimée et expédiée sous 24h à l'adresse suivante :
@@ -479,7 +479,7 @@
 					{/if}
 
 				{:else}
-					<h2>{#if deliveryRequested}🎉 Votre commande est en cours d'expédition !{:else}Votre commande est prête !{/if}</h2>
+					<h2>{#if deliveryRequested}Votre commande est en cours d'expédition !{:else}Votre commande est prête !{/if}</h2>
 					
 					{#if generatedImageUri}
 						<div class="preview-output-container">
@@ -506,7 +506,7 @@
 					{#if deliveryRequested}
 						<div style="background: var(--blue-50); border: 1px solid var(--blue-200); padding: 1.25rem; border-radius: var(--radius-sm); margin: 1.5rem 0; text-align: left;">
 							<p style="margin: 0 0 0.5rem 0; font-weight: 700; color: var(--blue-700); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
-								<span>📬 Option Envoi Postal Active</span>
+								<span>Option Envoi Postal Active</span>
 							</p>
 							<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--gray-600); line-height: 1.5;">
 								Votre planche photo va être imprimée sur papier photo professionnel haute qualité et expédiée sous 24h à l'adresse suivante :
@@ -521,10 +521,10 @@
 
 					<div class="actions-group horizontal-actions">
 						<button class="primary-btn" onclick={downloadPhoto} disabled={!generatedImageUri}>
-							📥 Télécharger la photo (HD)
+							Télécharger la photo (HD)
 						</button>
 						<button class="secondary-btn" onclick={sharePhoto} disabled={!generatedImageUri}>
-							🔗 Partager
+							Partager
 						</button>
 					</div>
 				{/if}

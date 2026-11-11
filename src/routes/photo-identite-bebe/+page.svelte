@@ -6,7 +6,7 @@
 		title: "Photo d'Identité Bébé & Nourrisson en Ligne sur Smartphone | IDidem",
 		description: "Prenez la photo d'identité de votre bébé ou nourrisson en ligne sur smartphone à la maison sans stress. 100% conforme passeport et CNI en mairie. Essais illimités.",
 		canonical: "https://ididem.com/photo-identite-bebe",
-		badge: "👶 SPÉCIAL NOURRISSON & ENFANT EN BAS ÂGE • SANS STRESS",
+		badge: "SPÉCIAL NOURRISSON & ENFANT EN BAS ÂGE • SANS STRESS",
 		h1: "Photo d'Identité Bébé & Nourrisson en Ligne sur Smartphone",
 		heroSubtitle: "Évitez le cauchemar des cabines Photomaton avec un bébé qui pleure ou ne tient pas sa tête. Réalisez la photo de passeport ou carte d'identité de votre nourrisson tranquillement chez vous au smartphone, avec essais illimités.",
 		focusFormula: /** @type {'officielle'} */ ('officielle'),

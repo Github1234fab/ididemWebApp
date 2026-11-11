@@ -187,8 +187,8 @@
 				</div>
 
 				<div class="trust-indicators">
-					<span>✔️ ANTS & OACI Conforme</span>
-					<span>🔒 Données 100% Privées</span>
+					<span>ANTS & OACI Conforme</span>
+					<span>Données 100% Privées</span>
 				</div>
 			</div>
 			
@@ -329,7 +329,7 @@
 		<div class="container">
 			<div class="app-mobile-card">
 				<div class="app-mobile-text">
-					<span class="app-badge">📱 APPLICATION MOBILE IOS & ANDROID • 11 LANGUES</span>
+					<span class="app-badge">APPLICATION MOBILE IOS & ANDROID • 11 LANGUES</span>
 					<h2>Vos photos d'identité et e-Photo ANTS aussi sur notre application mobile</h2>
 					<p>
 						Vous préférez utiliser une application installée sur votre smartphone ? Retrouvez toute la puissance d'<strong>IDidem</strong> sur l'App Store et Google Play. 
@@ -341,14 +341,12 @@
 					
 					<div class="store-buttons">
 						<a href="https://apps.apple.com/fr/iphone/search?term=ididem" target="_blank" rel="noopener noreferrer" class="store-btn">
-							<span class="store-icon">🍏</span>
 							<div class="store-btn-text">
 								<span class="sub-text">Télécharger dans l'</span>
 								<span class="main-text">App Store</span>
 							</div>
 						</a>
 						<a href="https://play.google.com/store/apps/details?id=com.fabfabfab.idemidphoto&hl=fr" target="_blank" rel="noopener noreferrer" class="store-btn">
-							<span class="store-icon">🤖</span>
 							<div class="store-btn-text">
 								<span class="sub-text">Disponible sur</span>
 								<span class="main-text">Google Play</span>
@@ -374,7 +372,7 @@
 	<section class="expertise-section">
 		<div class="container">
 			<div class="expertise-content">
-				<span class="expertise-badge">💡 EXPERTISE & AGRÉMENT OFFICIEL</span>
+				<span class="expertise-badge">EXPERTISE & AGRÉMENT OFFICIEL</span>
 				<h2>Une application photo d'identité conçue par des artisans photographes</h2>
 				<p class="lead-text">
 					Faire une photo d'identité ou une e-photo officielle réglementaire est un métier de haute précision. 
@@ -382,13 +380,13 @@
 				</p>
 				<div class="expertise-arguments">
 					<div class="arg-item">
-						<h4>⚠️ Pourquoi une simple IA ne suffit pas pour un passeport ou un permis ?</h4>
+						<h4>Pourquoi une simple IA ne suffit pas pour un passeport ou un permis ?</h4>
 						<p>
 							Beaucoup d'applications se contentent d'un filtre automatique qui valide par erreur des photos non conformes (ombres légères, inclinaison du regard, reflet imperceptible). Résultat : votre dossier de passeport ou de permis de conduire est rejeté en mairie ou sur ants.gouv.fr après plusieurs semaines d'attente.
 						</p>
 					</div>
 					<div class="arg-item">
-						<h4>🎓 Double contrôle biométrique & Agrément ANTS officiel</h4>
+						<h4>Double contrôle biométrique & Agrément ANTS officiel</h4>
 						<p>
 							Chez IDidem, vous bénéficiez du meilleur des deux mondes : un cadrage intelligent temps réel guidé au millimètre selon les normes OACI (ISO/IEC 19794-5), associé au contrôle rigoureux d'experts de l'identité. C'est l'assurance d'une acceptation à 100% pour vos titres sécurisés (CNI, passeport, permis, titre de séjour).
 						</p>
@@ -401,7 +399,7 @@
 	<!-- Green impact (Application éco-responsable) -->
 	<section class="eco-section">
 		<div class="container text-center">
-			<div class="eco-badge">🌱 Application Éco-Responsable</div>
+			<div class="eco-badge">Application Éco-Responsable</div>
 			<h2>Zéro trajet, zéro CO₂ pour vos photos</h2>
 			<p>En évitant les déplacements inutiles en voiture vers les cabines ou les studios de photographie, les utilisateurs d'IDidem ont déjà économisé plus de <strong>{co2Saved} kg de CO₂</strong>.</p>
 		</div>
@@ -563,22 +561,24 @@
 		width: 100%;
 		height: 100%;
 		position: relative;
-		background-size: 180%;
-		background-position: center 25%;
+		background-size: 230%;
+		background-position: center 18%;
 		background-repeat: no-repeat;
 	}
 	.avatar-placeholder.man {
 		background-image: url('/photo_homme.png');
+		background-size: 230%;
+		background-position: center 18%;
 	}
 	.avatar-placeholder.child {
 		background-image: url('/photo_enfant.png');
-		background-size: 115%;
-		background-position: center 15%;
+		background-size: 140%;
+		background-position: center 20%;
 	}
 	.avatar-placeholder.woman {
 		background-image: url('/photo_femme.png');
-		background-size: 185%;
-		background-position: center 30%;
+		background-size: 235%;
+		background-position: center 22%;
 	}
 	.card-badge {
 		font-size: 0.8rem;
@@ -739,10 +739,22 @@
 		flex: 1;
 		max-width: 420px;
 		position: relative;
+		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+		cursor: pointer;
+	}
+	.price-card:hover {
+		transform: translateY(-8px) scale(1.035);
+		box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.12), 0 10px 18px -6px rgba(0, 0, 0, 0.06);
+		border-color: var(--blue-400);
+		z-index: 2;
 	}
 	.price-card.popular {
 		border-color: var(--blue-500);
 		box-shadow: var(--shadow-lg);
+	}
+	.price-card.popular:hover {
+		border-color: var(--blue-600);
+		box-shadow: 0 25px 45px -8px rgba(37, 99, 235, 0.25), 0 12px 20px -6px rgba(37, 99, 235, 0.15);
 	}
 	.popular-badge {
 		position: absolute;

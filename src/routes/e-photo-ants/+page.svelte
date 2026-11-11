@@ -6,7 +6,7 @@
 		title: "e-Photo ANTS & Ephoto en ligne – Photo d'identité ANTS officielle | IDidem",
 		description: "Obtenez votre e-photo et photo ANTS officielle en ligne sur smartphone en 2 min. Code ephoto à 22 caractères avec signature numérique pour permis de conduire et titre de séjour.",
 		canonical: "https://ididem.com/e-photo-ants",
-		badge: "📜 PROCÉDURE OFFICIELLE ANTS (ANTS.GOUV.FR) • EPHOTO 100% EN LIGNE",
+		badge: "PROCÉDURE OFFICIELLE ANTS (ANTS.GOUV.FR) • EPHOTO 100% EN LIGNE",
 		h1: "Votre e-Photo ANTS Officielle & Ephoto en Ligne sur Smartphone",
 		heroSubtitle: "Prenez votre photo ANTS aux normes biométriques sur votre smartphone, signez directement sur votre écran tactile et recevez votre code e-photo à 22 caractères transmis au serveur ANTS en 2 minutes chrono.",
 		focusFormula: /** @type {'e-photo'} */ ('e-photo'),

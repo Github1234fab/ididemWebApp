@@ -6,7 +6,7 @@
 		title: "Photos Passeport en Ligne sur Smartphone – Conforme Mairie & OACI | IDidem",
 		description: "Faites vos photos de passeport biométrique en ligne sur smartphone en 2 minutes. Conforme norme OACI et Mairie. Planche 6 photos 35×45mm certifiée conforme.",
 		canonical: "https://ididem.com/photo-passeport-en-ligne",
-		badge: "🛂 NORME INTERNATIONALE OACI / ISO 19794-5 • CONFORME MAIRIE",
+		badge: "NORME INTERNATIONALE OACI / ISO 19794-5 • CONFORME MAIRIE",
 		h1: "Photos Passeport en Ligne Conformes sur Smartphone (Norme OACI)",
 		heroSubtitle: "Réalisez vos photos biométriques pour passeport français directement sur smartphone depuis chez vous. Planche de 6 photos 35×45mm certifiée conforme pour votre rendez-vous en Mairie ou Consulat.",
 		focusFormula: /** @type {'officielle'} */ ('officielle'),

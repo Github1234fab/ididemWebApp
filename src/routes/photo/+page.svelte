@@ -497,10 +497,12 @@ function capturePhoto() {
 	let isRedirecting = $state(false);
 
 	async function handlePayment() {
-		if (!userEmail || !isEmailValid(userEmail)) {
-			processingError = 'Veuillez saisir une adresse e-mail valide.';
-			alert(processingError);
-			return;
+		if (selectedFormula === 'e-photo' || deliveryRequested) {
+			if (!userEmail || !isEmailValid(userEmail)) {
+				processingError = 'Veuillez saisir une adresse e-mail valide.';
+				alert(processingError);
+				return;
+			}
 		}
 
 		if (selectedFormula === 'e-photo') {
@@ -857,7 +859,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1} 
 							onclick={() => setZoom(1)}
 						>
-							<span class="icon">👤</span> Grand-angle
+							Grand-angle
 						</button>
 						
 						<button 
@@ -866,7 +868,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1.4} 
 							onclick={() => setZoom(1.4)}
 						>
-							<span class="icon">✨</span> Normal
+							Normal
 						</button>
 						
 						<button 
@@ -875,7 +877,7 @@ function capturePhoto() {
 							class:active={currentZoom === 1.8} 
 							onclick={() => setZoom(1.8)}
 						>
-							<span class="icon">🔍</span> Zoom
+							Zoom
 						</button>
 					</div>
 					
@@ -1141,20 +1143,34 @@ function capturePhoto() {
 
 
 							{#if isProcessed}
-								<!-- CHAMP ADRESSE E-MAIL DE BASE POUR TOUS -->
-								<div class="email-input-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 0.5rem;">
-									<label for="user-email-field" style="font-weight: 700; font-size: 0.95rem; color: #1d1d1f; display: flex; align-items: center; gap: 0.5rem;">
-										<span>📧 Votre adresse e-mail pour recevoir vos photos</span> <span style="color: #ef4444;">*</span>
-									</label>
-									<input type="email" id="user-email-field" bind:value={userEmail} placeholder="Ex: votre.email@domaine.com" required style="padding: 0.75rem 0.9rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; width: 100%; box-sizing: border-box;" />
-								</div>
+								<!-- CHAMP ADRESSE E-MAIL UNIQUEMENT SI E-PHOTO OU ENVOI POSTAL -->
+								{#if selectedFormula === 'e-photo'}
+									<div class="email-input-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 0.5rem;">
+										<label for="user-email-field" style="font-weight: 700; font-size: 0.95rem; color: #1d1d1f; display: flex; align-items: center; gap: 0.5rem;">
+											<span>Votre adresse e-mail (pour recevoir votre code e-Photo ANTS)</span> <span style="color: #ef4444;">*</span>
+										</label>
+										<input type="email" id="user-email-field" bind:value={userEmail} placeholder="Ex: votre.email@domaine.com" required style="padding: 0.75rem 0.9rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; width: 100%; box-sizing: border-box;" />
+									</div>
+								{:else if deliveryRequested}
+									<div class="email-input-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 0.5rem;">
+										<label for="user-email-field" style="font-weight: 700; font-size: 0.95rem; color: #1d1d1f; display: flex; align-items: center; gap: 0.5rem;">
+											<span>Votre adresse e-mail (pour le suivi de votre envoi postal)</span> <span style="color: #ef4444;">*</span>
+										</label>
+										<input type="email" id="user-email-field" bind:value={userEmail} placeholder="Ex: votre.email@domaine.com" required style="padding: 0.75rem 0.9rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; width: 100%; box-sizing: border-box;" />
+									</div>
+								{:else}
+									<div class="instant-download-card" style="text-align: left; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 0.35rem;">
+										<strong style="font-size: 0.95rem; color: #0f172a;">Téléchargement numérique direct</strong>
+										<span style="font-size: 0.85rem; color: #64748b; line-height: 1.45;">Votre planche de 6 photos HD certifiée sera disponible au téléchargement immédiat sur cet écran dès la validation du paiement.</span>
+									</div>
+								{/if}
 
 								<!-- FORMULAIRE DE SIGNATURE MANUSCRITE E-PHOTO ANTS AVANT PAIEMENT -->
 								{#if selectedFormula === 'e-photo'}
 									<div class="signature-step-card" style="text-align: left; background: #ffffff; border: 2px solid var(--blue-500); border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 145, 255, 0.08); display: flex; flex-direction: column; gap: 1.25rem;">
 										<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
 											<h3 style="font-size: 1.1rem; font-weight: 800; color: var(--blue-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-												<span>✍️ Signature électronique ANTS</span>
+												<span>Signature électronique ANTS</span>
 											</h3>
 											<span style="background: var(--blue-50); color: var(--blue-700); font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.75rem; border-radius: 12px; border: 1px solid var(--blue-200);">Requis pour Permis / Titre de séjour</span>
 										</div>
@@ -1171,7 +1187,7 @@ function capturePhoto() {
 												ondrawend={handleDrawEnd} 
 											/>
 											<button type="button" onclick={handleClearSignature} style="background: var(--gray-200); color: var(--gray-700); border: none; padding: 0.4rem 1rem; border-radius: var(--radius-xs); font-size: 0.8rem; font-weight: 700; cursor: pointer; align-self: flex-end;">
-												🗑️ Effacer et recommencer
+												Effacer et recommencer
 											</button>
 										</div>
 
@@ -1190,20 +1206,20 @@ function capturePhoto() {
 								{/if}
 
 								<!-- Option Envoi Postal Premium -->
-								<div class="reassurance-card" style="text-align: left; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 1rem;">
+								<div class="reassurance-card" style="text-align: left; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05); display: flex; flex-direction: column; gap: 1rem;">
 									<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 0.5rem; flex-wrap: wrap;">
-										<span style="font-weight: 800; font-size: 1.15rem; color: #1d1d1f;">Option Envoi Postal</span>
-										<span style="background: #e6fcf5; color: #0ca678; border: 1px solid #c3fae8; font-size: 0.65rem; font-weight: 800; padding: 0.35rem 0.8rem; border-radius: 12px; display: inline-block; text-align: center; line-height: 1.3;">🌱 zéro déplacement<br />100% éco</span>
+										<span style="font-weight: 800; font-size: 1.15rem; color: #14532d;">Option Envoi Postal</span>
+										<span style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; font-size: 0.65rem; font-weight: 800; padding: 0.35rem 0.8rem; border-radius: 12px; display: inline-block; text-align: center; line-height: 1.3;">Zéro déplacement • 100% éco</span>
 									</div>
 
-									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 700; color: #27272a; cursor: pointer; font-size: 0.9rem; margin: 0; text-align: left;">
-										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.25rem; height: 1.25rem; accent-color: var(--blue-600); cursor: pointer; flex-shrink: 0; margin-top: 0.1rem;" />
+									<label style="display: flex; align-items: flex-start; gap: 0.75rem; font-weight: 600; color: #1f2937; cursor: pointer; font-size: 0.9rem; margin: 0; text-align: left;">
+										<input type="checkbox" bind:checked={deliveryRequested} style="width: 1.25rem; height: 1.25rem; accent-color: #16a34a; cursor: pointer; flex-shrink: 0; margin-top: 0.1rem;" />
 										<span style="line-height: 1.45;">Je choisis de recevoir ma planche de photos directement à mon domicile par voie postale (+2,00 €)</span>
 									</label>
 
 									{#if selectedFormula === 'e-photo'}
 										<p style="margin: 0; font-size: 0.8rem; color: #475569; background: #f8fafc; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid #e2e8f0; line-height: 1.45;">
-											💡 <strong>À savoir :</strong> Votre E-Photo certifiée et votre code ANTS vous sont <u>systématiquement envoyés par e-mail</u> sous 8h max pour vos démarches en ligne. L'option postale est un service complémentaire pour recevoir une planche papier imprimée chez vous.
+											<strong>À savoir :</strong> Votre E-Photo certifiée et votre code ANTS vous sont <u>systématiquement envoyés par e-mail</u> sous 8h max pour vos démarches en ligne. L'option postale est un service complémentaire pour recevoir une planche papier imprimée chez vous.
 										</p>
 									{/if}
 
@@ -1239,7 +1255,7 @@ function capturePhoto() {
 							<div class="result-actions">
 								<button class="btn-retake" disabled={isRedirecting} onclick={restart}>Recommencer</button>
 								{#if isProcessed}
-									<button class="btn-confirm-photo" disabled={isRedirecting || (deliveryRequested && (!userEmail || !deliveryName || !deliveryStreet || !deliveryZip || !deliveryCity))} onclick={handlePayment}>
+									<button class="btn-confirm-photo" disabled={isRedirecting || (deliveryRequested && (!userEmail || !deliveryName || !deliveryStreet || !deliveryZip || !deliveryCity)) || (selectedFormula === 'e-photo' && !userEmail)} onclick={handlePayment}>
 										{#if isRedirecting}
 											<span>Redirection...</span>
 										{:else}
@@ -2913,7 +2929,6 @@ function capturePhoto() {
 	.reassurance-card {
 		background: #f8fafc;
 		border: 1px solid var(--gray-200);
-		border-left: 4px solid var(--blue-600);
 		border-radius: var(--radius-md);
 		padding: 1.25rem;
 		margin-top: 1rem;
