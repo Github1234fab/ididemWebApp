@@ -471,11 +471,6 @@
 		background: #ffffff;
 	}
 
-	.val-icon {
-		font-size: 2rem;
-		margin-bottom: 1rem;
-	}
-
 	.val-card h3 {
 		font-size: 1.1rem;
 		font-weight: 800;

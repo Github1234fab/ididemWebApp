@@ -1,5 +1,3 @@
-import { villesSEO } from '$lib/data/villes.js';
-
 export async function GET() {
 	const domain = 'https://ididem.com';
 	
@@ -24,18 +22,6 @@ export async function GET() {
 		entries.push({
 			loc: `${domain}${page.path}`,
 			priority: page.priority,
-			changefreq: 'weekly'
-		});
-	}
-
-	// 2. Les 20 Vraies Pages Locales Dédiées aux Métropoles
-	// Utilisation de la route canonique principale photo-identite-en-ligne
-	const citySlugs = Object.keys(villesSEO);
-	const primaryIntention = 'photo-identite-en-ligne';
-	for (const city of citySlugs) {
-		entries.push({
-			loc: `${domain}/${primaryIntention}/${city}`,
-			priority: '0.8',
 			changefreq: 'weekly'
 		});
 	}

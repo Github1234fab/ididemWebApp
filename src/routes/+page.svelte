@@ -110,7 +110,7 @@
 				],
 				'contactPoint': {
 					'@type': 'ContactPoint',
-					'email': 'gralypho@gmail.com',
+					'email': 'contact@gralypho.com',
 					'contactType': 'customer support',
 					'areaServed': 'FR',
 					'availableLanguage': ['French', 'English']
@@ -160,11 +160,11 @@
 </script>
 
 <svelte:head>
-	<title>Photo d'identité en ligne, e-Photo ANTS & Ephoto sur smartphone | IDidem</title>
-	<meta name="description" content="Faites vos photos d'identité en ligne et e-photo ANTS officielle sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, carte de séjour et visas." />
+	<title>IDidem : Photo d'identité en ligne & e-Photo ANTS sur smartphone</title>
+	<meta name="description" content="Faites vos photos d'identité et e-Photo ANTS en ligne en 2 min sur smartphone. Code officiel permis de conduire, passeport, CNI & titre de séjour. Agréé ANTS." />
 	<link rel="canonical" href="https://ididem.com" />
-	<meta property="og:title" content="Photo d'identité en ligne, e-Photo ANTS & Ephoto sur smartphone | IDidem" />
-	<meta property="og:description" content="Faites vos photos d'identité en ligne et e-photo ANTS officielle sur smartphone en 2 minutes. Conforme passeport, carte d'identité, permis de conduire, carte de séjour et visas." />
+	<meta property="og:title" content="IDidem : Photo d'identité en ligne & e-Photo ANTS sur smartphone" />
+	<meta property="og:description" content="Faites vos photos d'identité et e-Photo ANTS en ligne en 2 min sur smartphone. Code officiel permis de conduire, passeport, CNI & titre de séjour. Agréé ANTS." />
 	<meta property="og:url" content="https://ididem.com" />
 	<meta property="og:type" content="website" />
 
@@ -970,10 +970,6 @@
 		transform: translateY(-2px);
 		border-color: #475569;
 		background: #1e293b;
-	}
-
-	.store-icon {
-		font-size: 1.5rem;
 	}
 
 	.store-btn-text {
