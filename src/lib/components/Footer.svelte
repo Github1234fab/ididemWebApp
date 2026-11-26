@@ -47,6 +47,7 @@
 				<li><a href="/#pricing">Tarifs</a></li>
 				<li><a href="/#faq">FAQ</a></li>
 				<li><a href="mailto:contact@gralypho.com">contact@gralypho.com</a></li>
+				<li><a href="https://gist.github.com/Github1234fab/e1e25311874bcddc4861007209446120" target="_blank" rel="noopener">Conditions Générales d'Utilisation (CGU)</a></li>
 				<li><a href="https://gist.github.com/Github1234fab/f41bd73e7b57d72e196c1b576654b37e" target="_blank" rel="noopener">Politique de Confidentialité</a></li>
 			</ul>
 		</div>
